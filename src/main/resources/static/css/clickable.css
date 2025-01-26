@@ -1,0 +1,10 @@
+/* Estilo para elementos clicables */
+.clickable {
+    cursor: pointer; /* Cambia el cursor a una mano al pasar por encima */
+}
+
+/* Opcional: estilo visual al pasar el mouse */
+.clickable:hover {
+    background-color: #f0f8ff; /* Azul claro para indicar que es interactivo */
+    cursor: pointer; /* Reafirma que el elemento es clicable */
+}
