@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/profile.css}">
+</head>
+<body>
+
+<div class="container">
+    <!-- Profile Section -->
+    <div class="profile-card">
+        <div class="profile-details">
+            <img src="https://www.github.com/hugoalvarezajenjo.png" alt="Profile Picture" class="profile-picture">
+            <div class="profile-info">
+                <h2>Hugo Alvarez Ajenjo</h2>
+                <p>Software Engineering Student</p>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <h6>120</h6>
+                        <p>Comments</p>
+                    </div>
+                    <div class="profile-stat">
+                        <h6>340</h6>
+                        <p>Followers</p>
+                    </div>
+                    <div class="profile-stat">
+                        <h6>150</h6>
+                        <p>Following</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-outline-primary">Edit Profile</button>
+    </div>
+</div>
+</body>
+</html>
