@@ -2,6 +2,7 @@ package es.hugoalvarezajenjo.selecta.controller;
 
 import es.hugoalvarezajenjo.selecta.entity.User;
 import es.hugoalvarezajenjo.selecta.mapper.UserMapper;
+import es.hugoalvarezajenjo.selecta.service.UserAuthentication;
 import es.hugoalvarezajenjo.selecta.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +16,17 @@ import java.util.Optional;
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserAuthentication userAuthentication;
 
-    public UserController(final UserService userService, final UserMapper userMapper) {
+    public UserController(final UserService userService, final UserMapper userMapper, final UserAuthentication userAuthentication) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.userAuthentication = userAuthentication;
     }
 
     @GetMapping
     public String profile(final Model model) {
-        model.addAttribute("user", this.userMapper.userToUserProfileDto(this.userService.getCurrentUser()));
+        model.addAttribute("user", this.userMapper.userToUserProfileDto(this.userAuthentication.getCurrentUser()));
         return "public/user/profile";
     }
 

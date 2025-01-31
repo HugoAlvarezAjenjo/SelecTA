@@ -8,6 +8,4 @@ public interface UserService {
     User registerUser(User user);
 
     Optional<User> getUserById(Long id);
-
-    User getCurrentUser();
 }
