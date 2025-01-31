@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping
     public String profile(final Model model) {
-        //TODO: Add Actual User Model
+        model.addAttribute("user", this.userMapper.userToUserProfileDto(this.userService.getCurrentUser()));
         return "public/user/profile";
     }
 

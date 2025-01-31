@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +16,8 @@
         <div class="profile-details">
             <img src="https://www.github.com/hugoalvarezajenjo.png" alt="Profile Picture" class="profile-picture">
             <div class="profile-info">
-                <h2>Hugo Alvarez Ajenjo</h2>
-                <p>Software Engineering Student</p>
+                <h2 th:text="${user.username}">John Doe</h2>
+                <p th:text="${user.career}">Software Engineering Student</p>
                 <div class="profile-stats">
                     <div class="profile-stat">
                         <h6>120</h6>
