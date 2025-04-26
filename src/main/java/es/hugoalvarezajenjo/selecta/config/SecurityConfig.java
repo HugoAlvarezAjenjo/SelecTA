@@ -19,7 +19,8 @@ public class SecurityConfig {
                                 "/",
                                 "/login",
                                 "/register",
-                                "/js/**"
+                                "/js/**",
+                                "/css/**"
                                 ).permitAll()
                         .anyRequest().authenticated()
                 )

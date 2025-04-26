@@ -1,0 +1,9 @@
+.hero-pattern {
+    background-image: radial-gradient(circle at 10% 20%, rgba(0, 114, 206, 0.1) 0%, rgba(255, 255, 255, 1) 20%);
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column-reverse;
+    }
+}
