@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SelecTA - Selecciona Tu Asignatura | UPM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'upm-blue': '#003865',
+                        'upm-light-blue': '#0072CE',
+                        'upm-gray': '#EAEAEA',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-pattern {
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 114, 206, 0.1) 0%, rgba(255, 255, 255, 1) 20%);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .transition-all {
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-white text-gray-800">
+<!-- Header -->
+<header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <div class="w-10 h-10 rounded-full bg-upm-blue flex items-center justify-center">
+                <span class="text-white font-bold text-xl">ST</span>
+            </div>
+            <span class="text-xl font-bold text-upm-blue">Selec<span class="text-upm-light-blue">TA</span></span>
+        </div>
+
+        <nav class="hidden md:flex space-x-8">
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Buscar Asignaturas</a>
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recomendador</a>
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recursos</a>
+        </nav>
+
+        <div class="flex items-center space-x-4">
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all hidden md:block">Acceder</a>
+            <a href="#" class="bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-full font-medium transition-all">Registrarse</a>
+
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-button" class="md:hidden text-upm-blue">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-upm-gray">
+        <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Buscar Asignaturas</a>
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recomendador</a>
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recursos</a>
+            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Acceder</a>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero-pattern">
+    <div class="container mx-auto px-4 py-12 md:py-20">
+        <div class="flex hero-content items-center m-3">
+            <div class="md:w-1/2 space-y-6">
+                <h1 class="text-4xl md:text-5xl font-bold text-upm-blue leading-tight">
+                    Selecciona tu asignatura ideal en segundos
+                </h1>
+                <p class="text-lg text-gray-600">
+                    Explora opiniones reales, recursos útiles y recibe recomendaciones personalizadas de estudiantes como tú en la UPM.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
+                        Buscar asignaturas
+                    </a>
+                    <a href="#" class="border-2 border-upm-light-blue text-upm-light-blue hover:bg-upm-gray px-6 py-3 rounded-full font-medium transition-all">
+                        Probar recomendador
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center mt-8 md:mt-0">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Estudiante universitario" class="w-full max-w-md rounded-lg shadow-xl">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="bg-upm-gray py-16">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center text-upm-blue mb-12">¿Por qué usar SelecTA?</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-brain text-upm-light-blue text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-upm-blue mb-2">Recomendaciones inteligentes</h3>
+                <p class="text-gray-600">Recomendador de asignaturas optativas inteligente.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check-circle text-upm-light-blue text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-upm-blue mb-2">Opiniones verificadas</h3>
+                <p class="text-gray-600">Todos los comentarios y valoraciones provienen de estudiantes reales de la UPM con credenciales verificadas.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-book text-upm-light-blue text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-upm-blue mb-2">Recursos académicos</h3>
+                <p class="text-gray-600">Accede a apuntes, exámenes anteriores y material docente compartido por la comunidad universitaria.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-upm-light-blue text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-upm-blue mb-2">Comunidad activa</h3>
+                <p class="text-gray-600">Conecta con otros estudiantes, resuelve dudas y comparte experiencias sobre asignaturas y profesores.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Courses Section -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-upm-blue">Asignaturas destacadas</h2>
+            <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium flex items-center">
+                Ver todas <i class="fas fa-chevron-right ml-2 text-sm"></i>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Course 1 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition-all">
+                <div class="h-40 bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center">
+                    <i class="fas fa-laptop-code text-white text-5xl"></i>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-upm-blue">Inteligencia Artificial</h3>
+                        <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-2 py-1 rounded-full">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span class="font-medium text-upm-blue">4.8</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Ingeniería Informática</p>
+                    <p class="text-gray-700 mb-4">Explora los fundamentos de machine learning, redes neuronales y sistemas expertos.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-upm-light-blue font-medium">120 opiniones</span>
+                        <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium">Ver detalles →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition-all">
+                <div class="h-40 bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center">
+                    <i class="fas fa-bolt text-white text-5xl"></i>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-upm-blue">Energías Renovables</h3>
+                        <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-2 py-1 rounded-full">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span class="font-medium text-upm-blue">4.6</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Ingeniería Industrial</p>
+                    <p class="text-gray-700 mb-4">Estudio de tecnologías sostenibles para la generación de energía limpia.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-upm-light-blue font-medium">85 opiniones</span>
+                        <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium">Ver detalles →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition-all">
+                <div class="h-40 bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center">
+                    <i class="fas fa-chart-line text-white text-5xl"></i>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-upm-blue">Economía Circular</h3>
+                        <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-2 py-1 rounded-full">
+                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                            <span class="font-medium text-upm-blue">4.7</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Ingeniería Ambiental</p>
+                    <p class="text-gray-700 mb-4">Modelos de negocio sostenibles y estrategias para reducir residuos.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-upm-light-blue font-medium">64 opiniones</span>
+                        <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium">Ver detalles →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="bg-gradient-to-r from-upm-blue to-upm-light-blue text-white py-16">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl font-bold mb-6">¿Listo para encontrar tu asignatura ideal?</h2>
+        <p class="text-xl mb-8 max-w-2xl mx-auto">Regístrate ahora para acceder a todas las funcionalidades de SelecTA.</p>
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" class="bg-white hover:bg-upm-gray text-upm-blue px-8 py-3 rounded-full font-bold transition-all">
+                Crear cuenta
+            </a>
+            <a href="#" class="border-2 border-white hover:bg-white hover:bg-opacity-10 px-8 py-3 rounded-full font-bold transition-all">
+                Saber más
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-upm-blue text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                        <span class="text-upm-blue font-bold text-xl">ST</span>
+                    </div>
+                    <span class="text-xl font-bold">Selec<span class="text-upm-light-blue">TA</span></span>
+                </div>
+                <p class="text-upm-gray">Plataforma desarrollada por estudiantes para ayudar en la elección de asignaturas optativas en la UPM.</p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-4">Enlaces útiles</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Buscar asignaturas</a></li>
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Recomendador</a></li>
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Recursos académicos</a></li>
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Preguntas frecuentes</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-4">Legal</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Términos de uso</a></li>
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Política de privacidad</a></li>
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Cookies</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-4">Contacto</h3>
+                <ul class="space-y-2">
+                    <li class="flex items-center">
+                        <i class="fas fa-envelope mr-2 text-upm-light-blue"></i>
+                        <a href="mailto:contacto@selecta.upm.es" class="text-upm-gray hover:text-white transition-all">contacto@selecta.upm.es</a>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-upm-light-blue"></i>
+                        <span class="text-upm-gray">ETSISI, UPM</span>
+                    </li>
+                </ul>
+
+                <div class="flex space-x-4 mt-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-upm-light-blue flex items-center justify-center hover:bg-white hover:text-upm-blue transition-all">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-upm-light-blue flex items-center justify-center hover:bg-white hover:text-upm-blue transition-all">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-upm-light-blue flex items-center justify-center hover:bg-white hover:text-upm-blue transition-all">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-upm-light-blue pt-8 text-center text-upm-gray">
+            <p>Desarrollado por estudiantes para estudiantes – Universidad Politécnica de Madrid © 2025</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // Close mobile menu if open
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
