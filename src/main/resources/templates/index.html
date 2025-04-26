@@ -12,45 +12,8 @@
     <link rel="stylesheet" th:href="@{/css/card.css}">
 </head>
 <body class="font-sans bg-white text-gray-800">
-<!-- Header -->
-<header class="sticky top-0 z-50 bg-white shadow-sm">
-    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 rounded-full bg-upm-blue flex items-center justify-center">
-                <span class="text-white font-bold text-xl">ST</span>
-            </div>
-            <span class="text-xl font-bold text-upm-blue">Selec<span class="text-upm-light-blue">TA</span></span>
-        </div>
 
-        <nav class="hidden md:flex space-x-8">
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Buscar Asignaturas</a>
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recomendador</a>
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recursos</a>
-        </nav>
-
-        <div class="flex items-center space-x-4">
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all hidden md:block">Acceder</a>
-            <a href="#" class="bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-full font-medium transition-all">Registrarse</a>
-
-            <!-- Mobile menu button -->
-            <button id="mobile-menu-button" class="md:hidden text-upm-blue">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                </svg>
-            </button>
-        </div>
-    </div>
-
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-upm-gray">
-        <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Buscar Asignaturas</a>
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recomendador</a>
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recursos</a>
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Acceder</a>
-        </div>
-    </div>
-</header>
+<header th:replace="fragments/navbar :: navbar"></header>
 
 <!-- Hero Section -->
 <section class="hero-pattern">
@@ -286,7 +249,7 @@
     </div>
 </footer>
 
-<script th:src="@{/js/mobile-menu.js}"></script>
+<!--<script th:src="@{/js/mobile-menu.js}"></script>-->
 <script th:src="@{/js/smooth-scroll.js}"></script>
 </body>
 </html>
