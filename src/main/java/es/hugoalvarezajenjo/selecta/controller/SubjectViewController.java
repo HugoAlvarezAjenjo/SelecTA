@@ -24,9 +24,10 @@ public class SubjectViewController {
         this.subjectService = subjectService;
     }
 
-    @GetMapping
-    public String subjectsView(final Model model) {
-        model.addAttribute("subjects", this.subjectService.getAllSubjects());
+    @GetMapping()
+    public String subjectView(Model model) {
+        List<SubjectItemDTO> subjectDTOs = subjectMapper.subjectsToSubjectItemDTOs(subjectService.getAllSubjects());
+        model.addAttribute("subjects", subjectDTOs);
         return "public/subject/list";
     }
 
@@ -40,10 +41,4 @@ public class SubjectViewController {
         return "public/subject/list";
     }
 
-    @GetMapping("/modern")
-    public String subjectViewModern(Model model) {
-        List<SubjectItemDTO> subjectDTOs = subjectMapper.subjectsToSubjectItemDTOs(subjectService.getAllSubjects());
-        model.addAttribute("subjects", subjectDTOs);
-        return "public/subject/list2";
-    }
 }
