@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
 public class SubjectItemDTO {
     private Long id;
     private String name;

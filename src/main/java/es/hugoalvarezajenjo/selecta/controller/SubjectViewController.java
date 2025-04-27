@@ -1,6 +1,8 @@
 package es.hugoalvarezajenjo.selecta.controller;
 
+import es.hugoalvarezajenjo.selecta.dto.SubjectItemDTO;
 import es.hugoalvarezajenjo.selecta.entity.Subject;
+import es.hugoalvarezajenjo.selecta.mapper.SubjectMapper;
 import es.hugoalvarezajenjo.selecta.service.SubjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,14 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/subjects")
 public class SubjectViewController {
+    private final SubjectMapper subjectMapper;
     private final SubjectService subjectService;
 
-    public SubjectViewController(final SubjectService subjectService) {
+    public SubjectViewController(final SubjectMapper subjectMapper, final SubjectService subjectService) {
+        this.subjectMapper = subjectMapper;
         this.subjectService = subjectService;
     }
 
@@ -33,5 +38,12 @@ public class SubjectViewController {
             return "public/subject/view";
         }
         return "public/subject/list";
+    }
+
+    @GetMapping("/modern")
+    public String subjectViewModern(Model model) {
+        List<SubjectItemDTO> subjectDTOs = subjectMapper.subjectsToSubjectItemDTOs(subjectService.getAllSubjects());
+        model.addAttribute("subjects", subjectDTOs);
+        return "public/subject/list2";
     }
 }
