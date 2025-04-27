@@ -10,7 +10,7 @@
         </div>
 
         <nav class="hidden md:flex space-x-8">
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Buscar Asignaturas</a>
+            <a th:href="@{/subjects/modern}" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Buscar Asignaturas</a>
             <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recomendador</a>
             <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recursos</a>
         </nav>
@@ -31,7 +31,7 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-upm-gray">
         <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Buscar Asignaturas</a>
+            <a th:href="@{/subjects/modern}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Buscar Asignaturas</a>
             <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recomendador</a>
             <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recursos</a>
             <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Acceder</a>
