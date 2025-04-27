@@ -1,10 +1,12 @@
 <header class="sticky top-0 z-50 bg-white shadow-sm" th:fragment="navbar">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center space-x-2">
+            <a th:href="@{/}" class="flex items-center space-x-2">
             <div class="w-10 h-10 rounded-full bg-upm-blue flex items-center justify-center">
                 <span class="text-white font-bold text-xl">ST</span>
             </div>
             <span class="text-xl font-bold text-upm-blue">Selec<span class="text-upm-light-blue">TA</span></span>
+            </a>
         </div>
 
         <nav class="hidden md:flex space-x-8">
