@@ -21,8 +21,9 @@ public class SecurityConfig {
                                 "/register",
                                 "/js/**",
                                 "/css/**"
-                                ).permitAll()
-                        .anyRequest().authenticated()
+                        ).permitAll()
+                        .requestMatchers("/admin/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")

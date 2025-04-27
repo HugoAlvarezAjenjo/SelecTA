@@ -35,8 +35,8 @@ public class SubjectViewController {
     public String subjectView(final Model model, @PathVariable final long id) {
         final Optional<Subject> subject = this.subjectService.getSubjectById(id);
         if (subject.isPresent()) {
-            model.addAttribute("subject", subject.get());
-            return "public/subject/view";
+            model.addAttribute("subject", this.subjectMapper.subjectToSubjectDto(subject.get()));
+            return "public/subject/view-modern";
         }
         return "public/subject/list";
     }
