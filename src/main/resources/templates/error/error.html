@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error inesperado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/tailwind-config.js}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" th:href="@{/css/error.css}">
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 bg-white">
+
+<div class="max-w-md w-full text-center space-y-6">
+    <!-- Icono de error -->
+    <div class="error-icon text-upm-blue">
+        <i class="fas fa-exclamation-triangle"></i>
+    </div>
+
+    <!-- Encabezado -->
+    <h1 class="text-4xl font-bold text-upm-blue">Algo salió mal</h1>
+
+    <!-- Mensaje explicativo -->
+    <p class="text-lg text-gray-500">
+        Ha ocurrido un error inesperado. Estamos trabajando para solucionarlo.
+    </p>
+
+    <!-- Botón para volver al inicio -->
+    <div class="pt-4">
+        <a th:href="/"
+           class="inline-block bg-upm-blue text-white font-medium py-3 px-6 rounded-lg hover:bg-[#00283C] transition-all shadow-md hover:-translate-y-0.5">
+            <i class="fas fa-home mr-2"></i> Volver al inicio
+        </a>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="pt-8 text-sm text-gray-500">
+        <p>Si el problema persiste, contacta con el soporte técnico.</p>
+        <p class="mt-2">© Universidad Politécnica de Madrid</p>
+    </div>
+</div>
+
+</body>
+</html>
