@@ -28,7 +28,7 @@
                     como tú en la UPM.
                 </p>
                 <div class="flex flex-wrap gap-4 pt-4">
-                    <a href="#"
+                    <a th:href="@{/subjects}"
                        class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
                         Buscar asignaturas
                     </a>
@@ -90,108 +90,6 @@
                 <p class="text-gray-600">Conecta con otros estudiantes, resuelve dudas y comparte experiencias sobre
                     asignaturas y profesores.</p>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Popular Courses Section -->
-<section class="py-16">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-upm-blue">Asignaturas destacadas</h2>
-            <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium flex items-center">
-                Ver todas <i class="fas fa-chevron-right ml-2 text-sm"></i>
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Course 1 -->
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition-all">
-                <div class="h-40 bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center">
-                    <i class="fas fa-laptop-code text-white text-5xl"></i>
-                </div>
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xl font-bold text-upm-blue">Inteligencia Artificial</h3>
-                        <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-2 py-1 rounded-full">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="font-medium text-upm-blue">4.8</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-4">Ingeniería Informática</p>
-                    <p class="text-gray-700 mb-4">Explora los fundamentos de machine learning, redes neuronales y
-                        sistemas expertos.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-upm-light-blue font-medium">120 opiniones</span>
-                        <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium">Ver detalles →</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Course 2 -->
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition-all">
-                <div class="h-40 bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center">
-                    <i class="fas fa-bolt text-white text-5xl"></i>
-                </div>
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xl font-bold text-upm-blue">Energías Renovables</h3>
-                        <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-2 py-1 rounded-full">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="font-medium text-upm-blue">4.6</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-4">Ingeniería Industrial</p>
-                    <p class="text-gray-700 mb-4">Estudio de tecnologías sostenibles para la generación de energía
-                        limpia.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-upm-light-blue font-medium">85 opiniones</span>
-                        <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium">Ver detalles →</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Course 3 -->
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition-all">
-                <div class="h-40 bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center">
-                    <i class="fas fa-chart-line text-white text-5xl"></i>
-                </div>
-                <div class="p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xl font-bold text-upm-blue">Economía Circular</h3>
-                        <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-2 py-1 rounded-full">
-                            <i class="fas fa-star text-yellow-400 mr-1"></i>
-                            <span class="font-medium text-upm-blue">4.7</span>
-                        </div>
-                    </div>
-                    <p class="text-gray-600 mb-4">Ingeniería Ambiental</p>
-                    <p class="text-gray-700 mb-4">Modelos de negocio sostenibles y estrategias para reducir
-                        residuos.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm text-upm-light-blue font-medium">64 opiniones</span>
-                        <a href="#" class="text-upm-light-blue hover:text-upm-blue font-medium">Ver detalles →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-<section class="bg-gradient-to-r from-upm-blue to-upm-light-blue text-white py-16">
-    <div class="container mx-auto px-4 text-center">
-        <h2 class="text-3xl font-bold mb-6">¿Listo para encontrar tu asignatura ideal?</h2>
-        <p class="text-xl mb-8 max-w-2xl mx-auto">Regístrate ahora para acceder a todas las funcionalidades de
-            SelecTA.</p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="#"
-               class="bg-white hover:bg-upm-gray text-upm-blue px-8 py-3 rounded-full font-bold transition-all">
-                Crear cuenta
-            </a>
-            <a href="#"
-               class="border-2 border-white hover:bg-white hover:bg-opacity-10 px-8 py-3 rounded-full font-bold transition-all">
-                Saber más
-            </a>
         </div>
     </div>
 </section>
