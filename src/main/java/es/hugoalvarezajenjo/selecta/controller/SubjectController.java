@@ -30,6 +30,7 @@ public class SubjectController {
     @GetMapping("/new")
     public String newSubjectForm(final Model model) {
         model.addAttribute("subject", new Subject());
+        model.addAttribute("actionUrl", "/admin/subject/new");
         return "admin/subject/form";
     }
 
@@ -44,6 +45,7 @@ public class SubjectController {
         Optional<Subject> subject = this.subjectService.getSubjectById(id);
         if (subject.isPresent()) {
             model.addAttribute("subject", subject.get());
+            model.addAttribute("actionUrl", "/admin/subject/edit/" + id);
             return "admin/subject/form";
         } else {
             return "admin/subject/list";

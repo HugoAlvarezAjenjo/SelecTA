@@ -10,7 +10,7 @@
 <body>
 <div class="container mt-5">
     <h1 th:text="${subject.id != null} ? 'Editar Asignatura' : 'Nueva Asignatura'">Subject Form</h1>
-    <form th:action="@{${subject.id} != null ? '/admin/subject/edit/' + ${subject.id} : '/admin/subject/new'}" th:object="${subject}" method="post">
+    <form th:action="@{${actionUrl}}" th:object="${subject}" method="post">
         <div class="mb-3">
             <label for="name" class="form-label">Nombre</label>
             <input type="text" id="name" th:field="*{name}" class="form-control" required/>
