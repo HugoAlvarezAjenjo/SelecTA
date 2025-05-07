@@ -1,4 +1,13 @@
-MVN=mvnw
+ifeq ($(OS),Windows_NT)
+    MVN = mvnw.cmd
+else
+    UNAME_S := $(shell uname -s)
+    ifneq (,$(findstring MINGW,$(UNAME_S)))
+        MVN = mvnw
+    else
+        MVN = ./mvnw
+    endif
+endif
 
 .PHONY: build run test clean install fmt validate
 
