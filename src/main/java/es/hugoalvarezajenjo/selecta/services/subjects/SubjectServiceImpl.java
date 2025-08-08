@@ -1,7 +1,6 @@
-package es.hugoalvarezajenjo.selecta.service;
+package es.hugoalvarezajenjo.selecta.services.subjects;
 
-import es.hugoalvarezajenjo.selecta.entity.Subject;
-import es.hugoalvarezajenjo.selecta.repository.SubjectRepository;
+import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

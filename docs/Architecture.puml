@@ -1,0 +1,18 @@
+@startuml
+package view {
+}
+
+package services {
+    package subjects {
+        interface SubjectService
+        class SubjectServiceImpl
+
+        package repository {
+            interface SubjectRepository
+        }
+
+        SubjectService <|.. SubjectServiceImpl
+        SubjectServiceImpl *--> SubjectRepository
+    }
+}
+@enduml

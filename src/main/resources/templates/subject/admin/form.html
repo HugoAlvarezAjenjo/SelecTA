@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar asignatura</title>
+</head>
+<body>
+<h1>Registrar asignatura</h1>
+<form th:action="@{/test/path}" th:object="${subject}" method="post">
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" th:field="*{name}" id="name" required />
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea th:field="*{description}" id="description" required></textarea>
+    </div>
+    <div>
+        <label for="credits">Credits:</label>
+        <input type="number" th:field="*{credits}" id="credits" min="0" required />
+    </div>
+    <div>
+        <label>Languages:</label><br/>
+        <th:block th:each="lang : ${T(es.hugoalvarezajenjo.selecta.services.types.Languages).values()}">
+            <input type="checkbox"
+                   th:field="*{languages}"
+                   th:value="${lang.name()}"
+                   th:id="${'lang_' + lang.name()}" />
+            <label th:for="${'lang_' + lang.name()}" th:text="${lang}">Language</label><br/>
+        </th:block>
+
+    </div>
+    <div>
+        <label>Semesters:</label><br/>
+        <th:block th:each="sem : ${T(es.hugoalvarezajenjo.selecta.services.types.Semester).values()}">
+            <input type="checkbox"
+                   th:field="*{semesters}"
+                   th:value="${sem.name()}"
+                   th:id="${'sem_' + sem.name()}" />
+            <label th:for="${'sem_' + sem.name()}" th:text="${sem}">Semester</label><br/>
+        </th:block>
+
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+</body>
+</html>

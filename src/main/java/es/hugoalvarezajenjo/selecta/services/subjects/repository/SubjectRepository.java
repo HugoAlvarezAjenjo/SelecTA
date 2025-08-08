@@ -1,6 +1,6 @@
-package es.hugoalvarezajenjo.selecta.repository;
+package es.hugoalvarezajenjo.selecta.services.subjects.repository;
 
-import es.hugoalvarezajenjo.selecta.entity.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

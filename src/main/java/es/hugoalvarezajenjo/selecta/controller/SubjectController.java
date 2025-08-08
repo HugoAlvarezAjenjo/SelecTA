@@ -1,7 +1,9 @@
 package es.hugoalvarezajenjo.selecta.controller;
 
-import es.hugoalvarezajenjo.selecta.entity.Subject;
-import es.hugoalvarezajenjo.selecta.service.SubjectService;
+import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
+import es.hugoalvarezajenjo.selecta.services.types.Languages;
+import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 @Controller
@@ -31,6 +34,8 @@ public class SubjectController {
     public String newSubjectForm(final Model model) {
         model.addAttribute("subject", new Subject());
         model.addAttribute("actionUrl", "/admin/subject/new");
+        model.addAttribute("languages", EnumSet.allOf(Languages.class));
+        model.addAttribute("semesters", EnumSet.allOf(Semester.class));
         return "admin/subject/form";
     }
 

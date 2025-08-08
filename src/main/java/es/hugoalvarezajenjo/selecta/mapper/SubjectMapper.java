@@ -2,7 +2,7 @@ package es.hugoalvarezajenjo.selecta.mapper;
 
 import es.hugoalvarezajenjo.selecta.dto.SubjectDto;
 import es.hugoalvarezajenjo.selecta.dto.SubjectItemDTO;
-import es.hugoalvarezajenjo.selecta.entity.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

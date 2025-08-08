@@ -1,9 +1,9 @@
 package es.hugoalvarezajenjo.selecta.controller;
 
 import es.hugoalvarezajenjo.selecta.dto.SubjectItemDTO;
-import es.hugoalvarezajenjo.selecta.entity.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.mapper.SubjectMapper;
-import es.hugoalvarezajenjo.selecta.service.SubjectService;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/subjects")
-public class SubjectViewController {
+@RequestMapping("/subjectsss")
+public class SubjectOldViewController {
     private final SubjectMapper subjectMapper;
     private final SubjectService subjectService;
 
-    public SubjectViewController(final SubjectMapper subjectMapper, final SubjectService subjectService) {
+    public SubjectOldViewController(final SubjectMapper subjectMapper, final SubjectService subjectService) {
         this.subjectMapper = subjectMapper;
         this.subjectService = subjectService;
     }
