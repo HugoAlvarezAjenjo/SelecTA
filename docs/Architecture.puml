@@ -1,5 +1,15 @@
 @startuml
-package view {
+package ui {
+    package subject {
+        package user {
+            class SubjectListController <<view controller>>
+            class SubjectViewController <<view controller>>
+        }
+
+        package admin {
+            class SubjectFormController <<view controller>>
+        }
+    }
 }
 
 package services {
@@ -15,4 +25,8 @@ package services {
         SubjectServiceImpl *--> SubjectRepository
     }
 }
+
+SubjectListController *--> SubjectService
+SubjectViewController *--> SubjectService
+SubjectFormController *--> SubjectService
 @enduml
