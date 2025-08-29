@@ -1,6 +1,4 @@
-package es.hugoalvarezajenjo.selecta.service;
-
-import es.hugoalvarezajenjo.selecta.entity.Subject;
+package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import java.util.List;
 import java.util.Optional;

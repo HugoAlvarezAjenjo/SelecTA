@@ -1,0 +1,32 @@
+@startuml
+package ui {
+    package subject {
+        package user {
+            class SubjectListController <<view controller>>
+            class SubjectViewController <<view controller>>
+        }
+
+        package admin {
+            class SubjectFormController <<view controller>>
+        }
+    }
+}
+
+package services {
+    package subjects {
+        interface SubjectService
+        class SubjectServiceImpl
+
+        package repository {
+            interface SubjectRepository
+        }
+
+        SubjectService <|.. SubjectServiceImpl
+        SubjectServiceImpl *--> SubjectRepository
+    }
+}
+
+SubjectListController *--> SubjectService
+SubjectViewController *--> SubjectService
+SubjectFormController *--> SubjectService
+@enduml
