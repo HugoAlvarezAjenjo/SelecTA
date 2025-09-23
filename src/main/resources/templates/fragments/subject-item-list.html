@@ -1,0 +1,59 @@
+<!-- fragments/subject-item.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div th:fragment="subject-item(subject)">
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex items-start">
+            <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center mr-4">
+                <i class="fas fa-laptop-code text-white text-2xl"></i>
+            </div>
+            <div class="flex-1">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-upm-blue" th:text="${subject.name}">Nombre Asignatura</h3>
+                    </div>
+                    <!-- Uncomment if you want to include the average grade -->
+                    <!--
+                    <div class="flex items-center bg-upm-light-blue bg-opacity-10 px-3 py-1 rounded-full">
+                        <i class="fas fa-star text-yellow-400 mr-1"></i>
+                        <span class="font-medium text-upm-blue" th:text="${subject.averageGrade}">0.0</span>
+                    </div>
+                    -->
+                </div>
+
+                <div class="mt-3 mb-4">
+                    <span th:each="attribute : ${subject.attributes}" class="inline-block bg-upm-gray rounded-full px-3 py-1 text-sm font-medium mr-2"
+                          th:text="${attribute}">Attribute</span>
+                </div>
+
+                <p class="text-gray-700 mb-4" th:text="${subject.description}">Descripción de la asignatura.</p>
+
+                <div class="flex justify-between items-center">
+                    <div>
+                        <!-- Uncomment if you want to include opinions and resources -->
+                        <!--
+                        <span class="text-sm text-upm-light-blue font-medium mr-4">
+                            <i class="fas fa-comment mr-1"></i>
+                            <span th:text="${subject.numOpinions}">0</span> opiniones
+                        </span>
+                        <span class="text-sm text-upm-light-blue font-medium">
+                            <i class="fas fa-file-alt mr-1"></i>
+                            <span th:text="${subject.numResources}">0</span> recursos
+                        </span>
+                        -->
+                    </div>
+                    <a th:href="@{'/subject/' + ${subject.id}}"
+                       class="text-upm-light-blue hover:text-upm-blue font-medium">
+                        Ver detalles →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
