@@ -1,5 +1,7 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
+import es.hugoalvarezajenjo.selecta.config.FeatureFlagConfig;
+import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
@@ -20,19 +22,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectViewController {
     private final SubjectService subjectService;
+    private final SubjectResourceService subjectResourceService;
+    private final FeatureFlagConfig featureFlagConfig;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
         final Optional<Subject> subject = this.subjectService.getSubjectById(id);
-        if (subject.isPresent()) {
-            model.addAttribute(
-                    "subject",
-                    SubjectViewController.mapToDTO(subject.get())
-            );
-            return "subject/user/subject-view";
-        } else {
+        if (subject.isEmpty()) {
             return "subject/user/no-subject";
         }
+        setFeatureFlags(model);
+        model.addAttribute("subject", SubjectViewController.mapToDTO(subject.get()));
+        model.addAttribute("resources", this.subjectResourceService.getResourcesFromSubject(id));
+        return "subject/user/subject-view";
+    }
+
+    private void setFeatureFlags(final Model model) {
+        model.addAttribute("subjectResourcesEnabled", this.featureFlagConfig.isSubjectResourceEnabled());
     }
 
     private static SubjectInfoDTO mapToDTO(final Subject subject) {

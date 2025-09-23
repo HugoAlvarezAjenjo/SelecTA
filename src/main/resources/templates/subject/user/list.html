@@ -37,7 +37,7 @@
     </style>
 </head>
 <body class="font-sans bg-white text-gray-800">
-<header th:replace="fragments/navbar :: navbar"></header>
+<th:block th:replace="~{fragments/navbar :: navbar}"/>
 
 <!-- Search Hero Section -->
 <section class="hero-pattern py-12">
@@ -236,7 +236,7 @@
     </div>
 </section>
 
-<footer th:replace="fragments/footer :: footer"></footer>
+<th:block th:replace="~{fragments/footer :: footer}" />
 
 <script th:src="@{/js/smooth-scroll.js}"></script>
 <script>

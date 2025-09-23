@@ -48,8 +48,7 @@
     </style>
 </head>
 <body class="font-sans bg-white text-gray-800">
-<header th:replace="fragments/navbar :: navbar"></header>
-
+<th:block th:replace="~{fragments/navbar :: navbar}"/>
 <!-- Subject Header -->
 <section class="hero-pattern py-8">
     <div class="container mx-auto px-4">
@@ -96,7 +95,7 @@
             <button id="reviews-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
                 <i class="fas fa-star mr-2"></i> Valoraciones
             </button>
-            <button id="resources-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
+            <button th:if="${subjectResourcesEnabled}" id="resources-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
                 <i class="fas fa-archive mr-2"></i> La Bóveda
             </button>
         </div>
@@ -339,7 +338,7 @@
         </div>
 
         <!-- Resources Tab Content -->
-        <div id="resources-content" class="tab-content hidden">
+        <div th:if="${subjectResourcesEnabled}" id="resources-content" class="tab-content hidden">
             <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-upm-blue">Recursos compartidos</h2>
@@ -574,7 +573,7 @@
     </div>
 </div>
 
-<footer th:replace="fragments/footer :: footer"></footer>
+<th:block th:replace="~{fragments/footer :: footer}" />
 
 <script>
     // Tab functionality
