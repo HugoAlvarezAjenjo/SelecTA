@@ -338,6 +338,7 @@
         </div>
 
         <!-- Resources Tab Content -->
+        <!-- Resources Tab Content -->
         <div th:if="${subjectResourcesEnabled}" id="resources-content" class="tab-content hidden">
             <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <div class="flex justify-between items-center mb-6">
@@ -347,130 +348,56 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Resource 1 -->
-                    <div class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
+                <!-- Resources Grid -->
+                <div th:if="${not #lists.isEmpty(resources)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Resource Card Template -->
+                    <div th:each="resource : ${resources}" class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
                         <div class="flex items-start mb-3">
                             <div class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-pdf text-upm-light-blue text-xl"></i>
+                                <!-- Dynamic icon based on resource type -->
+                                <th:block th:switch="${resource.type}">
+                                    <i th:case="'PDF'" class="fas fa-file-pdf text-upm-light-blue text-xl"></i>
+                                    <i th:case="'VIDEO'" class="fas fa-video text-upm-light-blue text-xl"></i>
+                                    <i th:case="'CODE'" class="fas fa-file-code text-upm-light-blue text-xl"></i>
+                                    <i th:case="'DOCUMENT'" class="fas fa-file-alt text-upm-light-blue text-xl"></i>
+                                    <i th:case="'PRESENTATION'" class="fas fa-file-powerpoint text-upm-light-blue text-xl"></i>
+                                    <i th:case="*" class="fas fa-file text-upm-light-blue text-xl"></i>
+                                </th:block>
                             </div>
                             <div>
-                                <h3 class="font-bold text-upm-blue">Apuntes completos IA</h3>
-                                <p class="text-gray-500 text-sm">Apuntes • 15 MB</p>
+                                <h3 class="font-bold text-upm-blue" th:text="${resource.name}">Resource Name</h3>
+                                <p class="text-gray-500 text-sm">
+                                    <span th:text="${resource.type}">Type</span> •
+                                    <span th:text="${resource.language}">Language</span>
+                                </p>
                             </div>
                         </div>
-                        <p class="text-gray-600 text-sm mb-4">Apuntes completos de todas las clases teóricas con ejemplos y ejercicios resueltos.</p>
+                        <p class="text-gray-600 text-sm mb-4" th:text="${resource.description}">Resource description</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">Subido el 12/03/2023</span>
-                            <button class="text-upm-light-blue hover:text-upm-blue font-medium">
+                            <span class="text-gray-500 text-xs" th:text="'Subido el ' + ${resource.uploadDate}">Upload date</span>
+                            <a th:href="${resource.url}"
+                               class="text-upm-light-blue hover:text-upm-blue font-medium"
+                               target="_blank">
                                 <i class="fas fa-download mr-1"></i> Descargar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Resource 2 -->
-                    <div class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
-                        <div class="flex items-start mb-3">
-                            <div class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-code text-upm-light-blue text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-upm-blue">Prácticas resueltas</h3>
-                                <p class="text-gray-500 text-sm">Código • 8 MB</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">Soluciones a todas las prácticas de laboratorio con explicaciones detalladas.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">Subido el 05/02/2023</span>
-                            <button class="text-upm-light-blue hover:text-upm-blue font-medium">
-                                <i class="fas fa-download mr-1"></i> Descargar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Resource 3 -->
-                    <div class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
-                        <div class="flex items-start mb-3">
-                            <div class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-file-alt text-upm-light-blue text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-upm-blue">Exámenes anteriores</h3>
-                                <p class="text-gray-500 text-sm">Exámenes • 5 MB</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">Colección de exámenes de los últimos 3 años con soluciones.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">Subido el 20/01/2023</span>
-                            <button class="text-upm-light-blue hover:text-upm-blue font-medium">
-                                <i class="fas fa-download mr-1"></i> Descargar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Resource 4 -->
-                    <div class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
-                        <div class="flex items-start mb-3">
-                            <div class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-video text-upm-light-blue text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-upm-blue">Vídeos explicativos</h3>
-                                <p class="text-gray-500 text-sm">Vídeo • 120 MB</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">Grabaciones de clases magistrales sobre redes neuronales.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">Subido el 15/12/2022</span>
-                            <button class="text-upm-light-blue hover:text-upm-blue font-medium">
-                                <i class="fas fa-download mr-1"></i> Descargar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Resource 5 -->
-                    <div class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
-                        <div class="flex items-start mb-3">
-                            <div class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-book text-upm-light-blue text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-upm-blue">Bibliografía recomendada</h3>
-                                <p class="text-gray-500 text-sm">Documento • 2 MB</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">Lista de libros y artículos científicos recomendados por el profesor.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">Subido el 30/11/2022</span>
-                            <button class="text-upm-light-blue hover:text-upm-blue font-medium">
-                                <i class="fas fa-download mr-1"></i> Descargar
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Resource 6 -->
-                    <div class="resource-card border border-upm-gray rounded-lg p-4 transition-all">
-                        <div class="flex items-start mb-3">
-                            <div class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                <i class="fas fa-project-diagram text-upm-light-blue text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-upm-blue">Proyectos ejemplo</h3>
-                                <p class="text-gray-500 text-sm">Proyectos • 45 MB</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 text-sm mb-4">Proyectos finales destacados de años anteriores con documentación.</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-500 text-xs">Subido el 10/10/2022</span>
-                            <button class="text-upm-light-blue hover:text-upm-blue font-medium">
-                                <i class="fas fa-download mr-1"></i> Descargar
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="flex justify-center mt-8">
+                <!-- Empty State -->
+                <div th:if="${#lists.isEmpty(resources)}" class="text-center py-12">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-upm-gray bg-opacity-20 flex items-center justify-center">
+                        <i class="fas fa-archive text-upm-light-blue text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-upm-blue mb-2">No hay recursos disponibles</h3>
+                    <p class="text-gray-600 mb-6">Sé el primero en compartir recursos para esta asignatura</p>
+                    <button id="open-upload-modal-empty" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
+                        <i class="fas fa-upload mr-2"></i> Subir primer recurso
+                    </button>
+                </div>
+
+                <!-- Pagination (you can implement this later with paginated data) -->
+                <div th:if="${not #lists.isEmpty(resources)}" class="flex justify-center mt-8">
                     <nav class="inline-flex rounded-md shadow">
                         <a href="#" class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
                             <i class="fas fa-chevron-left"></i>
@@ -484,6 +411,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 
