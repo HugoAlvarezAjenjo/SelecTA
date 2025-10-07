@@ -2,10 +2,7 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -19,7 +16,11 @@ public class Subject {
     private Long id;
     private String name;
     private String description;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Set<Languages> languages = new HashSet<>();
     private int credits;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Set<Semester> semesters = new HashSet<>();
 }

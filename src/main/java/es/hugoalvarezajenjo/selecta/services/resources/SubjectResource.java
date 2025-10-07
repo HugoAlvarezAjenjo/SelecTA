@@ -1,9 +1,6 @@
 package es.hugoalvarezajenjo.selecta.services.resources;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -18,6 +15,7 @@ public class SubjectResource {
     private String name;
     private String description;
     private LocalDate creationDate;
+    @Enumerated(EnumType.STRING)
     private ResourceType type;
     private String language;
     private String url;
