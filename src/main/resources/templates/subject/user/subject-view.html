@@ -95,7 +95,7 @@
             <button id="reviews-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
                 <i class="fas fa-star mr-2"></i> Valoraciones
             </button>
-            <button th:if="${subjectResourcesEnabled}" id="resources-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
+            <button id="resources-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
                 <i class="fas fa-archive mr-2"></i> La Bóveda
             </button>
         </div>
@@ -338,8 +338,7 @@
         </div>
 
         <!-- Resources Tab Content -->
-        <!-- Resources Tab Content -->
-        <div th:if="${subjectResourcesEnabled}" id="resources-content" class="tab-content hidden">
+        <div id="resources-content" class="tab-content hidden">
             <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-upm-blue">Recursos compartidos</h2>

@@ -19,7 +19,7 @@ public class SubjectResourceDTO {
                 subjectResource.getName(),
                 subjectResource.getDescription(),
                 subjectResource.getType().toString(),
-                subjectResource.getLanguage().toString(),
+                subjectResource.getLanguage(),
                 subjectResource.getCreationDate().toString(),
                 subjectResource.getUrl()
         );

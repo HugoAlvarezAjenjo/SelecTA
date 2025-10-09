@@ -19,7 +19,6 @@ import java.util.Optional;
 public class SubjectViewController {
     private final SubjectService subjectService;
     private final SubjectResourceService subjectResourceService;
-    private final FeatureFlagConfig featureFlagConfig;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
@@ -27,14 +26,9 @@ public class SubjectViewController {
         if (subject.isEmpty()) {
             return "subject/user/no-subject";
         }
-        setFeatureFlags(model);
         model.addAttribute("subject", SubjectInfoDTO.createFromDomain(subject.get()));
         model.addAttribute("resources",
                 SubjectResourceDTO.createFromDomain(this.subjectResourceService.getResourcesFromSubject(id)));
         return "subject/user/subject-view";
-    }
-
-    private void setFeatureFlags(final Model model) {
-        model.addAttribute("subjectResourcesEnabled", this.featureFlagConfig.isSubjectResourceEnabled());
     }
 }
