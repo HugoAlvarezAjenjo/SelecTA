@@ -1,0 +1,28 @@
+@startchen
+' left to right direction
+
+entity Subject {
+    id <<key>>
+    name
+    description
+    credits
+    languages
+    semester
+}
+entity SubjectResource{
+    id <<key>>
+    name <<unique>>
+    type
+    description
+    creationDate
+    language
+    url
+}
+
+relationship HasResource {
+}
+
+Subject -1- HasResource
+HasResource -N- SubjectResource
+
+@endchen

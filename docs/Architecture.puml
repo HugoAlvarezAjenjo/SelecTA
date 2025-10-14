@@ -19,10 +19,14 @@ package services {
 
         package repository {
             interface SubjectRepository
+            class SubjectSpecifications {
+                + {static} containsWordsInNameOrDescription(search querry): Specification<Subject>
+            }
         }
 
         SubjectService <|.. SubjectServiceImpl
         SubjectServiceImpl *--> SubjectRepository
+        SubjectServiceImpl --> SubjectSpecifications: create specification
     }
     package subjectResource {
         interface SubjectResourceService
