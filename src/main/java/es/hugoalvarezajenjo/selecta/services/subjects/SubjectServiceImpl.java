@@ -1,7 +1,9 @@
 package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
+import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +35,15 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public void deleteSubjectById(final Long id) {
         this.subjectRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Subject> findBySearchQuery(final String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return this.subjectRepository.findAll();
+        }
+
+        final Specification<Subject> spec = SubjectSpecifications.containsWordsInNameOrDescription(query);
+        return this.subjectRepository.findAll(spec);
     }
 }

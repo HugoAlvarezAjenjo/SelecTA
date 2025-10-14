@@ -27,16 +27,13 @@ public class SubjectListController {
     private String subjectListView(
             @RequestParam(value = "search", required = false) final String searchQuery,
             final Model model) {
-        final List<Subject> allSubjects = this.subjectService.getAllSubjects();
+
         List<Subject> filteredSubjects;
 
-        // TODO: Use a predicate base system
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            filteredSubjects = allSubjects.stream()
-                    .filter(subject -> subject.getName().toLowerCase().contains(searchQuery.toLowerCase()))
-                    .collect(Collectors.toList());
+            filteredSubjects = this.subjectService.findBySearchQuery(searchQuery);
         } else {
-            filteredSubjects = allSubjects;
+            filteredSubjects = this.subjectService.getAllSubjects();
         }
 
         model.addAttribute("subjects", filteredSubjects.stream()

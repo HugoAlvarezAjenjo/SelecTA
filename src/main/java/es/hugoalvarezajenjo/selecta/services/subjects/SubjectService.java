@@ -11,4 +11,6 @@ public interface SubjectService {
     Optional<Subject> getSubjectById(Long id);
 
     void deleteSubjectById(Long id);
+
+    List<Subject> findBySearchQuery(String searchQuery);
 }
