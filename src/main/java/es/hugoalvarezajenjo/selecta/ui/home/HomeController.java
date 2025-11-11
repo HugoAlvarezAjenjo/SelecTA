@@ -1,4 +1,4 @@
-package es.hugoalvarezajenjo.selecta.controller;
+package es.hugoalvarezajenjo.selecta.ui.home;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
