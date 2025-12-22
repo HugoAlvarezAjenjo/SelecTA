@@ -9,6 +9,7 @@ package ui {
         package admin {
             class SubjectFormController <<view controller>>
         }
+
     }
 }
 
@@ -37,6 +38,23 @@ package services {
         }
         SubjectResourceService <|.. SubjectResourceServiceImpl
         SubjectResourceServiceImpl *--> SubjectResourceRepository
+    }
+
+    package storage {
+        interface StorageService {
+            + uploadFile(filePath: String, inputStream: InputStream, size: long, contentType: String): String
+            + downloadFile(filePath: String): InputStream
+            + deleteFile(filePath: String)
+            + fileExists(filePath: String): boolean
+        }
+
+        class LocalStorageService {
+            + uploadFile(filePath: String, inputStream: InputStream, size: long, contentType: String): String
+            + downloadFile(filePath: String): InputStream
+            + deleteFile(filePath: String)
+            + fileExists(filePath: String): boolean
+        }
+        StorageService <|.. LocalStorageService
     }
 }
 

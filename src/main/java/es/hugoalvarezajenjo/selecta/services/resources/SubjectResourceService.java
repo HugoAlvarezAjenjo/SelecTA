@@ -3,5 +3,9 @@ package es.hugoalvarezajenjo.selecta.services.resources;
 import java.util.List;
 
 public interface SubjectResourceService {
+    void saveResource(SubjectResource subjectResource);
+
     List<SubjectResource> getResourcesFromSubject(Long subjectId);
+
+    SubjectResource findById(Long resourceId);
 }

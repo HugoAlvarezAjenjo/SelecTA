@@ -12,7 +12,17 @@ public class SubjectResourceServiceImpl implements SubjectResourceService {
     private final SubjectResourceRepository subjectResourceRepository;
 
     @Override
+    public void saveResource(final SubjectResource subjectResource) {
+        this.subjectResourceRepository.save(subjectResource);
+    }
+
+    @Override
     public List<SubjectResource> getResourcesFromSubject(final Long subjectId) {
         return this.subjectResourceRepository.findSubjectResourceBySubjectId(subjectId);
+    }
+
+    @Override
+    public SubjectResource findById(final Long resourceId) {
+        return this.subjectResourceRepository.findById(resourceId).orElse(null);
     }
 }

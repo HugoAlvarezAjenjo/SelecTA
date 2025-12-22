@@ -7,6 +7,7 @@ import java.util.List;
 
 @Value
 public class SubjectResourceDTO {
+    private Long id;
     private String name;
     private String description;
     private String type;
@@ -15,13 +16,19 @@ public class SubjectResourceDTO {
     private String url;
 
     public static SubjectResourceDTO createFromDomain(final SubjectResource subjectResource) {
+        String storagePath = subjectResource.getUrl();
+        if (storagePath != null && storagePath.startsWith("/")) {
+            storagePath = storagePath.substring(1);
+        }
+
         return new SubjectResourceDTO(
+                subjectResource.getId(),
                 subjectResource.getName(),
                 subjectResource.getDescription(),
                 subjectResource.getType().toString(),
                 subjectResource.getLanguage(),
                 subjectResource.getCreationDate().toString(),
-                subjectResource.getUrl()
+                storagePath
         );
     }
 
