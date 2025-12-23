@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Editar: ' + ${subject.subjectName}">Editar Asignatura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script th:src="@{/js/tailwind-config.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/hero.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <style>
+        .markdown-preview {
+            min-height: 200px;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background-color: #f8fafc;
+        }
+
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+
+        .tab-button.active {
+            background-color: #0072CE;
+            color: white;
+        }
+
+        .tab-button:not(.active) {
+            background-color: #f1f5f9;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body class="font-sans bg-gray-50 text-gray-800">
+<th:block th:replace="~{fragments/navbar :: navbar}" />
+
+<!-- Subject Header (Read-only) -->
+<section class="hero-pattern py-8">
+    <div class="container mx-auto px-4">
+        <div class="mb-6">
+            <a th:href="@{/subject/{id}(id=${subject.id})}"
+               class="inline-flex items-center text-upm-blue hover:text-upm-light-blue mb-4">
+                <i class="fas fa-arrow-left mr-2"></i> Volver a la asignatura
+            </a>
+            <h1 class="text-3xl font-bold text-upm-blue">
+                <i class="fas fa-edit mr-2"></i> Editar:
+                <span th:text="${subject.subjectName}">Inteligencia Artificial</span>
+            </h1>
+            <p class="text-gray-600">Código: <span th:text="${subject.subjectName}">1156</span> - ETSII - Grado en Ingeniería Informática</p> <!-- TODO: Subject Code -->
+        </div>
+
+        <!-- Edit Form -->
+        <form id="editSubjectForm" th:action="@{/edit/subject/{id}(id=${subject.id})}" method="post" class="bg-white rounded-xl shadow-sm p-6">
+
+            <!-- Short Description (From Header) -->
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-upm-blue mb-4 flex items-center">
+                    <i class="fas fa-heading mr-2"></i> Descripción Corta
+                </h2>
+                <p class="text-gray-600 mb-4 text-sm">
+                    Esta descripción aparece en el encabezado de la página de la asignatura.
+                </p>
+
+                <div class="mb-4">
+                    <label for="shortDescription" class="block text-gray-700 mb-2 font-medium">
+                        Descripción breve
+                    </label>
+                    <textarea id="shortDescription" name="shortDescription" rows="3"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-50"
+                              th:text="${subject.description}"
+                              placeholder="Describe brevemente la asignatura..."></textarea>
+                    <p class="text-gray-500 text-sm mt-1">
+                        <span id="shortDescCount" class="font-medium">0</span> caracteres
+                    </p>
+                </div>
+            </div>
+
+            <!-- Long Description (Markdown for Description Tab) -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-upm-blue flex items-center">
+                        <i class="fas fa-align-left mr-2"></i> Descripción Larga
+                    </h2>
+                    <div class="flex space-x-2">
+                        <button type="button" id="editTabButton" class="tab-button active">Editar</button>
+                        <button type="button" id="previewTabButton" class="tab-button">Vista previa</button>
+                    </div>
+                </div>
+
+                <p class="text-gray-600 mb-4 text-sm">
+                    Esta es la descripción completa que aparecerá en la pestaña "Descripción". Usa formato Markdown.
+                </p>
+
+                <!-- Edit Tab -->
+                <div id="editTab" class="tab-content">
+                    <div class="mb-4">
+                        <label for="longDescription" class="block text-gray-700 mb-2 font-medium">
+                            Contenido (Markdown)
+                        </label>
+                        <textarea id="longDescription" name="longDescription" rows="15"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-50 font-mono text-sm"
+                                  th:text="${subject.subjectInfo}"
+                                  placeholder="Escribe la descripción detallada de la asignatura aquí..."></textarea>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Sintaxis Markdown rápida:</h3>
+                        <div class="grid grid-cols-2 gap-2 text-sm">
+                            <div class="font-mono"># Título</div>
+                            <div class="text-gray-600">Encabezado grande</div>
+
+                            <div class="font-mono">## Subtítulo</div>
+                            <div class="text-gray-600">Encabezado mediano</div>
+
+                            <div class="font-mono">**texto**</div>
+                            <div class="text-gray-600">Negrita</div>
+
+                            <div class="font-mono">*texto*</div>
+                            <div class="text-gray-600">Cursiva</div>
+
+                            <div class="font-mono">- elemento</div>
+                            <div class="text-gray-600">Lista</div>
+
+                            <div class="font-mono">[enlace](url)</div>
+                            <div class="text-gray-600">Enlace</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Tab -->
+                <div id="previewTab" class="tab-content hidden">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2 font-medium">
+                            Vista previa
+                        </label>
+                        <div id="markdownPreview" class="markdown-preview">
+                            <p class="text-gray-500">La vista previa aparecerá aquí...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+                <a th:href="@{/subject/{id}(id=${subject.id})}"
+                   class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
+                    Cancelar
+                </a>
+                <button type="submit"
+                        class="px-6 py-3 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg">
+                    <i class="fas fa-save mr-2"></i> Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<th:block th:replace="~{fragments/footer :: footer}" />
+
+<script>
+    // Simple markdown parser for preview
+    function parseMarkdown(markdown) {
+        if (!markdown) return '<p class="text-gray-500">No hay contenido para mostrar.</p>';
+
+        let html = markdown
+            // Headers
+            .replace(/^### (.*$)/gm, '<h3 class="text-lg font-bold text-upm-blue mt-4 mb-2">$1</h3>')
+            .replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold text-upm-blue mt-6 mb-3">$1</h2>')
+            .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold text-upm-blue mt-8 mb-4">$1</h1>')
+            // Bold
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            // Lists
+            .replace(/^- (.*$)/gm, '<li class="ml-4 mb-1">$1</li>')
+            .replace(/(<li.*?>.*?<\/li>)/g, '<ul class="list-disc pl-6 my-2">$1</ul>')
+            // Links
+            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-upm-light-blue hover:text-upm-blue hover:underline">$1</a>')
+            // Line breaks
+            .replace(/\n/g, '<br>');
+
+        // Clean up nested ULs
+        html = html.replace(/<\/ul><br><ul/g, '');
+
+        return html;
+    }
+
+    // Character counter for short description
+    const shortDescription = document.getElementById('shortDescription');
+    const shortDescCount = document.getElementById('shortDescCount');
+
+    shortDescription.addEventListener('input', function() {
+        const count = this.value.length;
+        shortDescCount.textContent = count;
+    });
+
+    // Initialize count
+    if (shortDescription.value) {
+        shortDescCount.textContent = shortDescription.value.length;
+    }
+
+    // Tab switching for edit/preview
+    const editTabButton = document.getElementById('editTabButton');
+    const previewTabButton = document.getElementById('previewTabButton');
+    const editTab = document.getElementById('editTab');
+    const previewTab = document.getElementById('previewTab');
+    const longDescription = document.getElementById('longDescription');
+    const markdownPreview = document.getElementById('markdownPreview');
+
+    editTabButton.addEventListener('click', function() {
+        editTabButton.classList.add('active');
+        previewTabButton.classList.remove('active');
+        editTab.classList.remove('hidden');
+        previewTab.classList.add('hidden');
+    });
+
+    previewTabButton.addEventListener('click', function() {
+        previewTabButton.classList.add('active');
+        editTabButton.classList.remove('active');
+        previewTab.classList.remove('hidden');
+        editTab.classList.add('hidden');
+
+        // Update preview
+        markdownPreview.innerHTML = parseMarkdown(longDescription.value);
+    });
+
+    // Update preview when typing in edit mode
+    longDescription.addEventListener('input', function() {
+        // Only update preview if preview tab is active
+        if (!previewTab.classList.contains('hidden')) {
+            markdownPreview.innerHTML = parseMarkdown(this.value);
+        }
+    });
+
+    // Form submission
+    document.getElementById('editSubjectForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Basic validation
+        if (!shortDescription.value.trim()) {
+            alert('Por favor, completa la descripción corta');
+            shortDescription.focus();
+            return;
+        }
+
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Guardando...';
+        submitButton.disabled = true;
+
+        // Submit form
+        this.submit();
+    });
+</script>
+</body>
+
+</html>
