@@ -3,7 +3,6 @@ package es.hugoalvarezajenjo.selecta.ui.subject.teacher.editsubject;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
-import es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview.SubjectInfoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
@@ -33,7 +32,6 @@ public class EditSubjectDescriptionDTO {
                 subject.getName(),
                 subject.getDescription(),
                 "Empty String",
-                attributesList
-        );
+                attributesList);
     }
 }

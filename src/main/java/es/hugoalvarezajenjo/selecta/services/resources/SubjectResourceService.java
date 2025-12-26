@@ -8,4 +8,6 @@ public interface SubjectResourceService {
     List<SubjectResource> getResourcesFromSubject(Long subjectId);
 
     SubjectResource findById(Long resourceId);
+
+    void deleteResource(Long resourceId);
 }
