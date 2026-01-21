@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>UI Components</title>
+</head>
+
+<body>
+
+    <!-- Empty State Component -->
+    <div th:fragment="empty-state(icon, title, message)" class="text-center py-12">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-upm-gray bg-opacity-20 flex items-center justify-center">
+            <i th:class="'fas fa-' + ${icon} + ' text-upm-light-blue text-3xl'"></i>
+        </div>
+        <h3 class="text-xl font-bold text-upm-blue mb-2" th:text="${title}">Title</h3>
+        <p class="text-gray-600" th:text="${message}">Message</p>
+    </div>
+
+    <!-- Badge Component -->
+    <span th:fragment="badge(text, variant)" th:class="'badge badge-' + ${variant}" th:text="${text}">Badge</span>
+
+    <!-- Alert Message Component -->
+    <div th:fragment="alert(type, message, icon)" th:class="'px-4 py-3 rounded-lg mb-6 border ' + 
+              (${type} == 'success' ? 'bg-green-100 border-green-400 text-green-700' : 
+               ${type} == 'error' ? 'bg-red-100 border-red-400 text-red-700' : 
+               ${type} == 'warning' ? 'bg-yellow-100 border-yellow-400 text-yellow-700' : 
+               'bg-blue-100 border-blue-400 text-blue-700')">
+        <i th:class="'fas fa-' + ${icon} + ' mr-2'"></i>
+        <span th:text="${message}">Alert message</span>
+    </div>
+
+    <!-- Pagination Component -->
+    <div th:fragment="pagination(currentPage, totalPages, baseUrl)">
+        <div class="mt-8 flex justify-center" th:if="${totalPages > 1}">
+            <nav class="inline-flex rounded-md shadow">
+                <!-- Previous Button -->
+                <a th:if="${currentPage > 1}" th:href="@{${baseUrl} + '?page=' + ${currentPage - 1}}"
+                    class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <span th:unless="${currentPage > 1}"
+                    class="px-4 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+
+                <!-- Page Numbers -->
+                <th:block th:each="page : ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${page != currentPage}" th:href="@{${baseUrl} + '?page=' + ${page}}" th:text="${page}"
+                        class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">1</a>
+                    <span th:if="${page == currentPage}" th:text="${page}"
+                        class="px-4 py-2 border-t border-b border-gray-300 bg-upm-light-blue text-white font-medium">1</span>
+                </th:block>
+
+                <!-- Next Button -->
+                <a th:if="${currentPage < totalPages}" th:href="@{${baseUrl} + '?page=' + ${currentPage + 1}}"
+                    class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <span th:unless="${currentPage < totalPages}"
+                    class="px-4 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Loading Spinner Component -->
+    <div th:fragment="loading-spinner(text)" class="flex flex-col items-center justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-upm-light-blue mb-4"></div>
+        <p class="text-gray-600" th:text="${text}">Loading...</p>
+    </div>
+
+    <!-- Info Card Component -->
+    <div th:fragment="info-card(icon, label, value, color)">
+        <div class="flex items-center space-x-3">
+            <div th:class="'w-10 h-10 rounded-full flex items-center justify-center ' + 
+                       (${color} != null ? ${color} : 'bg-upm-light-blue bg-opacity-10')">
+                <i th:class="'fas fa-' + ${icon} + ' ' + 
+                        (${color} != null ? 'text-white' : 'text-upm-light-blue')"></i>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600" th:text="${label}">Label</p>
+                <p class="text-lg font-semibold text-upm-blue" th:text="${value}">Value</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

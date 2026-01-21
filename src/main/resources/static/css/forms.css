@@ -1,0 +1,121 @@
+/**
+ * Form Component Styling
+ * Used in: All forms across the application
+ */
+
+.form-label {
+    display: block;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-upm-light-blue);
+    box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 6rem;
+}
+
+.form-error {
+    color: var(--color-error);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.form-help {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    margin-top: var(--spacing-xs);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-required {
+    color: var(--color-error);
+}
+
+/* Checkbox and Radio */
+.form-checkbox,
+.form-radio {
+    width: 1.125rem;
+    height: 1.125rem;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.form-checkbox:checked,
+.form-radio:checked {
+    background-color: var(--color-upm-light-blue);
+    border-color: var(--color-upm-light-blue);
+}
+
+.form-checkbox:focus,
+.form-radio:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
+}
+
+/* Search input specific */
+.search-input {
+    padding-left: var(--spacing-xl);
+    padding-right: 3.5rem;
+}
+
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
+}
+
+/* Filter checkboxes (for list.html) */
+.filter-checkbox {
+    display: none;
+}
+
+.filter-checkbox:checked+.filter-label {
+    background-color: var(--color-upm-light-blue);
+    color: var(--color-text-inversed);
+}
+
+.filter-checkbox:checked+.filter-label .filter-icon {
+    color: var(--color-text-inversed);
+}
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) 0.75rem;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-upm-gray);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    width: 100%;
+}
+
+.filter-label:hover {
+    background-color: var(--color-border-dark);
+}
+
+.filter-icon {
+    color: var(--color-upm-light-blue);
+    margin-right: var(--spacing-sm);
+}

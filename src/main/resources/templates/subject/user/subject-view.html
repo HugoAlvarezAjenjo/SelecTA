@@ -10,13 +10,13 @@
     <script th:src="@{/js/tailwind-config.js}"></script>
     <link rel="stylesheet" th:href="@{/css/hero.css}">
     <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/design-system.css}">
+    <link rel="stylesheet" th:href="@{/css/tabs.css}">
+    <link rel="stylesheet" th:href="@{/css/markdown.css}">
+    <link rel="stylesheet" th:href="@{/css/modals.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
     <style>
-        .tab-active {
-            border-bottom: 3px solid #0072CE;
-            color: #003865;
-            font-weight: 600;
-        }
-
+        /* Star rating specific to this view */
         .star-rating .star {
             color: #ccc;
             cursor: pointer;
@@ -25,139 +25,6 @@
 
         .star-rating .star.selected {
             color: #FFD700;
-        }
-
-        .resource-card:hover {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            transform: translateY(-2px);
-        }
-
-        .comment-card {
-            border-left: 3px solid #0072CE;
-        }
-
-        /* Markdown content styling */
-        .markdown-content h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #003865;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .markdown-content h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #003865;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .markdown-content h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #003865;
-            margin-top: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .markdown-content p {
-            color: #374151;
-            line-height: 1.75;
-            margin-bottom: 1rem;
-        }
-
-        .markdown-content ul,
-        .markdown-content ol {
-            margin-left: 1.5rem;
-            margin-bottom: 1rem;
-            color: #374151;
-        }
-
-        .markdown-content ul {
-            list-style-type: disc;
-        }
-
-        .markdown-content ol {
-            list-style-type: decimal;
-        }
-
-        .markdown-content li {
-            margin-bottom: 0.5rem;
-            line-height: 1.75;
-        }
-
-        .markdown-content a {
-            color: #0072CE;
-            text-decoration: none;
-        }
-
-        .markdown-content a:hover {
-            color: #003865;
-            text-decoration: underline;
-        }
-
-        .markdown-content strong {
-            font-weight: 600;
-            color: #111827;
-        }
-
-        .markdown-content em {
-            font-style: italic;
-        }
-
-        .markdown-content code {
-            background-color: #f3f4f6;
-            padding: 0.125rem 0.375rem;
-            border-radius: 0.25rem;
-            font-family: monospace;
-            font-size: 0.875em;
-        }
-
-        .markdown-content pre {
-            background-color: #f3f4f6;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin-bottom: 1rem;
-        }
-
-        .markdown-content pre code {
-            background-color: transparent;
-            padding: 0;
-        }
-
-        .markdown-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 1rem;
-        }
-
-        .markdown-content table th,
-        .markdown-content table td {
-            border: 1px solid #e5e7eb;
-            padding: 0.5rem;
-            text-align: left;
-        }
-
-        .markdown-content table th {
-            background-color: #f9fafb;
-            font-weight: 600;
-            color: #003865;
-        }
-
-        .markdown-content blockquote {
-            border-left: 4px solid #0072CE;
-            padding-left: 1rem;
-            color: #6b7280;
-            font-style: italic;
-            margin: 1rem 0;
-        }
-
-        .markdown-content hr {
-            border: 0;
-            border-top: 1px solid #e5e7eb;
-            margin: 2rem 0;
         }
 
         @media (max-width: 768px) {
@@ -243,15 +110,13 @@
                     </div>
 
                     <!-- Empty state when no description -->
-                    <div th:if="${subject.longDescriptionHtml == null or subject.longDescriptionHtml.isEmpty()}"
-                        class="text-center py-12">
-                        <div
-                            class="w-24 h-24 mx-auto mb-4 rounded-full bg-upm-gray bg-opacity-20 flex items-center justify-center">
-                            <i class="fas fa-info-circle text-upm-light-blue text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-upm-blue mb-2">No hay información detallada disponible</h3>
-                        <p class="text-gray-600">La descripción detallada de esta asignatura aún no ha sido añadida.</p>
-                    </div>
+                    <th:block th:if="${subject.longDescriptionHtml == null or subject.longDescriptionHtml.isEmpty()}">
+                        <th:block th:replace="~{fragments/ui-components :: empty-state(
+                            icon='info-circle',
+                            title='No hay información detallada disponible',
+                            message='La descripción detallada de esta asignatura aún no ha sido añadida.'
+                        )}" />
+                    </th:block>
                 </div>
 
                 <!-- Related Subjects -->
@@ -482,14 +347,13 @@
 
                     <!-- Empty State -->
                     <div th:if="${#lists.isEmpty(resources)}" class="text-center py-12">
-                        <div
-                            class="w-24 h-24 mx-auto mb-4 rounded-full bg-upm-gray bg-opacity-20 flex items-center justify-center">
-                            <i class="fas fa-archive text-upm-light-blue text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-upm-blue mb-2">No hay recursos disponibles</h3>
-                        <p class="text-gray-600 mb-6">Sé el primero en compartir recursos para esta asignatura</p>
+                        <th:block th:replace="~{fragments/ui-components :: empty-state(
+                            icon='archive',
+                            title='No hay recursos disponibles',
+                            message='Sé el primero en compartir recursos para esta asignatura'
+                        )}" />
                         <button id="open-upload-modal-empty"
-                            class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
+                            class="mt-4 bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
                             <i class="fas fa-upload mr-2"></i> Subir primer recurso
                         </button>
                     </div>

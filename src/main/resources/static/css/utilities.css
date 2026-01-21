@@ -1,0 +1,135 @@
+/**
+ * Utility Classes
+ * Common utility patterns beyond TailwindCSS
+ */
+
+/* Transitions - already exists in base.css but consolidating here */
+.transition-all {
+    transition: all var(--transition-base);
+}
+
+.transition-fast {
+    transition: all var(--transition-fast);
+}
+
+.transition-slow {
+    transition: all var(--transition-slow);
+}
+
+/* Hover effects */
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+.hover-shadow:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Focus states specific to UPM brand */
+.focus-upm:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
+    border-color: var(--color-upm-light-blue);
+}
+
+/* Text utilities */
+.text-upm-blue {
+    color: var(--color-upm-blue);
+}
+
+.text-upm-light-blue {
+    color: var(--color-upm-light-blue);
+}
+
+/* Background utilities */
+.bg-upm-blue {
+    background-color: var(--color-upm-blue);
+}
+
+.bg-upm-light-blue {
+    background-color: var(--color-upm-light-blue);
+}
+
+.bg-upm-gray {
+    background-color: var(--color-upm-gray);
+}
+
+/* Border utilities */
+.border-upm-blue {
+    border-color: var(--color-upm-blue);
+}
+
+.border-upm-light-blue {
+    border-color: var(--color-upm-light-blue);
+}
+
+.border-upm-gray {
+    border-color: var(--color-upm-gray);
+}
+
+/* Custom shadows matching UPM design */
+.shadow-upm {
+    box-shadow: 0 4px 6px -1px rgba(0, 114, 206, 0.1), 0 2px 4px -2px rgba(0, 114, 206, 0.1);
+}
+
+/* Container utilities */
+.container-narrow {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.container-medium {
+    max-width: 64rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Loading state */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: wait;
+}
+
+/* Disabled state */
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Screen reader only */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Truncate text */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Line clamp utilities */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

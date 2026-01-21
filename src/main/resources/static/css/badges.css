@@ -1,0 +1,64 @@
+/**
+ * Badge Component Styling
+ * Used in: edit-subject-resources.html, subject-view.html, list.html
+ */
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* Resource type badges */
+.badge-exercise {
+    background-color: #DBEAFE;
+    color: #1E40AF;
+}
+
+.badge-notes {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.badge-presentation {
+    background-color: #E0E7FF;
+    color: #3730A3;
+}
+
+.badge-video {
+    background-color: #FCE7F3;
+    color: #9F1239;
+}
+
+.badge-external {
+    background-color: #D1FAE5;
+    color: #065F46;
+}
+
+/* Generic badge variants using design system */
+.badge-primary {
+    background-color: rgba(0, 114, 206, 0.1);
+    color: var(--color-upm-light-blue);
+}
+
+.badge-secondary {
+    background-color: var(--color-upm-gray);
+    color: var(--color-text-secondary);
+}
+
+.badge-success {
+    background-color: var(--color-success-bg);
+    color: #065F46;
+}
+
+.badge-error {
+    background-color: var(--color-error-bg);
+    color: #991B1B;
+}
+
+.badge-warning {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+}

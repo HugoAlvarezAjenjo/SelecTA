@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Form Components</title>
+</head>
+
+<body>
+
+    <!-- Text Input Field Component -->
+    <div th:fragment="text-field(id, label, placeholder, required, value)">
+        <div class="form-group">
+            <label th:for="${id}" class="form-label">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="form-required">*</span>
+            </label>
+            <input type="text" th:id="${id}" th:name="${id}" th:placeholder="${placeholder}" th:required="${required}"
+                th:value="${value}" class="form-input">
+        </div>
+    </div>
+
+    <!-- Textarea Field Component -->
+    <div th:fragment="textarea-field(id, label, placeholder, required, rows, value)">
+        <div class="form-group">
+            <label th:for="${id}" class="form-label">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="form-required">*</span>
+            </label>
+            <textarea th:id="${id}" th:name="${id}" th:placeholder="${placeholder}" th:required="${required}"
+                th:rows="${rows} ?: 4" th:text="${value}" class="form-textarea"></textarea>
+        </div>
+    </div>
+
+    <!-- Select Field Component -->
+    <div th:fragment="select-field(id, label, required, options, selectedValue)">
+        <div class="form-group">
+            <label th:for="${id}" class="form-label">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="form-required">*</span>
+            </label>
+            <select th:id="${id}" th:name="${id}" th:required="${required}" class="form-select">
+                <option value="">Select an option</option>
+                <option th:each="option : ${options}" th:value="${option.value}" th:text="${option.text}"
+                    th:selected="${option.value == selectedValue}">Option</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Button Component -->
+    <button th:fragment="button(text, icon, variant, type, extraClasses)" th:type="${type} ?: 'button'" th:class="'inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all ' +
+                  (${variant} == 'primary' ? 'bg-upm-light-blue hover:bg-upm-blue text-white' :
+                   ${variant} == 'secondary' ? 'border-2 border-upm-light-blue text-upm-light-blue hover:bg-upm-gray' :
+                   ${variant} == 'danger' ? 'bg-red-500 hover:bg-red-600 text-white' :
+                   ${variant} == 'success' ? 'bg-green-500 hover:bg-green-600 text-white' :
+                   'bg-gray-200 hover:bg-gray-300 text-gray-700') +
+                  (${extraClasses} != null ? ' ' + ${extraClasses} : '')">
+        <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' mr-2'"></i>
+        <span th:text="${text}">Button</span>
+    </button>
+
+    <!-- File Upload Field Component -->
+    <div th:fragment="file-field(id, label, required, acceptTypes, helpText)">
+        <div class="form-group">
+            <label th:for="${id}" class="form-label">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="form-required">*</span>
+            </label>
+            <input type="file" th:id="${id}" th:name="${id}" th:required="${required}" th:accept="${acceptTypes}"
+                class="form-input">
+            <p th:if="${helpText}" class="form-help" th:text="${helpText}">Help text</p>
+        </div>
+    </div>
+
+    <!-- Checkbox Field Component -->
+    <div th:fragment="checkbox-field(id, label, checked)">
+        <div class="flex items-center">
+            <input type="checkbox" th:id="${id}" th:name="${id}" th:checked="${checked}" class="form-checkbox">
+            <label th:for="${id}" class="ml-2 text-gray-700" th:text="${label}">Label</label>
+        </div>
+    </div>
+
+    <!-- Form Error Message Component -->
+    <div th:fragment="error-message(message)" th:if="${message}">
+        <p class="form-error" th:text="${message}">Error message</p>
+    </div>
+
+</body>
+
+</html>
