@@ -36,6 +36,130 @@
             border-left: 3px solid #0072CE;
         }
 
+        /* Markdown content styling */
+        .markdown-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #003865;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #003865;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .markdown-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #003865;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .markdown-content p {
+            color: #374151;
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .markdown-content ul {
+            list-style-type: disc;
+        }
+
+        .markdown-content ol {
+            list-style-type: decimal;
+        }
+
+        .markdown-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.75;
+        }
+
+        .markdown-content a {
+            color: #0072CE;
+            text-decoration: none;
+        }
+
+        .markdown-content a:hover {
+            color: #003865;
+            text-decoration: underline;
+        }
+
+        .markdown-content strong {
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .markdown-content em {
+            font-style: italic;
+        }
+
+        .markdown-content code {
+            background-color: #f3f4f6;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            font-size: 0.875em;
+        }
+
+        .markdown-content pre {
+            background-color: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-content table th,
+        .markdown-content table td {
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .markdown-content table th {
+            background-color: #f9fafb;
+            font-weight: 600;
+            color: #003865;
+        }
+
+        .markdown-content blockquote {
+            border-left: 4px solid #0072CE;
+            padding-left: 1rem;
+            color: #6b7280;
+            font-style: italic;
+            margin: 1rem 0;
+        }
+
+        .markdown-content hr {
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+            margin: 2rem 0;
+        }
+
         @media (max-width: 768px) {
             .subject-actions {
                 flex-direction: column;
@@ -113,89 +237,20 @@
             <!-- Description Tab Content -->
             <div id="description-content" class="tab-content">
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                    <h2 class="text-2xl font-bold text-upm-blue mb-4">Objetivos de aprendizaje</h2>
-                    <p class="text-gray-700 mb-6">
-                        Al finalizar esta asignatura, el estudiante será capaz de:
-                    </p>
-                    <ul class="list-disc pl-6 space-y-2 text-gray-700 mb-6">
-                        <li>Comprender los fundamentos teóricos de la Inteligencia Artificial y sus principales áreas de
-                            aplicación.</li>
-                        <li>Diseñar e implementar algoritmos de búsqueda para resolver problemas complejos.</li>
-                        <li>Desarrollar sistemas basados en conocimiento utilizando técnicas de representación y
-                            razonamiento.</li>
-                        <li>Aplicar técnicas de aprendizaje automático para resolver problemas prácticos.</li>
-                        <li>Evaluar críticamente los resultados obtenidos por sistemas de inteligencia artificial.</li>
-                    </ul>
-
-                    <h2 class="text-2xl font-bold text-upm-blue mb-4">Temario</h2>
-                    <div class="space-y-4">
-                        <div class="border-l-4 border-upm-light-blue pl-4">
-                            <h3 class="text-lg font-semibold text-upm-blue">1. Introducción a la Inteligencia Artificial
-                            </h3>
-                            <p class="text-gray-600">Historia, definiciones, aplicaciones y estado actual del campo.</p>
-                        </div>
-                        <div class="border-l-4 border-upm-light-blue pl-4">
-                            <h3 class="text-lg font-semibold text-upm-blue">2. Búsqueda y planificación</h3>
-                            <p class="text-gray-600">Algoritmos de búsqueda no informada e informada, búsqueda
-                                adversarial.</p>
-                        </div>
-                        <div class="border-l-4 border-upm-light-blue pl-4">
-                            <h3 class="text-lg font-semibold text-upm-blue">3. Sistemas basados en conocimiento</h3>
-                            <p class="text-gray-600">Representación del conocimiento, lógica proposicional y de primer
-                                orden.</p>
-                        </div>
-                        <div class="border-l-4 border-upm-light-blue pl-4">
-                            <h3 class="text-lg font-semibold text-upm-blue">4. Aprendizaje automático</h3>
-                            <p class="text-gray-600">Aprendizaje supervisado y no supervisado, redes neuronales, deep
-                                learning.</p>
-                        </div>
-                        <div class="border-l-4 border-upm-light-blue pl-4">
-                            <h3 class="text-lg font-semibold text-upm-blue">5. Aplicaciones avanzadas</h3>
-                            <p class="text-gray-600">Procesamiento del lenguaje natural, visión por computador,
-                                robótica.</p>
-                        </div>
+                    <!-- Dynamic markdown content -->
+                    <div th:if="${subject.longDescriptionHtml != null and !subject.longDescriptionHtml.isEmpty()}"
+                        class="markdown-content prose prose-lg max-w-none" th:utext="${subject.longDescriptionHtml}">
                     </div>
 
-                    <h2 class="text-2xl font-bold text-upm-blue mt-8 mb-4">Metodología docente</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-upm-gray bg-opacity-30 p-4 rounded-lg">
-                            <h3 class="font-semibold text-upm-blue mb-2"><i class="fas fa-chalkboard-teacher mr-2"></i>
-                                Clases teóricas</h3>
-                            <p class="text-gray-600 text-sm">2 horas semanales - Exposición de conceptos fundamentales.
-                            </p>
+                    <!-- Empty state when no description -->
+                    <div th:if="${subject.longDescriptionHtml == null or subject.longDescriptionHtml.isEmpty()}"
+                        class="text-center py-12">
+                        <div
+                            class="w-24 h-24 mx-auto mb-4 rounded-full bg-upm-gray bg-opacity-20 flex items-center justify-center">
+                            <i class="fas fa-info-circle text-upm-light-blue text-3xl"></i>
                         </div>
-                        <div class="bg-upm-gray bg-opacity-30 p-4 rounded-lg">
-                            <h3 class="font-semibold text-upm-blue mb-2"><i class="fas fa-laptop-code mr-2"></i>
-                                Prácticas de laboratorio</h3>
-                            <p class="text-gray-600 text-sm">2 horas semanales - Implementación de algoritmos en Python.
-                            </p>
-                        </div>
-                        <div class="bg-upm-gray bg-opacity-30 p-4 rounded-lg">
-                            <h3 class="font-semibold text-upm-blue mb-2"><i class="fas fa-project-diagram mr-2"></i>
-                                Proyecto final</h3>
-                            <p class="text-gray-600 text-sm">Desarrollo de un sistema de IA aplicado a un problema real.
-                            </p>
-                        </div>
-                    </div>
-
-                    <h2 class="text-2xl font-bold text-upm-blue mt-8 mb-4">Evaluación</h2>
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium text-gray-700">Examen teórico</span>
-                            <span class="font-medium text-upm-blue">40%</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium text-gray-700">Prácticas de laboratorio</span>
-                            <span class="font-medium text-upm-blue">30%</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium text-gray-700">Proyecto final</span>
-                            <span class="font-medium text-upm-blue">25%</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="font-medium text-gray-700">Participación y ejercicios</span>
-                            <span class="font-medium text-upm-blue">5%</span>
-                        </div>
+                        <h3 class="text-xl font-bold text-upm-blue mb-2">No hay información detallada disponible</h3>
+                        <p class="text-gray-600">La descripción detallada de esta asignatura aún no ha sido añadida.</p>
                     </div>
                 </div>
 

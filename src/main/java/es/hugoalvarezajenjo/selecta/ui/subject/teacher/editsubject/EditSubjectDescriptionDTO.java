@@ -31,7 +31,7 @@ public class EditSubjectDescriptionDTO {
                 subject.getId(),
                 subject.getName(),
                 subject.getDescription(),
-                "Empty String",
+                subject.getLongDescription() != null ? subject.getLongDescription() : "",
                 attributesList);
     }
 }

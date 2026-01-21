@@ -16,6 +16,8 @@ public class Subject {
     private Long id;
     private String name;
     private String description;
+    @Column(columnDefinition = "TEXT")
+    private String longDescription;
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private Set<Languages> languages = new HashSet<>();

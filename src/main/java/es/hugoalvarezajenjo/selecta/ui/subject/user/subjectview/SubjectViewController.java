@@ -1,6 +1,6 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
-import es.hugoalvarezajenjo.selecta.config.FeatureFlagConfig;
+import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
@@ -19,6 +19,7 @@ import java.util.Optional;
 public class SubjectViewController {
     private final SubjectService subjectService;
     private final SubjectResourceService subjectResourceService;
+    private final MarkdownService markdownService;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
@@ -26,7 +27,11 @@ public class SubjectViewController {
         if (subject.isEmpty()) {
             return "subject/user/no-subject";
         }
-        model.addAttribute("subject", SubjectInfoDTO.createFromDomain(subject.get()));
+
+        // Convert markdown to HTML
+        String longDescriptionHtml = markdownService.toHtml(subject.get().getLongDescription());
+
+        model.addAttribute("subject", SubjectInfoDTO.createFromDomain(subject.get(), longDescriptionHtml));
         model.addAttribute("resources",
                 SubjectResourceDTO.createFromDomain(this.subjectResourceService.getResourcesFromSubject(id)));
         return "subject/user/subject-view";

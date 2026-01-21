@@ -42,7 +42,7 @@ public class EditSubjectDescriptionView {
         Subject subject = subjectOpt.get();
         // Update the subject with new descriptions
         subject.setDescription(shortDescription);
-        // subject.setLongDescription(longDescription);
+        subject.setLongDescription(longDescription);
 
         // Save the updated subject
         this.subjectService.saveSubject(subject);
