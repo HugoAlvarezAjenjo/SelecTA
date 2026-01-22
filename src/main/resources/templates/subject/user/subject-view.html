@@ -16,17 +16,6 @@
     <link rel="stylesheet" th:href="@{/css/modals.css}">
     <link rel="stylesheet" th:href="@{/css/card.css}">
     <style>
-        /* Star rating specific to this view */
-        .star-rating .star {
-            color: #ccc;
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
-
-        .star-rating .star.selected {
-            color: #FFD700;
-        }
-
         @media (max-width: 768px) {
             .subject-actions {
                 flex-direction: column;
@@ -87,9 +76,7 @@
                 <button id="description-tab" class="tab-active px-6 py-4 font-medium text-gray-500 transition-all">
                     <i class="fas fa-info-circle mr-2"></i> Descripción
                 </button>
-                <button id="reviews-tab" class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
-                    <i class="fas fa-star mr-2"></i> Valoraciones
-                </button>
+
                 <button id="resources-tab"
                     class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
                     <i class="fas fa-archive mr-2"></i> La Bóveda
@@ -165,131 +152,7 @@
                 </div>
             </div>
 
-            <!-- Reviews Tab Content -->
-            <div id="reviews-content" class="tab-content hidden">
-                <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-upm-blue">Opiniones de estudiantes</h2>
-                        <div class="flex items-center">
-                            <span class="text-gray-600 mr-3">Ordenar por:</span>
-                            <select
-                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-upm-light-blue">
-                                <option>Más recientes</option>
-                                <option>Mejor valoradas</option>
-                                <option>Peor valoradas</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="space-y-6 mb-8">
-                        <!-- Review 1 -->
-                        <div class="comment-card bg-white p-4 rounded-lg shadow-sm">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h4 class="font-bold text-upm-blue">Ana Martínez</h4>
-                                    <p class="text-gray-500 text-sm">Ingeniería Informática - 2023</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex mr-1">
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-sm ml-2">Hace 2 semanas</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-700">
-                                Una de las mejores asignaturas que he cursado. El profesor explica muy bien los
-                                conceptos y las prácticas son muy interesantes.
-                                El proyecto final fue un reto pero aprendí muchísimo. Recomiendo totalmente esta
-                                asignatura a quien le interese el campo de la IA.
-                            </p>
-                        </div>
-
-                        <!-- Review 2 -->
-                        <div class="comment-card bg-white p-4 rounded-lg shadow-sm">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h4 class="font-bold text-upm-blue">Carlos Rodríguez</h4>
-                                    <p class="text-gray-500 text-sm">Ingeniería de Software - 2023</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex mr-1">
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="far fa-star text-yellow-400"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-sm ml-2">Hace 1 mes</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-700">
-                                Contenido muy interesante y actual. Las clases teóricas son completas y las prácticas
-                                ayudan a fijar los conceptos.
-                                El nivel de exigencia es alto pero se aprende mucho. El único punto negativo es que
-                                algunos temas se ven muy rápido.
-                            </p>
-                        </div>
-
-                        <!-- Review 3 -->
-                        <div class="comment-card bg-white p-4 rounded-lg shadow-sm">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h4 class="font-bold text-upm-blue">Lucía Fernández</h4>
-                                    <p class="text-gray-500 text-sm">Ingeniería de Computadores - 2022</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="flex mr-1">
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star text-yellow-400"></i>
-                                        <i class="fas fa-star-half-alt text-yellow-400"></i>
-                                    </div>
-                                    <span class="text-gray-500 text-sm ml-2">Hace 3 meses</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-700">
-                                Asignatura muy completa que te da una visión general de la IA. Las prácticas con Python
-                                y TensorFlow son muy útiles.
-                                El proyecto final es exigente pero muy gratificante. Recomiendo tener buenas bases de
-                                programación antes de cursarla.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Pagination -->
-                    <div class="flex justify-center">
-                        <nav class="inline-flex rounded-md shadow">
-                            <a href="#"
-                                class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                            <a href="#"
-                                class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue font-medium hover:bg-upm-gray">1</a>
-                            <a href="#"
-                                class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">2</a>
-                            <a href="#"
-                                class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">3</a>
-                            <a href="#"
-                                class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        </nav>
-                    </div>
-
-                    <!-- Add Review Button (only for logged in users) -->
-                    <div id="add-review-section" class="mt-8 text-center">
-                        <button id="open-review-modal"
-                            class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
-                            <i class="fas fa-plus mr-2"></i> Dejar tu opinión
-                        </button>
-                    </div>
-                </div>
-            </div>
 
             <!-- Resources Tab Content -->
             <div id="resources-content" class="tab-content hidden">
@@ -381,44 +244,7 @@
         </div>
     </section>
 
-    <!-- Review Modal -->
-    <div id="review-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-upm-blue">Deja tu valoración</h3>
-                <button id="close-review-modal" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
 
-            <div class="mb-6">
-                <label class="block text-gray-700 mb-2">Valoración</label>
-                <div class="star-rating flex justify-center mb-2">
-                    <span class="star" data-value="1"><i class="fas fa-star"></i></span>
-                    <span class="star" data-value="2"><i class="fas fa-star"></i></span>
-                    <span class="star" data-value="3"><i class="fas fa-star"></i></span>
-                    <span class="star" data-value="4"><i class="fas fa-star"></i></span>
-                    <span class="star" data-value="5"><i class="fas fa-star"></i></span>
-                </div>
-                <input type="hidden" id="rating-value" value="0">
-            </div>
-
-            <div class="mb-6">
-                <label for="review-text" class="block text-gray-700 mb-2">Comentario (opcional)</label>
-                <textarea id="review-text" rows="4"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"
-                    placeholder="Escribe tu experiencia con esta asignatura..."></textarea>
-            </div>
-
-            <div class="flex justify-end space-x-3">
-                <button id="cancel-review"
-                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-upm-gray">Cancelar</button>
-                <button id="submit-review"
-                    class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg">Enviar
-                    valoración</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Upload Resource Modal -->
     <div id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -489,10 +315,7 @@
                 tab: document.getElementById('description-tab'),
                 content: document.getElementById('description-content')
             },
-            reviews: {
-                tab: document.getElementById('reviews-tab'),
-                content: document.getElementById('reviews-content')
-            },
+
             resources: {
                 tab: document.getElementById('resources-tab'),
                 content: document.getElementById('resources-content')
@@ -521,76 +344,7 @@
         // Initialize with description tab active
         activateTab('description');
 
-        // Review modal functionality
-        const reviewModal = document.getElementById('review-modal');
-        const openReviewModal = document.getElementById('open-review-modal');
-        const closeReviewModal = document.getElementById('close-review-modal');
-        const cancelReview = document.getElementById('cancel-review');
-        const submitReview = document.getElementById('submit-review');
-        const stars = document.querySelectorAll('.star-rating .star');
-        const ratingValue = document.getElementById('rating-value');
 
-        openReviewModal.addEventListener('click', () => {
-            reviewModal.classList.remove('hidden');
-        });
-
-        closeReviewModal.addEventListener('click', () => {
-            reviewModal.classList.add('hidden');
-        });
-
-        cancelReview.addEventListener('click', () => {
-            reviewModal.classList.add('hidden');
-        });
-
-        submitReview.addEventListener('click', () => {
-            const rating = ratingValue.value;
-            const reviewText = document.getElementById('review-text').value;
-
-            if (rating > 0) {
-                // Here you would typically send the data to your backend
-                alert(`Gracias por tu valoración de ${rating} estrellas!`);
-                reviewModal.classList.add('hidden');
-
-                // Reset form
-                stars.forEach(star => star.classList.remove('selected'));
-                ratingValue.value = 0;
-                document.getElementById('review-text').value = '';
-            } else {
-                alert('Por favor, selecciona una valoración con estrellas');
-            }
-        });
-
-        // Star rating functionality
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const value = parseInt(star.getAttribute('data-value'));
-                ratingValue.value = value;
-
-                stars.forEach((s, index) => {
-                    if (index < value) {
-                        s.classList.add('selected');
-                    } else {
-                        s.classList.remove('selected');
-                    }
-                });
-            });
-
-            star.addEventListener('mouseover', () => {
-                const value = parseInt(star.getAttribute('data-value'));
-
-                stars.forEach((s, index) => {
-                    if (index < value) {
-                        s.classList.add('hovered');
-                    } else {
-                        s.classList.remove('hovered');
-                    }
-                });
-            });
-
-            star.addEventListener('mouseout', () => {
-                stars.forEach(s => s.classList.remove('hovered'));
-            });
-        });
 
         // Upload modal functionality
         const uploadModal = document.getElementById('upload-modal');
