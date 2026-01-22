@@ -41,7 +41,7 @@ public class EditSubjectResourcesView {
             return "subject/user/no-subject";
         }
 
-        model.addAttribute("subject", EditSubjectDescriptionDTO.createFromDomain(subject.get()));
+        model.addAttribute("subjectDTO", EditSubjectDescriptionDTO.createFromDomain(subject.get()));
         model.addAttribute("subjectResources",
                 SubjectResourceDTO.createFromDomain(this.subjectResourceService.getResourcesFromSubject(subjectId)));
         model.addAttribute("resourceTypes", ResourceType.values());
