@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.InputStream;
@@ -41,8 +40,8 @@ public class ResourceDownloadController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Get the storage path from the resource (stored in the 'url' field)
-            final String storagePath = resource.getUrl();
+            // The storage path is the resource ID (stored as filename)
+            final String storagePath = resourceId.toString();
 
             // Verify file exists
             if (!this.storageService.fileExists(storagePath)) {
@@ -51,8 +50,8 @@ public class ResourceDownloadController {
 
             final InputStream inputStream = this.storageService.downloadFile(storagePath);
 
-            // Use the resource name from database for the filename
-            final String filename = resource.getName();
+            // Use the original filename from database for the download
+            final String filename = resource.getOriginalName();
 
             final StreamingResponseBody streamingBody = outputStream -> {
                 int bytesRead;

@@ -12,8 +12,8 @@ public class SubjectResourceServiceImpl implements SubjectResourceService {
     private final SubjectResourceRepository subjectResourceRepository;
 
     @Override
-    public void saveResource(final SubjectResource subjectResource) {
-        this.subjectResourceRepository.save(subjectResource);
+    public SubjectResource saveResource(final SubjectResource subjectResource) {
+        return this.subjectResourceRepository.save(subjectResource);
     }
 
     @Override

@@ -4,51 +4,58 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
 public class LocalStorageService implements StorageService {
 
-    private final String storagePath = "./file-storage/"; // Carpeta en tu proyecto
+    private final String storagePath = "file-storage/subject_resources/"; // Relative to execution dir
 
     public LocalStorageService() {
-        // Crear la carpeta si no existe
-        new File(storagePath).mkdirs();
-    }
-
-    @Override
-    public String uploadFile(String fileName, InputStream inputStream, long size, String contentType) {
-        try {
-            String filePath = storagePath + fileName;
-            Files.copy(inputStream, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
-            return filePath; // Devuelve la ruta donde se guardó
-        } catch (IOException e) {
-            throw new RuntimeException("Error al subir archivo", e);
+        // Create the folder if it doesn't exist
+        final File directory = new File(storagePath);
+        if (!directory.exists()) {
+            directory.mkdirs();
         }
     }
 
     @Override
-    public InputStream downloadFile(String filePath) {
-        final String path = storagePath + filePath;
+    public String uploadFile(final String fileName, final InputStream inputStream, final long size,
+            final String contentType) {
         try {
-            return new FileInputStream(path);
+            final Path targetLocation = Paths.get(storagePath).resolve(fileName);
+            Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            return fileName; // Return logical path (filename)
+        } catch (IOException e) {
+            throw new RuntimeException("Error uploading file", e);
+        }
+    }
+
+    @Override
+    public InputStream downloadFile(final String filePath) {
+        try {
+            final Path file = Paths.get(storagePath).resolve(filePath);
+            return new FileInputStream(file.toFile());
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Archivo no encontrado: " + path, e);
+            throw new RuntimeException("File not found: " + filePath, e);
         }
     }
 
     @Override
-    public void deleteFile(String filePath) {
+    public void deleteFile(final String filePath) {
         try {
-            Files.deleteIfExists(Paths.get(filePath));
+            final Path file = Paths.get(storagePath).resolve(filePath);
+            Files.deleteIfExists(file);
         } catch (IOException e) {
-            throw new RuntimeException("Error al eliminar archivo", e);
+            throw new RuntimeException("Error deleting file", e);
         }
     }
 
     @Override
-    public boolean fileExists(String filePath) {
-        return Files.exists(Paths.get(this.storagePath + filePath));
+    public boolean fileExists(final String filePath) {
+        final Path file = Paths.get(storagePath).resolve(filePath);
+        return Files.exists(file);
     }
 }

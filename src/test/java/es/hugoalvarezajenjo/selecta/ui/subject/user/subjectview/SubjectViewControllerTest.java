@@ -64,7 +64,7 @@ class SubjectViewControllerTest {
         testResource.setType(ResourceType.PRESENTATION);
         testResource.setLanguage("English");
         testResource.setCreationDate(LocalDate.of(2024, 1, 15));
-        testResource.setUrl("/resources/syllabus.pdf");
+        testResource.setOriginalName("syllabus.pdf");
         testResource.setSubjectId(EXISTING_SUBJECT_ID);
     }
 
@@ -143,7 +143,6 @@ class SubjectViewControllerTest {
         assertEquals(testResource.getType().toString(), resourceDTO.getType());
         assertEquals(testResource.getLanguage(), resourceDTO.getLanguage());
         assertEquals(testResource.getCreationDate().toString(), resourceDTO.getUploadDate());
-        assertEquals(testResource.getUrl(), resourceDTO.getUrl());
     }
 
     @Test
@@ -228,7 +227,7 @@ class SubjectViewControllerTest {
         secondResource.setType(ResourceType.PRESENTATION);
         secondResource.setLanguage("Spanish");
         secondResource.setCreationDate(LocalDate.of(2024, 1, 20));
-        secondResource.setUrl("/resources/exercises.pdf");
+        secondResource.setOriginalName("exercises.pdf");
         secondResource.setSubjectId(EXISTING_SUBJECT_ID);
 
         List<SubjectResource> testResources = List.of(testResource, secondResource);
@@ -259,7 +258,8 @@ class SubjectViewControllerTest {
         // Act
         subjectViewController.subjectView(NON_EXISTING_SUBJECT_ID, model);
 
-        // Assert - BEHAVIOR: We optimize by not fetching resources for non-existent subjects
+        // Assert - BEHAVIOR: We optimize by not fetching resources for non-existent
+        // subjects
         verifyNoInteractions(subjectResourceService);
     }
 }

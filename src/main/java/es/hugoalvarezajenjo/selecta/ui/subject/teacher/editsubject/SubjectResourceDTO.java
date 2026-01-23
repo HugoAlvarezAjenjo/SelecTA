@@ -13,22 +13,15 @@ public class SubjectResourceDTO {
     private String type;
     private String language;
     private String uploadDate;
-    private String url;
 
     public static SubjectResourceDTO createFromDomain(final SubjectResource subjectResource) {
-        String storagePath = subjectResource.getUrl();
-        if (storagePath != null && storagePath.startsWith("/")) {
-            storagePath = storagePath.substring(1);
-        }
-
         return new SubjectResourceDTO(
                 subjectResource.getId(),
                 subjectResource.getName(),
                 subjectResource.getDescription(),
                 subjectResource.getType().toString(),
                 subjectResource.getLanguage(),
-                subjectResource.getCreationDate().toString(),
-                storagePath);
+                subjectResource.getCreationDate().toString());
     }
 
     public static List<SubjectResourceDTO> createFromDomain(final List<SubjectResource> subjectResources) {
@@ -36,5 +29,4 @@ public class SubjectResourceDTO {
                 .map(SubjectResourceDTO::createFromDomain)
                 .toList();
     }
-
 }

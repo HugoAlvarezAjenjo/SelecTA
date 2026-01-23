@@ -18,5 +18,5 @@ public class SubjectResource {
     @Enumerated(EnumType.STRING)
     private ResourceType type;
     private String language;
-    private String url;
+    private String originalName;
 }
