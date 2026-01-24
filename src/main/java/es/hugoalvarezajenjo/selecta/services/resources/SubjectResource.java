@@ -1,12 +1,18 @@
 package es.hugoalvarezajenjo.selecta.services.resources;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubjectResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
