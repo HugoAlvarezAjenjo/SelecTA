@@ -1,4 +1,4 @@
-package es.hugoalvarezajenjo.selecta.entity;
+package es.hugoalvarezajenjo.selecta.services.user;
 
 import jakarta.persistence.*;
 

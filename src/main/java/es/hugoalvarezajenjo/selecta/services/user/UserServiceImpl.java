@@ -1,7 +1,7 @@
-package es.hugoalvarezajenjo.selecta.service;
+package es.hugoalvarezajenjo.selecta.services.user;
 
-import es.hugoalvarezajenjo.selecta.entity.User;
-import es.hugoalvarezajenjo.selecta.repository.UserRepository;
+import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

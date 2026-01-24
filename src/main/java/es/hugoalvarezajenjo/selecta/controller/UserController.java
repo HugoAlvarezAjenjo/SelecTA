@@ -1,9 +1,10 @@
 package es.hugoalvarezajenjo.selecta.controller;
 
-import es.hugoalvarezajenjo.selecta.entity.User;
 import es.hugoalvarezajenjo.selecta.mapper.UserMapper;
-import es.hugoalvarezajenjo.selecta.service.UserAuthentication;
-import es.hugoalvarezajenjo.selecta.service.UserService;
+import es.hugoalvarezajenjo.selecta.services.user.User;
+import es.hugoalvarezajenjo.selecta.services.user.UserAuthentication;
+import es.hugoalvarezajenjo.selecta.services.user.UserService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,8 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserAuthentication userAuthentication;
 
-    public UserController(final UserService userService, final UserMapper userMapper, final UserAuthentication userAuthentication) {
+    public UserController(final UserService userService, final UserMapper userMapper,
+            final UserAuthentication userAuthentication) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.userAuthentication = userAuthentication;

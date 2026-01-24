@@ -1,6 +1,4 @@
-package es.hugoalvarezajenjo.selecta.service;
-
-import es.hugoalvarezajenjo.selecta.entity.User;
+package es.hugoalvarezajenjo.selecta.services.user;
 
 import java.util.Optional;
 

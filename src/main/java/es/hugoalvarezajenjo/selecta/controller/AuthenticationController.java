@@ -1,7 +1,8 @@
 package es.hugoalvarezajenjo.selecta.controller;
 
-import es.hugoalvarezajenjo.selecta.entity.User;
-import es.hugoalvarezajenjo.selecta.service.UserService;
+import es.hugoalvarezajenjo.selecta.services.user.User;
+import es.hugoalvarezajenjo.selecta.services.user.UserService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
