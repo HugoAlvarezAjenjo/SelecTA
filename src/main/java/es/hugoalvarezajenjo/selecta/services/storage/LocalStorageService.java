@@ -1,5 +1,6 @@
 package es.hugoalvarezajenjo.selecta.services.storage;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -11,11 +12,12 @@ import java.nio.file.StandardCopyOption;
 @Service
 public class LocalStorageService implements StorageService {
 
-    private final String storagePath = "file-storage/subject_resources/"; // Relative to execution dir
+    private final String storagePath;
 
-    public LocalStorageService() {
+    public LocalStorageService(@Value("${app.storage.path:file-storage/subject_resources/}") String storagePath) {
+        this.storagePath = storagePath;
         // Create the folder if it doesn't exist
-        final File directory = new File(storagePath);
+        final File directory = new File(this.storagePath);
         if (!directory.exists()) {
             directory.mkdirs();
         }

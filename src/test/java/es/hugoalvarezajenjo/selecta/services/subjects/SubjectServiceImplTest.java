@@ -171,4 +171,51 @@ class SubjectServiceImplTest {
         assertFalse(result.isPresent());
         verify(subjectRepository, times(1)).findById(null);
     }
+
+    @Test
+    @DisplayName("Should return all subjects when search query is null")
+    void findBySearchQuery_WithNullQuery_ReturnsAllSubjects() {
+        // Arrange
+        List<Subject> expectedSubjects = Arrays.asList(subject1, subject2);
+        when(subjectRepository.findAll()).thenReturn(expectedSubjects);
+
+        // Act
+        List<Subject> result = subjectService.findBySearchQuery(null);
+
+        // Assert
+        assertEquals(expectedSubjects, result);
+        verify(subjectRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Should return all subjects when search query is empty")
+    void findBySearchQuery_WithEmptyQuery_ReturnsAllSubjects() {
+        // Arrange
+        List<Subject> expectedSubjects = Arrays.asList(subject1, subject2);
+        when(subjectRepository.findAll()).thenReturn(expectedSubjects);
+
+        // Act
+        List<Subject> result = subjectService.findBySearchQuery("   ");
+
+        // Assert
+        assertEquals(expectedSubjects, result);
+        verify(subjectRepository, times(1)).findAll();
+    }
+
+    @Test
+    @DisplayName("Should return filtered subjects when search query is provided")
+    @SuppressWarnings("unchecked")
+    void findBySearchQuery_WithValidQuery_ReturnsFilteredSubjects() {
+        // Arrange
+        List<Subject> filteredSubjects = List.of(subject1);
+        when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(filteredSubjects);
+
+        // Act
+        List<Subject> result = subjectService.findBySearchQuery("Math");
+
+        // Assert
+        assertEquals(filteredSubjects, result);
+        verify(subjectRepository, times(1)).findAll(any(org.springframework.data.jpa.domain.Specification.class));
+    }
 }

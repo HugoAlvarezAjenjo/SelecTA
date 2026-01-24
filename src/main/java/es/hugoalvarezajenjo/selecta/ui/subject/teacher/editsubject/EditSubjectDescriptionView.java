@@ -1,6 +1,5 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.teacher.editsubject;
 
-import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import lombok.RequiredArgsConstructor;
