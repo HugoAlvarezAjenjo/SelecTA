@@ -122,6 +122,15 @@
                         </div>
                     </div>
 
+                    <!-- Private Resource Checkbox -->
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="isPrivate" name="isPrivate"
+                            class="w-5 h-5 text-upm-light-blue border-gray-300 rounded focus:ring-upm-light-blue">
+                        <label for="isPrivate" class="text-gray-700 font-medium cursor-pointer">
+                            <i class="fas fa-lock mr-1"></i> Recurso privado (solo visible para profesores)
+                        </label>
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="flex justify-end">
                         <button type="submit"
@@ -161,6 +170,10 @@
                                     th:text="${res.type}">
                                     EXERCISE
                                 </span>
+                                <span th:if="${res.isPrivate}"
+                                    class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <i class="fas fa-lock mr-1"></i> Privado
+                                </span>
                             </div>
                         </div>
 
@@ -190,6 +203,13 @@
                                 <i class="fas fa-download mr-1"></i> Descargar
                             </a>
 
+                            <!-- Toggle Privacy Button -->
+                            <button th:onclick="'confirmTogglePrivacy(' + ${res.id} + ', ' + ${res.isPrivate} + ')'"
+                                class="flex-1 px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg text-sm">
+                                <i th:class="${res.isPrivate ? 'fas fa-eye' : 'fas fa-eye-slash'}"></i>
+                                <span th:text="${res.isPrivate ? 'Publicar' : 'Privatizar'}">Privatizar</span>
+                            </button>
+
                             <!-- Delete Button -->
                             <form
                                 th:action="@{'/edit/subject/' + ${subjectDTO.id} + '/resources/' + ${res.id} + '/delete'}"
@@ -208,10 +228,24 @@
         </div>
     </section>
 
+    <!-- Hidden form for toggle privacy -->
+    <form id="togglePrivacyForm" method="post" style="display:none;">
+    </form>
+
     <th:block th:replace="~{fragments/footer :: footer}" />
 
-    <!-- Minimal JavaScript for file input display -->
-    <script>
+    <!-- Minimal JavaScript for file input display and toggle privacy -->
+    <script th:inline="javascript">
+        function confirmTogglePrivacy(resourceId, isPrivate) {
+            const action = isPrivate ? 'hacer público' : 'hacer privado';
+            if (confirm(`¿Estás seguro de que quieres ${action} este recurso?`)) {
+                const subjectId = /*[[${subjectDTO.id}]]*/ 0;
+                const form = document.getElementById('togglePrivacyForm');
+                form.action = `/edit/subject/${subjectId}/resources/${resourceId}/toggle-privacy`;
+                form.submit();
+            }
+        }
+
         // Show selected filename
         const fileInput = document.getElementById('file');
         if (fileInput) {

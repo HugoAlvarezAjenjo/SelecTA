@@ -79,6 +79,24 @@ class SubjectResourceServiceImplTest {
     }
 
     @Test
+    void getPublicResourcesFromSubject_shouldReturnOnlyPublicResources() {
+        Long subjectId = 1L;
+        SubjectResource publicResource = new SubjectResource();
+        publicResource.setPrivate(false);
+        SubjectResource privateResource = new SubjectResource();
+        privateResource.setPrivate(true);
+
+        when(subjectResourceRepository.findSubjectResourceBySubjectIdAndIsPrivate(subjectId, false))
+                .thenReturn(Arrays.asList(publicResource));
+
+        List<SubjectResource> result = subjectResourceService.getPublicResourcesFromSubject(subjectId);
+
+        assertEquals(1, result.size());
+        assertFalse(result.get(0).isPrivate());
+        verify(subjectResourceRepository).findSubjectResourceBySubjectIdAndIsPrivate(subjectId, false);
+    }
+
+    @Test
     void deleteResource_shouldCallRepositoryDelete() {
         Long resourceId = 1L;
 

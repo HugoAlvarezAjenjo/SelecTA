@@ -25,4 +25,5 @@ public class SubjectResource {
     private ResourceType type;
     private String language;
     private String originalName;
+    private boolean isPrivate = false;
 }

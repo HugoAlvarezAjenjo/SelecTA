@@ -33,7 +33,7 @@ public class SubjectViewController {
 
         model.addAttribute("subject", SubjectInfoDTO.createFromDomain(subject.get(), longDescriptionHtml));
         model.addAttribute("resources",
-                SubjectResourceDTO.createFromDomain(this.subjectResourceService.getResourcesFromSubject(id)));
+                SubjectResourceDTO.createFromDomain(this.subjectResourceService.getPublicResourcesFromSubject(id)));
         return "subject/user/subject-view";
     }
 }

@@ -22,8 +22,22 @@ public class SubjectResourceServiceImpl implements SubjectResourceService {
     }
 
     @Override
+    public List<SubjectResource> getPublicResourcesFromSubject(final Long subjectId) {
+        return this.subjectResourceRepository.findSubjectResourceBySubjectIdAndIsPrivate(subjectId, false);
+    }
+
+    @Override
     public SubjectResource findById(final Long resourceId) {
         return this.subjectResourceRepository.findById(resourceId).orElse(null);
+    }
+
+    @Override
+    public void togglePrivacy(final Long resourceId) {
+        final SubjectResource resource = this.subjectResourceRepository.findById(resourceId).orElse(null);
+        if (resource != null) {
+            resource.setPrivate(!resource.isPrivate());
+            this.subjectResourceRepository.save(resource);
+        }
     }
 
     @Override

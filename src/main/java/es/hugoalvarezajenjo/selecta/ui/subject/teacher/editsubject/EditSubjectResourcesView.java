@@ -48,6 +48,7 @@ public class EditSubjectResourcesView {
             @RequestParam(required = false) final String description,
             @RequestParam final ResourceType type,
             @RequestParam(required = false) final String language,
+            @RequestParam(defaultValue = "false") final boolean isPrivate,
             final RedirectAttributes redirectAttributes) {
 
         final Optional<Subject> subjectOpt = this.subjectService.getSubjectById(subjectId);
@@ -70,6 +71,7 @@ public class EditSubjectResourcesView {
             resource.setLanguage(language != null ? language : "");
             resource.setOriginalName(file.getOriginalFilename());
             resource.setCreationDate(LocalDate.now());
+            resource.setPrivate(isPrivate);
 
             resource = this.subjectResourceService.saveResource(resource);
 
@@ -111,6 +113,25 @@ public class EditSubjectResourcesView {
         this.subjectResourceService.deleteResource(resourceId);
 
         redirectAttributes.addFlashAttribute("success", "Recurso eliminado correctamente");
+        return "redirect:/edit/subject/" + subjectId + "/resources";
+    }
+
+    @PostMapping("/{resourceId}/toggle-privacy")
+    public String toggleResourcePrivacy(
+            @PathVariable final Long subjectId,
+            @PathVariable final Long resourceId,
+            final RedirectAttributes redirectAttributes) {
+
+        final SubjectResource resource = this.subjectResourceService.findById(resourceId);
+        if (resource == null) {
+            redirectAttributes.addFlashAttribute("error", "Recurso no encontrado");
+            return "redirect:/edit/subject/" + subjectId + "/resources";
+        }
+
+        this.subjectResourceService.togglePrivacy(resourceId);
+
+        final String status = !resource.isPrivate() ? "privado" : "público";
+        redirectAttributes.addFlashAttribute("success", "El recurso ahora es " + status);
         return "redirect:/edit/subject/" + subjectId + "/resources";
     }
 

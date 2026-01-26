@@ -7,7 +7,11 @@ public interface SubjectResourceService {
 
     List<SubjectResource> getResourcesFromSubject(Long subjectId);
 
+    List<SubjectResource> getPublicResourcesFromSubject(Long subjectId);
+
     SubjectResource findById(Long resourceId);
+
+    void togglePrivacy(Long resourceId);
 
     void deleteResource(Long resourceId);
 }

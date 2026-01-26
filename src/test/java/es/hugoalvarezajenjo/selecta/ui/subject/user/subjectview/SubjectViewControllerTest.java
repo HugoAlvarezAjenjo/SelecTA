@@ -77,7 +77,7 @@ class SubjectViewControllerTest {
     void shouldDisplaySubjectPageWithCorrectDetailsAndResources() {
         // Arrange
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
-        when(subjectResourceService.getResourcesFromSubject(EXISTING_SUBJECT_ID))
+        when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(List.of(testResource));
 
         // Act
@@ -93,7 +93,7 @@ class SubjectViewControllerTest {
     void shouldProvideCorrectSubjectInformationAsDTO() {
         // Arrange
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
-        when(subjectResourceService.getResourcesFromSubject(EXISTING_SUBJECT_ID)).thenReturn(List.of());
+        when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID)).thenReturn(List.of());
 
         ArgumentCaptor<SubjectInfoDTO> subjectCaptor = ArgumentCaptor.forClass(SubjectInfoDTO.class);
 
@@ -126,7 +126,7 @@ class SubjectViewControllerTest {
         // Arrange
         List<SubjectResource> testResources = List.of(testResource);
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
-        when(subjectResourceService.getResourcesFromSubject(EXISTING_SUBJECT_ID))
+        when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(testResources);
 
         ArgumentCaptor<List<SubjectResourceDTO>> resourcesCaptor = ArgumentCaptor.forClass(List.class);
@@ -161,7 +161,7 @@ class SubjectViewControllerTest {
         // No semesters, no languages
 
         when(subjectService.getSubjectById(2L)).thenReturn(Optional.of(minimalSubject));
-        when(subjectResourceService.getResourcesFromSubject(2L)).thenReturn(List.of());
+        when(subjectResourceService.getPublicResourcesFromSubject(2L)).thenReturn(List.of());
 
         ArgumentCaptor<SubjectInfoDTO> subjectCaptor = ArgumentCaptor.forClass(SubjectInfoDTO.class);
 
@@ -204,7 +204,7 @@ class SubjectViewControllerTest {
     void shouldHandleEmptyResourcesList() {
         // Arrange
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
-        when(subjectResourceService.getResourcesFromSubject(EXISTING_SUBJECT_ID))
+        when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(List.of()); // Empty list
 
         ArgumentCaptor<List<SubjectResourceDTO>> resourcesCaptor = ArgumentCaptor.forClass(List.class);
@@ -236,7 +236,7 @@ class SubjectViewControllerTest {
 
         List<SubjectResource> testResources = List.of(testResource, secondResource);
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
-        when(subjectResourceService.getResourcesFromSubject(EXISTING_SUBJECT_ID))
+        when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(testResources);
 
         ArgumentCaptor<List<SubjectResourceDTO>> resourcesCaptor = ArgumentCaptor.forClass(List.class);

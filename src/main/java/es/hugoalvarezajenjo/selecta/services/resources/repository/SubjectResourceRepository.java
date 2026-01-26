@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface SubjectResourceRepository extends JpaRepository<SubjectResource, Long> {
     List<SubjectResource> findSubjectResourceBySubjectId(Long subjectId);
+
+    List<SubjectResource> findSubjectResourceBySubjectIdAndIsPrivate(Long subjectId, boolean isPrivate);
 }

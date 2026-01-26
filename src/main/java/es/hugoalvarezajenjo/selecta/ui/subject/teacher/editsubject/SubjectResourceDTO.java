@@ -13,6 +13,7 @@ public class SubjectResourceDTO {
     private String type;
     private String language;
     private String uploadDate;
+    private boolean isPrivate;
 
     public static SubjectResourceDTO createFromDomain(final SubjectResource subjectResource) {
         return new SubjectResourceDTO(
@@ -21,7 +22,8 @@ public class SubjectResourceDTO {
                 subjectResource.getDescription(),
                 subjectResource.getType().toString(),
                 subjectResource.getLanguage(),
-                subjectResource.getCreationDate().toString());
+                subjectResource.getCreationDate().toString(),
+                subjectResource.isPrivate());
     }
 
     public static List<SubjectResourceDTO> createFromDomain(final List<SubjectResource> subjectResources) {
