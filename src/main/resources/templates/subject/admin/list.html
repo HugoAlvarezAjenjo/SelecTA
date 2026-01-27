@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Asignaturas - SelecTA</title>
+    <link rel="stylesheet" th:href="@{/css/design-system.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities.css}">
+    <link rel="stylesheet" th:href="@{/css/badges.css}">
+    <link rel="stylesheet" th:href="@{/css/modals.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'upm-blue': '#003865',
+                        'upm-light-blue': '#0072CE',
+                        'upm-gray': '#E5E7EB',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-upm-blue">Administrar Asignaturas</h1>
+                <p class="text-gray-600">Crear, editar y eliminar asignaturas del sistema.</p>
+            </div>
+            <a th:href="@{/admin/subjects/new}"
+                class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-lg font-medium transition-all inline-flex items-center">
+                <i class="fas fa-plus mr-2"></i> Nueva Asignatura
+            </a>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 border-b border-gray-200">
+                            <th class="px-6 py-4 font-semibold text-upm-blue">ID</th>
+                            <th class="px-6 py-4 font-semibold text-upm-blue">Nombre</th>
+                            <th class="px-6 py-4 font-semibold text-upm-blue text-center">Créditos</th>
+                            <th class="px-6 py-4 font-semibold text-upm-blue">Idiomas</th>
+                            <th class="px-6 py-4 font-semibold text-upm-blue">Semestres</th>
+                            <th class="px-6 py-4 font-semibold text-upm-blue text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr th:each="subject : ${subjects}" class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 text-gray-500 font-mono text-sm" th:text="${subject.id}">1</td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-upm-blue" th:text="${subject.name}">Nombre de la Asignatura
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-sm font-medium"
+                                    th:text="${subject.credits}">6</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    <span th:each="lang : ${subject.languages}" class="badge badge-info text-xs"
+                                        th:text="${lang}">ES</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-wrap gap-1">
+                                    <span th:each="sem : ${subject.semesters}" class="badge badge-secondary text-xs"
+                                        th:text="${sem}">S1</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <div class="flex justify-end space-x-2">
+                                    <a th:href="@{/admin/subjects/{id}/edit(id=${subject.id})}"
+                                        class="p-2 text-upm-light-blue hover:text-upm-blue transition-colors"
+                                        title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="p-2 text-red-500 hover:text-red-700 transition-colors"
+                                        title="Eliminar" th:data-id="${subject.id}" th:data-name="${subject.name}"
+                                        onclick="openDeleteModal(this.getAttribute('data-id'), this.getAttribute('data-name'))">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(subjects)}">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-500 italic">
+                                No hay asignaturas registradas.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal"
+        class="fixed inset-0 z-[1000] hidden flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+            <div class="p-6">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Confirmar eliminación</h3>
+                <p class="text-center text-gray-600">
+                    ¿Estás seguro de que deseas eliminar la asignatura <span id="subjectNameToDelete"
+                        class="font-bold text-red-600"></span>? Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="bg-gray-50 p-4 flex justify-end space-x-3">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors">
+                    Cancelar
+                </button>
+                <form id="deleteForm" method="post" action="">
+                    <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-all">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script th:inline="javascript">
+        function openDeleteModal(id, name) {
+            const modal = document.getElementById('deleteModal');
+            document.getElementById('subjectNameToDelete').innerText = name;
+            document.getElementById('deleteForm').action = '/admin/subjects/' + id + '/delete';
+            modal.classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                closeDeleteModal();
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -37,3 +37,6 @@ INSERT INTO subject_resource (subject_id, name, description, creation_date, type
                                                                                                          (5, 'Spring Boot Guide', 'Comprehensive Spring Boot development guide', '2024-03-01', 'NOTES', 'SPANISH', 'spring_guide.pdf', false),
                                                                                                          (2, 'Mechanics Video Lectures', 'Video lectures on classical mechanics', '2024-03-05', 'VIDEO', 'ENGLISH', 'mechanics.mp4', false),
                                                                                                          (1, 'Calculus Presentation', 'Slides for calculus concepts and formulas', '2024-03-10', 'PRESENTATION', 'ENGLISH', 'calculus.pptx', false);
+
+-- Reset identity counters to avoid primary key violations with prepopulated data
+ALTER TABLE subject ALTER COLUMN id RESTART WITH 6;

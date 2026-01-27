@@ -1,49 +1,184 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Registrar asignatura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit ? 'Editar Asignatura' : 'Nueva Asignatura'} + ' - SelecTA'">Nueva Asignatura - SelecTA
+    </title>
+    <link rel="stylesheet" th:href="@{/css/design-system.css}">
+    <link rel="stylesheet" th:href="@{/css/utilities.css}">
+    <link rel="stylesheet" th:href="@{/css/forms.css}">
+    <link rel="stylesheet" th:href="@{/css/modals.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'upm-blue': '#003865',
+                        'upm-light-blue': '#0072CE',
+                        'upm-gray': '#E5E7EB',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-<h1>Registrar asignatura</h1>
-<form th:action="@{/test/path}" th:object="${subject}" method="post">
-    <div>
-        <label for="name">Name:</label>
-        <input type="text" th:field="*{name}" id="name" required />
-    </div>
-    <div>
-        <label for="description">Description:</label>
-        <textarea th:field="*{description}" id="description" required></textarea>
-    </div>
-    <div>
-        <label for="credits">Credits:</label>
-        <input type="number" th:field="*{credits}" id="credits" min="0" required />
-    </div>
-    <div>
-        <label>Languages:</label><br/>
-        <th:block th:each="lang : ${T(es.hugoalvarezajenjo.selecta.services.types.Languages).values()}">
-            <input type="checkbox"
-                   th:field="*{languages}"
-                   th:value="${lang.name()}"
-                   th:id="${'lang_' + lang.name()}" />
-            <label th:for="${'lang_' + lang.name()}" th:text="${lang}">Language</label><br/>
-        </th:block>
 
-    </div>
-    <div>
-        <label>Semesters:</label><br/>
-        <th:block th:each="sem : ${T(es.hugoalvarezajenjo.selecta.services.types.Semester).values()}">
-            <input type="checkbox"
-                   th:field="*{semesters}"
-                   th:value="${sem.name()}"
-                   th:id="${'sem_' + sem.name()}" />
-            <label th:for="${'sem_' + sem.name()}" th:text="${sem}">Semester</label><br/>
-        </th:block>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
 
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="mb-8">
+                <a th:href="@{/admin/subjects}"
+                    class="text-upm-light-blue hover:text-upm-blue transition-colors inline-flex items-center mb-4">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver al listado
+                </a>
+                <h1 class="text-3xl font-bold text-upm-blue"
+                    th:text="${isEdit ? 'Editar Asignatura' : 'Nueva Asignatura'}">Nueva Asignatura</h1>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <form th:action="@{/admin/subjects/save}" th:object="${subject}" method="post" class="p-8">
+                    <input type="hidden" th:if="${isEdit}" th:field="*{id}" />
+
+                    <div class="grid grid-cols-1 gap-6">
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label for="name" class="form-label font-semibold text-upm-blue mb-1">Nombre de la
+                                asignatura <span class="text-red-500">*</span></label>
+                            <input type="text" th:field="*{name}" id="name" class="form-input"
+                                placeholder="Ej. Arquitectura de Computadores" required />
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group">
+                            <label for="description" class="form-label font-semibold text-upm-blue mb-1">Descripción
+                                corta</label>
+                            <textarea th:field="*{description}" id="description" class="form-textarea" rows="3"
+                                placeholder="Una breve descripción de la asignatura..."></textarea>
+                        </div>
+
+                        <!-- Credits & Misc -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label for="credits" class="form-label font-semibold text-upm-blue mb-1">Créditos <span
+                                        class="text-red-500">*</span></label>
+                                <input type="number" th:field="*{credits}" id="credits" class="form-input" min="0"
+                                    step="1" required />
+                            </div>
+                        </div>
+
+                        <hr class="border-gray-100" />
+
+                        <!-- Languages -->
+                        <div>
+                            <label class="form-label font-semibold text-upm-blue mb-3 block">Idiomas impartidos</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <div th:each="lang : ${T(es.hugoalvarezajenjo.selecta.services.types.Languages).values()}"
+                                    class="flex items-center">
+                                    <input type="checkbox" th:field="*{languages}" th:value="${lang.name()}"
+                                        th:id="'lang-' + ${lang.name()}"
+                                        class="w-5 h-5 text-upm-light-blue border-gray-300 rounded focus:ring-upm-light-blue" />
+                                    <label th:for="'lang-' + ${lang.name()}" th:text="${lang}"
+                                        class="ml-2 text-gray-700">Español</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Semesters -->
+                        <div>
+                            <label class="form-label font-semibold text-upm-blue mb-3 block">Semestres
+                                disponibles</label>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                <div th:each="sem : ${T(es.hugoalvarezajenjo.selecta.services.types.Semester).values()}"
+                                    class="flex items-center">
+                                    <input type="checkbox" th:field="*{semesters}" th:value="${sem.name()}"
+                                        th:id="'sem-' + ${sem.name()}"
+                                        class="w-5 h-5 text-upm-light-blue border-gray-300 rounded focus:ring-upm-light-blue" />
+                                    <label th:for="'sem-' + ${sem.name()}" th:text="${sem}"
+                                        class="ml-2 text-gray-700">Semestre 1</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div th:if="${isEdit}">
+                            <button type="button" onclick="openDeleteModal()"
+                                class="text-red-500 hover:text-red-700 font-medium transition-colors flex items-center">
+                                <i class="fas fa-trash-alt mr-2"></i> Eliminar asignatura
+                            </button>
+                        </div>
+                        <div th:unless="${isEdit}"></div>
+
+                        <div class="flex space-x-4">
+                            <a th:href="@{/admin/subjects}"
+                                class="px-6 py-3 text-gray-600 hover:text-gray-800 font-medium transition-colors">
+                                Cancelar
+                            </a>
+                            <button type="submit"
+                                class="bg-upm-light-blue hover:bg-upm-blue text-white px-8 py-3 rounded-lg font-bold shadow-lg transition-all transform hover:-translate-y-0.5">
+                                <i class="fas fa-save mr-2"></i> Guardar Asignatura
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal (only in edit mode) -->
+    <div th:if="${isEdit}" id="deleteModal"
+        class="fixed inset-0 z-[1000] hidden flex items-center justify-center bg-black bg-opacity-50 px-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
+            <div class="p-6">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-center text-gray-900 mb-2">Confirmar eliminación</h3>
+                <p class="text-center text-gray-600">
+                    ¿Estás seguro de que deseas eliminar la asignatura <span class="font-bold text-red-600"
+                        th:text="${subject.name}"></span>? Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="bg-gray-50 p-4 flex justify-end space-x-3">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors">
+                    Cancelar
+                </button>
+                <form th:action="@{/admin/subjects/{id}/delete(id=${subject.id})}" method="post">
+                    <button type="submit"
+                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-all">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div>
-        <button type="submit">Submit</button>
-    </div>
-</form>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script th:if="${isEdit}" th:inline="javascript">
+        function openDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                closeDeleteModal();
+            }
+        }
+    </script>
 </body>
+
 </html>
