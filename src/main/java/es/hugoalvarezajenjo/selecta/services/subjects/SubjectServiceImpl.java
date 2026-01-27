@@ -46,4 +46,20 @@ public class SubjectServiceImpl implements SubjectService {
         final Specification<Subject> spec = SubjectSpecifications.containsWordsInNameOrDescription(query);
         return this.subjectRepository.findAll(spec);
     }
+
+    @Override
+    public List<Subject> getActiveSubjects() {
+        return this.subjectRepository.findAll(SubjectSpecifications.isNotDiscontinued());
+    }
+
+    @Override
+    public List<Subject> findActiveBySearchQuery(final String query) {
+        Specification<Subject> spec = SubjectSpecifications.isNotDiscontinued();
+
+        if (query != null && !query.trim().isEmpty()) {
+            spec = spec.and(SubjectSpecifications.containsWordsInNameOrDescription(query));
+        }
+
+        return this.subjectRepository.findAll(spec);
+    }
 }

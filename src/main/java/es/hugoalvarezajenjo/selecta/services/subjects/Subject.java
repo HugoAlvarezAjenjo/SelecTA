@@ -30,4 +30,5 @@ public class Subject {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private Set<Semester> semesters = new HashSet<>();
+    private boolean discontinued = false;
 }

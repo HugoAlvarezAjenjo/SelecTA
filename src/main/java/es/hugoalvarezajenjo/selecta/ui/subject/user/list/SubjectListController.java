@@ -31,9 +31,9 @@ public class SubjectListController {
         List<Subject> filteredSubjects;
 
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            filteredSubjects = this.subjectService.findBySearchQuery(searchQuery);
+            filteredSubjects = this.subjectService.findActiveBySearchQuery(searchQuery);
         } else {
-            filteredSubjects = this.subjectService.getAllSubjects();
+            filteredSubjects = this.subjectService.getActiveSubjects();
         }
 
         model.addAttribute("subjects", filteredSubjects.stream()
@@ -57,7 +57,6 @@ public class SubjectListController {
                 subject.getId(),
                 subject.getName(),
                 subject.getDescription(),
-                attributesList
-        );
+                attributesList);
     }
 }

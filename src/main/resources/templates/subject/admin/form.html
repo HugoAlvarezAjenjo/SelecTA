@@ -106,6 +106,18 @@
                         </div>
                     </div>
 
+                    <!-- Discontinued Toggle -->
+                    <div class="mt-8 flex items-center p-4 bg-orange-50 rounded-lg border border-orange-100">
+                        <input type="checkbox" th:field="*{discontinued}" id="discontinued"
+                            class="w-6 h-6 text-orange-600 border-gray-300 rounded focus:ring-orange-500" />
+                        <div class="ml-3">
+                            <label for="discontinued" class="font-bold text-orange-800">Marcar como
+                                descatalogada</label>
+                            <p class="text-sm text-orange-700">Esta asignatura dejará de aparecer en las búsquedas de
+                                los estudiantes.</p>
+                        </div>
+                    </div>
+
                     <div
                         class="mt-8 pt-6 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
                         <div th:if="${isEdit}">

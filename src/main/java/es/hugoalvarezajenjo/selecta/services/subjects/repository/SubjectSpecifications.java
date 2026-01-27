@@ -21,19 +21,16 @@ public class SubjectSpecifications {
                 if (word.length() > 2) { // Only consider words longer than 2 chars
                     Predicate namePredicate = criteriaBuilder.like(
                             criteriaBuilder.lower(root.get("name")),
-                            "%" + word + "%"
-                    );
+                            "%" + word + "%");
                     Predicate descPredicate = criteriaBuilder.like(
                             criteriaBuilder.lower(root.get("description")),
-                            "%" + word + "%"
-                    );
+                            "%" + word + "%");
                     predicates.add(criteriaBuilder.or(namePredicate, descPredicate));
                 }
             }
 
-            return predicates.isEmpty() ?
-                    criteriaBuilder.conjunction() :
-                    criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            return predicates.isEmpty() ? criteriaBuilder.conjunction()
+                    : criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 
@@ -54,5 +51,9 @@ public class SubjectSpecifications {
             }
             return cb.isMember(semester, root.get("semesters"));
         };
+    }
+
+    public static Specification<Subject> isNotDiscontinued() {
+        return (root, query, cb) -> cb.equal(root.get("discontinued"), false);
     }
 }

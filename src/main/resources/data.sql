@@ -1,10 +1,10 @@
 -- Insert Subjects
-INSERT INTO subject (id, name, description, credits) VALUES
-                                                         (1, 'Mathematics', 'Advanced mathematics course covering algebra and calculus', 6),
-                                                         (2, 'Physics', 'Fundamentals of physics including mechanics and thermodynamics', 6),
-                                                         (3, 'Programming', 'Java programming basics and object-oriented design', 4),
-                                                         (4, 'Database Systems', 'Introduction to database design and SQL', 5),
-                                                         (5, 'Web Development', 'Front-end and back-end web development technologies', 5);
+INSERT INTO subject (id, name, description, credits, discontinued) VALUES
+                                                         (1, 'Mathematics', 'Advanced mathematics course covering algebra and calculus', 6, false),
+                                                         (2, 'Physics', 'Fundamentals of physics including mechanics and thermodynamics', 6, false),
+                                                         (3, 'Programming', 'Java programming basics and object-oriented design', 4, false),
+                                                         (4, 'Database Systems', 'Introduction to database design and SQL', 5, false),
+                                                         (5, 'Web Development', 'Front-end and back-end web development technologies', 5, false);
 
 -- Insert Subject languages (for the subject_languages join table)
 INSERT INTO subject_languages (subject_id, languages) VALUES

@@ -13,4 +13,8 @@ public interface SubjectService {
     void deleteSubjectById(Long id);
 
     List<Subject> findBySearchQuery(String searchQuery);
+
+    List<Subject> getActiveSubjects();
+
+    List<Subject> findActiveBySearchQuery(String searchQuery);
 }

@@ -14,4 +14,5 @@ public class SubjectAdminDTO {
     private int credits;
     private Set<Languages> languages;
     private Set<Semester> semesters;
+    private boolean discontinued;
 }

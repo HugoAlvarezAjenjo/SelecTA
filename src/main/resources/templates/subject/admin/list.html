@@ -58,7 +58,10 @@
                         <tr th:each="subject : ${subjects}" class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 text-gray-500 font-mono text-sm" th:text="${subject.id}">1</td>
                             <td class="px-6 py-4">
-                                <div class="font-bold text-upm-blue" th:text="${subject.name}">Nombre de la Asignatura
+                                <div class="font-bold text-upm-blue flex items-center">
+                                    <span th:text="${subject.name}">Nombre de la Asignatura</span>
+                                    <span th:if="${subject.discontinued}"
+                                        class="ml-2 bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">Descatalogada</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-center">
