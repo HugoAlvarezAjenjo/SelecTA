@@ -101,8 +101,23 @@ public class SubjectServiceImpl implements SubjectService {
             spec = spec.and(SubjectSpecifications.hasCreditsLessThanEqual(criteria.getMaxCredits()));
         }
 
-        if (criteria.getSemesters() != null && !criteria.getSemesters().isEmpty()) {
-            spec = spec.and(SubjectSpecifications.hasSemesterIn(criteria.getSemesters()));
+        if (criteria.getSemesterTypes() != null && !criteria.getSemesterTypes().isEmpty()) {
+            java.util.List<es.hugoalvarezajenjo.selecta.services.types.Semester> targetSemesters = new java.util.ArrayList<>();
+            if (criteria.getSemesterTypes().contains("ODD")) {
+                targetSemesters.addAll(java.util.Arrays.asList(
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.FIRST, 
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.THIRD, 
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.FIFTH, 
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.SEVENTH));
+            }
+            if (criteria.getSemesterTypes().contains("EVEN")) {
+                targetSemesters.addAll(java.util.Arrays.asList(
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.SECOND, 
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.FOURTH, 
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.SIXTH, 
+                    es.hugoalvarezajenjo.selecta.services.types.Semester.EIGHTH));
+            }
+            spec = spec.and(SubjectSpecifications.hasSemesterIn(targetSemesters));
         }
 
         if (criteria.getLanguage() != null) {

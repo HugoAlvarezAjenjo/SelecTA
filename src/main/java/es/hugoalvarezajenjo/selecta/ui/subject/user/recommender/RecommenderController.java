@@ -25,7 +25,6 @@ public class RecommenderController {
     @GetMapping
     public String recommenderForm(Model model) {
         model.addAttribute("recommenderDTO", new SubjectRecommenderDTO());
-        model.addAttribute("allSemesters", Semester.values());
         model.addAttribute("allLanguages", Languages.values());
         return "subject/user/recommender";
     }
@@ -38,7 +37,6 @@ public class RecommenderController {
                 .toList();
         
         model.addAttribute("recommenderDTO", dto);
-        model.addAttribute("allSemesters", Semester.values());
         model.addAttribute("allLanguages", Languages.values());
         model.addAttribute("recommendedSubjects", recommendedDTOs);
         
