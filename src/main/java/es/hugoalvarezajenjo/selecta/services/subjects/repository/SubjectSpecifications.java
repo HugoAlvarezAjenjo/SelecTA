@@ -56,4 +56,22 @@ public class SubjectSpecifications {
     public static Specification<Subject> isNotDiscontinued() {
         return (root, query, cb) -> cb.equal(root.get("discontinued"), false);
     }
+
+    public static Specification<Subject> hasCreditsLessThanEqual(Integer maxCredits) {
+        return (root, query, cb) -> {
+            if (maxCredits == null || maxCredits <= 0) {
+                return cb.conjunction();
+            }
+            return cb.lessThanOrEqualTo(root.get("credits"), maxCredits);
+        };
+    }
+
+    public static Specification<Subject> hasSemesterIn(List<es.hugoalvarezajenjo.selecta.services.types.Semester> semesters) {
+        return (root, query, cb) -> {
+            if (semesters == null || semesters.isEmpty()) {
+                return cb.conjunction();
+            }
+            return root.join("semesters").in(semesters);
+        };
+    }
 }

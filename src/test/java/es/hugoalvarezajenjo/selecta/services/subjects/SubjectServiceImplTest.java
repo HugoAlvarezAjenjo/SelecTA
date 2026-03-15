@@ -297,4 +297,78 @@ class SubjectServiceImplTest {
         // Assert
         assertEquals(1, result.size());
     }
+
+    @Test
+    @DisplayName("Should return active subjects when criteria is null")
+    void recommendSubjects_WithNullCriteria_ReturnsActiveSubjects() {
+        // Arrange
+        List<Subject> activeSubjects = Arrays.asList(subject1, subject2);
+        when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(activeSubjects);
+
+        // Act
+        List<Subject> result = subjectService.recommendSubjects(null);
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals(activeSubjects, result);
+    }
+
+    @Test
+    @DisplayName("Should return filtered subjects when criteria is provided without keywords")
+    void recommendSubjects_WithCriteriaNoKeywords_ReturnsFilteredSubjects() {
+        // Arrange
+        es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria =
+                new es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO();
+        criteria.setMaxCredits(6);
+        criteria.setLanguage(es.hugoalvarezajenjo.selecta.services.types.Languages.SPANISH);
+
+        List<Subject> filteredSubjects = Arrays.asList(subject1);
+        when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(filteredSubjects);
+
+        // Act
+        List<Subject> result = subjectService.recommendSubjects(criteria);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(subject1, result.get(0));
+    }
+
+    @Test
+    @DisplayName("Should return sorted and filtered subjects based on keyword relevance")
+    void recommendSubjects_WithKeywords_ReturnsSortedSubjects() {
+        // Arrange
+        es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria =
+                new es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO();
+        criteria.setSearchKeywords("Physics");
+
+        Subject highRelevance = new Subject();
+        highRelevance.setId(10L);
+        highRelevance.setName("Advanced Physics"); // Word 'physics' gets score +3
+        highRelevance.setDescription("Some description");
+
+        Subject lowRelevance = new Subject();
+        lowRelevance.setId(11L);
+        lowRelevance.setName("Something Else");
+        lowRelevance.setDescription("This is related to physics."); // Word 'physics' gets score +1
+
+        Subject noRelevance = new Subject();
+        noRelevance.setId(12L);
+        noRelevance.setName("Chemistry");
+        noRelevance.setDescription("Basics"); // Score 0, should be filtered out
+
+        // The repository will return all three initial subjects based on first filter pass
+        List<Subject> initialSubjects = Arrays.asList(noRelevance, lowRelevance, highRelevance);
+        when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(initialSubjects);
+
+        // Act
+        List<Subject> result = subjectService.recommendSubjects(criteria);
+
+        // Assert
+        assertEquals(2, result.size()); // noRelevance is filtered out
+        assertEquals(10L, result.get(0).getId()); // highRelevance should be first
+        assertEquals(11L, result.get(1).getId()); // lowRelevance should be second
+    }
 }

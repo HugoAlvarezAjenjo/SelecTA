@@ -88,4 +88,64 @@ public class SubjectServiceImpl implements SubjectService {
                 .limit(limit)
                 .toList();
     }
+
+    @Override
+    public List<Subject> recommendSubjects(final es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria) {
+        if (criteria == null) {
+            return getActiveSubjects();
+        }
+
+        Specification<Subject> spec = SubjectSpecifications.isNotDiscontinued();
+
+        if (criteria.getMaxCredits() != null) {
+            spec = spec.and(SubjectSpecifications.hasCreditsLessThanEqual(criteria.getMaxCredits()));
+        }
+
+        if (criteria.getSemesters() != null && !criteria.getSemesters().isEmpty()) {
+            spec = spec.and(SubjectSpecifications.hasSemesterIn(criteria.getSemesters()));
+        }
+
+        if (criteria.getLanguage() != null) {
+            spec = spec.and(SubjectSpecifications.withLanguage(criteria.getLanguage().name()));
+        }
+
+        List<Subject> filteredSubjects = this.subjectRepository.findAll(spec);
+
+        String searchKeywords = criteria.getSearchKeywords();
+        if (searchKeywords != null && !searchKeywords.trim().isEmpty()) {
+            String[] words = searchKeywords.trim().toLowerCase().split("[\\s,]+"); // Split by comma or space
+            
+            // Re-order by relevance match
+            filteredSubjects.sort((s1, s2) -> {
+                long s1Score = calculateRelevanceScore(s1, words);
+                long s2Score = calculateRelevanceScore(s2, words);
+                return Long.compare(s2Score, s1Score); // Descending
+            });
+            
+            // Only return items that had at least 1 match with keywords if keywords are provided
+            filteredSubjects = filteredSubjects.stream()
+                .filter(s -> calculateRelevanceScore(s, words) > 0)
+                .toList();
+        }
+
+        return filteredSubjects;
+    }
+
+    private long calculateRelevanceScore(Subject subject, String[] words) {
+        long score = 0;
+        String name = subject.getName() != null ? subject.getName().toLowerCase() : "";
+        String desc = subject.getDescription() != null ? subject.getDescription().toLowerCase() : "";
+        java.util.Set<String> tags = subject.getTags();
+
+        for (String word : words) {
+            if (word.length() > 2) { // Skip tiny words
+                if (name.contains(word)) score += 3; // Name match gets highest weight
+                if (desc.contains(word)) score += 1; // Description match
+                if (tags != null && tags.stream().map(String::toLowerCase).anyMatch(t -> t.contains(word))) {
+                    score += 2; // Tag match
+                }
+            }
+        }
+        return score;
+    }
 }

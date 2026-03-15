@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendador de Asignaturas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script th:src="@{/js/tailwind-config.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/design-system.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
+</head>
+
+<body class="font-sans bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+    <th:block th:replace="~{fragments/navbar :: navbar}" />
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-2">Recomendador de Asignaturas</h1>
+            <p class="text-gray-600">Encuentra tus asignaturas ideales ajustando tus preferencias de búsqueda.</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar Filter Form -->
+            <aside class="w-full lg:w-1/3">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
+                    <h2 class="text-xl font-bold text-upm-blue mb-4 pb-2 border-b border-gray-100">
+                        <i class="fas fa-filter mr-2 text-upm-light-blue"></i> Filtros
+                    </h2>
+                    
+                    <form th:action="@{/recommender}" th:object="${recommenderDTO}" method="post">
+                        
+                        <!-- Search Keywords -->
+                        <div class="mb-5">
+                            <label for="searchKeywords" class="block text-sm font-medium text-gray-700 mb-1">Palabras clave y/o Tags</label>
+                            <input type="text" id="searchKeywords" th:field="*{searchKeywords}" placeholder="Ej. Inteligencia, Machine Learning"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-upm-light-blue focus:border-transparent text-sm">
+                            <p class="text-xs text-gray-500 mt-1">Busca en nombres, descripciones y tags. Se ordenará por relevancia.</p>
+                        </div>
+
+                        <!-- Language -->
+                        <div class="mb-5">
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-1">Idioma de impartición</label>
+                            <select id="language" th:field="*{language}"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-upm-light-blue focus:border-transparent text-sm">
+                                <option value="">Cualquier idioma</option>
+                                <option th:each="lang : ${allLanguages}" th:value="${lang.name()}" th:text="${lang}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Credits -->
+                        <div class="mb-5">
+                            <label for="maxCredits" class="block text-sm font-medium text-gray-700 mb-1">Máximo de ECTS</label>
+                            <input type="number" id="maxCredits" th:field="*{maxCredits}" placeholder="Ej. 6" min="1" max="30"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-upm-light-blue focus:border-transparent text-sm">
+                        </div>
+
+                        <!-- Semesters Checkboxes -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Semestres</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <th:block th:each="sem : ${allSemesters}">
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" th:field="*{semesters}" th:value="${sem.name()}"
+                                            class="form-checkbox h-4 w-4 text-upm-light-blue rounded border-gray-300 focus:ring-upm-light-blue">
+                                        <span class="ml-2 text-sm text-gray-700" th:text="${sem.name()}">FIRST</span>
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-upm-blue hover:bg-upm-light-blue text-white font-medium py-2 px-4 rounded-lg transition duration-200">
+                            <i class="fas fa-search mr-2"></i> Buscar
+                        </button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Results Section -->
+            <section class="w-full lg:w-2/3">
+                
+                <div th:if="${recommendedSubjects == null}" class="bg-blue-50 border border-blue-100 text-upm-blue rounded-xl p-8 text-center">
+                    <i class="fas fa-magic text-4xl mb-4 text-upm-light-blue opacity-80"></i>
+                    <h3 class="text-xl font-medium mb-2">Configura tus preferencias</h3>
+                    <p class="text-gray-600">Ajusta los filtros en el menú lateral y haz clic en "Buscar" para descubrir las asignaturas que mejor encajan contigo y ordenadas por relevancia.</p>
+                </div>
+
+                <div th:if="${recommendedSubjects != null and recommendedSubjects.isEmpty()}" class="bg-gray-50 border border-gray-200 text-gray-500 rounded-xl p-8 text-center">
+                    <i class="fas fa-search-minus text-4xl mb-4 opacity-50"></i>
+                    <h3 class="text-xl font-medium mb-2">Sin resultados</h3>
+                    <p>No hemos encontrado asignaturas que coincidan con todo lo que has marcado. Intenta quitar algún límite.</p>
+                </div>
+
+                <!-- Results Grid -->
+                <div th:if="${recommendedSubjects != null and !recommendedSubjects.isEmpty()}" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="md:col-span-2 mb-2 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-gray-700"><span th:text="${recommendedSubjects.size()}">0</span> asignaturas encontradas</h3>
+                        <span class="text-sm text-gray-500"><i class="fas fa-sort-amount-down mr-1"></i> Ordenado por relevancia</span>
+                    </div>
+
+                    <div th:each="related : ${recommendedSubjects}" class="bg-white border border-gray-100 rounded-xl shadow-sm p-5 hover:shadow-md transition-all cursor-pointer flex flex-col" th:onclick="|window.location.href='@{/subject/{id}(id=${related.id})}'|">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-upm-blue leading-tight" th:text="${related.name}">Subject Name</h3>
+                        </div>
+                        
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow" th:text="${related.description}">Description...</p>
+                        
+                        <div th:if="${related.tags != null and not #lists.isEmpty(related.tags)}" class="flex flex-wrap gap-1 mb-4">
+                            <span th:each="tag : ${related.tags}" class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded" th:text="'#' + ${tag}"></span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+                            <div class="flex flex-wrap gap-1">
+                                <span th:each="attr, stat : ${related.attributes}" th:if="${stat.index < 3}" class="bg-upm-blue bg-opacity-10 text-upm-blue rounded-full px-2 py-1 text-xs font-medium" th:text="${attr}">Attribute</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <th:block th:replace="~{fragments/footer :: footer}" />
+</body>
+</html>

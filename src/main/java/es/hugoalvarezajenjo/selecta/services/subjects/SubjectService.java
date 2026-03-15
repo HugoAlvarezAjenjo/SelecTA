@@ -19,4 +19,6 @@ public interface SubjectService {
     List<Subject> findActiveBySearchQuery(String searchQuery);
 
     List<Subject> getRelatedSubjects(Long subjectId, int limit);
+
+    List<Subject> recommendSubjects(es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria);
 }
