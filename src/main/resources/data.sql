@@ -25,6 +25,14 @@ INSERT INTO subject_semesters (subject_id, semesters) VALUES
                                                           (4, 'FOURTH'),
                                                           (5, 'FIFTH');
 
+-- Insert Subject tags
+INSERT INTO subject_tags (subject_id, tags) VALUES
+                                                (1, 'Math'), (1, 'Science'), (1, 'Engineering'),
+                                                (2, 'Physics'), (2, 'Science'), (2, 'Engineering'),
+                                                (3, 'Computer Science'), (3, 'Software Engineering'), (3, 'Programming'),
+                                                (4, 'Computer Science'), (4, 'Software Engineering'), (4, 'Data'),
+                                                (5, 'Computer Science'), (5, 'Software Engineering'), (5, 'Web');
+
 -- Insert Subject Resources
 INSERT INTO subject_resource (subject_id, name, description, creation_date, type, language, original_name, is_private) VALUES
                                                                                                          (1, 'Math Syllabus', 'Complete course syllabus for Mathematics', '2024-01-15', 'EXERCISE', 'ENGLISH', 'math_syllabus.pdf', false),

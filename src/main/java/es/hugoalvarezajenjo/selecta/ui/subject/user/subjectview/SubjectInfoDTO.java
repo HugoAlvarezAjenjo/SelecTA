@@ -15,6 +15,7 @@ public class SubjectInfoDTO {
     private String description;
     private String longDescriptionHtml;
     private Iterable<String> attributes;
+    private Iterable<String> tags;
 
     public static SubjectInfoDTO createFromDomain(final Subject subject, final String longDescriptionHtml) {
         final List<String> attributesList = new ArrayList<>();
@@ -30,6 +31,7 @@ public class SubjectInfoDTO {
                 subject.getName(),
                 subject.getDescription(),
                 longDescriptionHtml,
-                attributesList);
+                attributesList,
+                subject.getTags());
     }
 }

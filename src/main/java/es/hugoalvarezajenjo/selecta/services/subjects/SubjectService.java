@@ -17,4 +17,6 @@ public interface SubjectService {
     List<Subject> getActiveSubjects();
 
     List<Subject> findActiveBySearchQuery(String searchQuery);
+
+    List<Subject> getRelatedSubjects(Long subjectId, int limit);
 }

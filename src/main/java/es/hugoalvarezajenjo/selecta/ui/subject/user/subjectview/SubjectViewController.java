@@ -34,6 +34,12 @@ public class SubjectViewController {
         model.addAttribute("subject", SubjectInfoDTO.createFromDomain(subject.get(), longDescriptionHtml));
         model.addAttribute("resources",
                 SubjectResourceDTO.createFromDomain(this.subjectResourceService.getPublicResourcesFromSubject(id)));
+        
+        java.util.List<SubjectInfoDTO> relatedSubjects = this.subjectService.getRelatedSubjects(id, 3).stream()
+                .map(s -> SubjectInfoDTO.createFromDomain(s, ""))
+                .toList();
+        model.addAttribute("relatedSubjects", relatedSubjects);
+        
         return "subject/user/subject-view";
     }
 }

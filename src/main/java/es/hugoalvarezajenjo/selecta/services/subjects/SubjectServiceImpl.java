@@ -62,4 +62,30 @@ public class SubjectServiceImpl implements SubjectService {
 
         return this.subjectRepository.findAll(spec);
     }
+
+    @Override
+    public List<Subject> getRelatedSubjects(final Long subjectId, final int limit) {
+        final Optional<Subject> subjectOpt = this.subjectRepository.findById(subjectId);
+        if (subjectOpt.isEmpty()) {
+            return List.of();
+        }
+
+        final Subject targetSubject = subjectOpt.get();
+        final java.util.Set<String> targetTags = targetSubject.getTags();
+
+        if (targetTags == null || targetTags.isEmpty()) {
+            return List.of();
+        }
+
+        return this.getActiveSubjects().stream()
+                .filter(s -> !s.getId().equals(subjectId)) // Exclude the target subject itself
+                .filter(s -> s.getTags() != null && s.getTags().stream().anyMatch(targetTags::contains)) // Must have at least one common tag
+                .sorted((s1, s2) -> {
+                    long s1Matches = s1.getTags().stream().filter(targetTags::contains).count();
+                    long s2Matches = s2.getTags().stream().filter(targetTags::contains).count();
+                    return Long.compare(s2Matches, s1Matches); // Descending order of matches
+                })
+                .limit(limit)
+                .toList();
+    }
 }

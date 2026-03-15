@@ -218,4 +218,83 @@ class SubjectServiceImplTest {
         assertEquals(filteredSubjects, result);
         verify(subjectRepository, times(1)).findAll(any(org.springframework.data.jpa.domain.Specification.class));
     }
+
+    @Test
+    @DisplayName("Should return related subjects sorted by matching tags count")
+    @SuppressWarnings("unchecked")
+    void getRelatedSubjects_WithMatchingTags_ReturnsRelatedSubjects() {
+        // Arrange
+        Subject targetSubject = new Subject();
+        targetSubject.setId(1L);
+        targetSubject.setTags(new java.util.HashSet<>(Arrays.asList("Math", "Science")));
+
+        Subject related1 = new Subject();
+        related1.setId(2L);
+        related1.setTags(new java.util.HashSet<>(Arrays.asList("Math", "Science", "Physics"))); // 2 matches
+
+        Subject related2 = new Subject();
+        related2.setId(3L);
+        related2.setTags(new java.util.HashSet<>(Arrays.asList("Science", "Biology"))); // 1 match
+
+        Subject unrelated = new Subject();
+        unrelated.setId(4L);
+        unrelated.setTags(new java.util.HashSet<>(Arrays.asList("History"))); // 0 matches
+
+        when(subjectRepository.findById(1L)).thenReturn(Optional.of(targetSubject));
+        when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(Arrays.asList(targetSubject, related1, related2, unrelated));
+
+        // Act
+        List<Subject> result = subjectService.getRelatedSubjects(1L, 3);
+
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals(2L, result.get(0).getId()); // Most matches first
+        assertEquals(3L, result.get(1).getId());
+    }
+
+    @Test
+    @DisplayName("Should return empty list when target subject has no tags")
+    void getRelatedSubjects_TargetHasNoTags_ReturnsEmptyList() {
+        // Arrange
+        Subject targetSubject = new Subject();
+        targetSubject.setId(1L);
+        targetSubject.setTags(new java.util.HashSet<>());
+
+        when(subjectRepository.findById(1L)).thenReturn(Optional.of(targetSubject));
+
+        // Act
+        List<Subject> result = subjectService.getRelatedSubjects(1L, 3);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Should respect the limit parameter for related subjects")
+    @SuppressWarnings("unchecked")
+    void getRelatedSubjects_WithLimit_ReturnsLimitedResults() {
+        // Arrange
+        Subject targetSubject = new Subject();
+        targetSubject.setId(1L);
+        targetSubject.setTags(new java.util.HashSet<>(Arrays.asList("Math")));
+
+        Subject related1 = new Subject();
+        related1.setId(2L);
+        related1.setTags(new java.util.HashSet<>(Arrays.asList("Math")));
+
+        Subject related2 = new Subject();
+        related2.setId(3L);
+        related2.setTags(new java.util.HashSet<>(Arrays.asList("Math")));
+
+        when(subjectRepository.findById(1L)).thenReturn(Optional.of(targetSubject));
+        when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                .thenReturn(Arrays.asList(targetSubject, related1, related2));
+
+        // Act
+        List<Subject> result = subjectService.getRelatedSubjects(1L, 1);
+
+        // Assert
+        assertEquals(1, result.size());
+    }
 }
