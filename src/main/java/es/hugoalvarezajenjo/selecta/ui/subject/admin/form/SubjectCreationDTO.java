@@ -14,4 +14,7 @@ public class SubjectCreationDTO {
     private int credits;
     private Set<Languages> languages;
     private Set<Semester> semesters;
+    private String longDescription;
+    private Set<String> tags;
+    private Set<Long> teacherIds;
 }

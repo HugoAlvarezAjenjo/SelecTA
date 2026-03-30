@@ -48,3 +48,15 @@ INSERT INTO subject_resource (subject_id, name, description, creation_date, type
 
 -- Reset identity counters to avoid primary key violations with prepopulated data
 ALTER TABLE subject ALTER COLUMN id RESTART WITH 6;
+
+-- Insert Teachers (using BCrypt for 'password')
+INSERT INTO accounts (username, password, email, user_type, role) VALUES
+('hugo', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'hugo@example.com', 'TEACHER', 'TEACHER'),
+('alicia', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'alicia@example.com', 'TEACHER', 'TEACHER');
+
+-- Link Teachers to Subjects
+INSERT INTO subject_teachers (subject_id, teacher_id) VALUES
+(1, 1),
+(3, 1),
+(3, 2),
+(5, 2);

@@ -15,4 +15,7 @@ public class SubjectAdminDTO {
     private Set<Languages> languages;
     private Set<Semester> semesters;
     private boolean discontinued;
+    private String longDescription;
+    private Set<String> tags;
+    private Set<Long> teacherIds;
 }

@@ -79,6 +79,7 @@ class SubjectViewControllerTest {
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
         when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(List.of(testResource));
+        when(subjectService.getRelatedSubjects(EXISTING_SUBJECT_ID, 3)).thenReturn(List.of());
 
         // Act
         String viewName = subjectViewController.subjectView(EXISTING_SUBJECT_ID, model);
@@ -94,6 +95,7 @@ class SubjectViewControllerTest {
         // Arrange
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
         when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID)).thenReturn(List.of());
+        when(subjectService.getRelatedSubjects(EXISTING_SUBJECT_ID, 3)).thenReturn(List.of());
 
         ArgumentCaptor<SubjectInfoDTO> subjectCaptor = ArgumentCaptor.forClass(SubjectInfoDTO.class);
 
@@ -118,6 +120,10 @@ class SubjectViewControllerTest {
         assertTrue(attributes.contains("Ingles"), "Should include English language");
         assertTrue(attributes.contains("Español"), "Should include Spanish language");
         assertEquals(5, attributes.size(), "Should have all attributes");
+
+        // Verify teachers are handled (even if empty)
+        assertNotNull(subjectDTO.getTeachers(), "Teachers should not be null");
+        assertFalse(subjectDTO.getTeachers().iterator().hasNext(), "Teachers should be empty");
     }
 
     @Test
@@ -128,6 +134,7 @@ class SubjectViewControllerTest {
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
         when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(testResources);
+        when(subjectService.getRelatedSubjects(EXISTING_SUBJECT_ID, 3)).thenReturn(List.of());
 
         ArgumentCaptor<List<SubjectResourceDTO>> resourcesCaptor = ArgumentCaptor.forClass(List.class);
 
@@ -162,6 +169,7 @@ class SubjectViewControllerTest {
 
         when(subjectService.getSubjectById(2L)).thenReturn(Optional.of(minimalSubject));
         when(subjectResourceService.getPublicResourcesFromSubject(2L)).thenReturn(List.of());
+        when(subjectService.getRelatedSubjects(2L, 3)).thenReturn(List.of());
 
         ArgumentCaptor<SubjectInfoDTO> subjectCaptor = ArgumentCaptor.forClass(SubjectInfoDTO.class);
 
@@ -206,6 +214,7 @@ class SubjectViewControllerTest {
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
         when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(List.of()); // Empty list
+        when(subjectService.getRelatedSubjects(EXISTING_SUBJECT_ID, 3)).thenReturn(List.of());
 
         ArgumentCaptor<List<SubjectResourceDTO>> resourcesCaptor = ArgumentCaptor.forClass(List.class);
 
@@ -238,6 +247,7 @@ class SubjectViewControllerTest {
         when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
         when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID))
                 .thenReturn(testResources);
+        when(subjectService.getRelatedSubjects(EXISTING_SUBJECT_ID, 3)).thenReturn(List.of());
 
         ArgumentCaptor<List<SubjectResourceDTO>> resourcesCaptor = ArgumentCaptor.forClass(List.class);
 
@@ -251,6 +261,34 @@ class SubjectViewControllerTest {
         assertEquals(2, resourcesDTO.size(), "Should have two resources");
         assertEquals("Course Syllabus", resourcesDTO.get(0).getName());
         assertEquals("Exercise Sheet", resourcesDTO.get(1).getName());
+    }
+
+    @Test
+    @DisplayName("Should provide teacher names and emails in the DTO")
+    void shouldProvideTeacherNamesAndEmailsInDTO() {
+        // Arrange
+        es.hugoalvarezajenjo.selecta.services.user.Teacher teacher = new es.hugoalvarezajenjo.selecta.services.user.Teacher();
+        teacher.setUsername("hugo");
+        teacher.setEmail("hugo@example.com");
+        testSubject.setTeachers(Set.of(teacher));
+
+        when(subjectService.getSubjectById(EXISTING_SUBJECT_ID)).thenReturn(Optional.of(testSubject));
+        when(subjectResourceService.getPublicResourcesFromSubject(EXISTING_SUBJECT_ID)).thenReturn(List.of());
+        when(subjectService.getRelatedSubjects(EXISTING_SUBJECT_ID, 3)).thenReturn(List.of());
+
+        ArgumentCaptor<SubjectInfoDTO> subjectCaptor = ArgumentCaptor.forClass(SubjectInfoDTO.class);
+
+        // Act
+        subjectViewController.subjectView(EXISTING_SUBJECT_ID, model);
+
+        // Assert
+        verify(model).addAttribute(eq("subject"), subjectCaptor.capture());
+        SubjectInfoDTO subjectDTO = subjectCaptor.getValue();
+
+        List<SubjectInfoDTO.TeacherInfo> teachers = (List<SubjectInfoDTO.TeacherInfo>) subjectDTO.getTeachers();
+        assertEquals(1, teachers.size());
+        assertEquals("hugo", teachers.get(0).getName());
+        assertEquals("hugo@example.com", teachers.get(0).getEmail());
     }
 
     @Test

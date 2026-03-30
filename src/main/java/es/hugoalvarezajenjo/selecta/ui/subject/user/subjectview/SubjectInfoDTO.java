@@ -16,6 +16,13 @@ public class SubjectInfoDTO {
     private String longDescriptionHtml;
     private Iterable<String> attributes;
     private Iterable<String> tags;
+    private Iterable<TeacherInfo> teachers;
+
+    @Value
+    public static class TeacherInfo {
+        String name;
+        String email;
+    }
 
     public static SubjectInfoDTO createFromDomain(final Subject subject, final String longDescriptionHtml) {
         final List<String> attributesList = new ArrayList<>();
@@ -26,12 +33,21 @@ public class SubjectInfoDTO {
         for (final Languages language : subject.getLanguages()) {
             attributesList.add(language.toString());
         }
+
+        final List<TeacherInfo> teachersList = new ArrayList<>();
+        if (subject.getTeachers() != null) {
+            for (final var teacher : subject.getTeachers()) {
+                teachersList.add(new TeacherInfo(teacher.getUsername(), teacher.getEmail()));
+            }
+        }
+
         return new SubjectInfoDTO(
                 subject.getId(),
                 subject.getName(),
                 subject.getDescription(),
                 longDescriptionHtml,
                 attributesList,
-                subject.getTags());
+                subject.getTags(),
+                teachersList);
     }
 }
