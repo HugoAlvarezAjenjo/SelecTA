@@ -34,10 +34,10 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        final User user = this.getUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-        return org.springframework.security.core.userdetails.User.withUsername(user.getUsername())
+    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
+        final User user = this.getUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
+        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                 .password(user.getPassword())
                 .build();
     }
@@ -46,10 +46,10 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return this.getUserByUsername(userDetails.getUsername()).orElse(null);
+        return this.getUserByEmail(userDetails.getUsername()).orElse(null);
     }
 
-    private Optional<User> getUserByUsername(final String username) {
-        return this.userRepository.findByUsername(username);
+    private Optional<User> getUserByEmail(final String email) {
+        return this.userRepository.findByEmail(email);
     }
 }
