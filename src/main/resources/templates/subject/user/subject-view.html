@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -36,9 +36,21 @@
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <div class="subject-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                    <div>
-                        <h1 th:text="${subject.name}" class="text-3xl md:text-4xl font-bold text-upm-blue mb-1">
-                            Inteligencia Artificial</h1>
+                    <div class="flex-grow">
+                        <div class="flex items-center justify-between">
+                            <h1 th:text="${subject.name}" class="text-3xl md:text-4xl font-bold text-upm-blue mb-1">
+                                Inteligencia Artificial</h1>
+                            
+                            <!-- Favourite Button -->
+                            <div sec:authorize="hasRole('STUDENT')" class="ml-4">
+                                <a th:href="@{/subject/{id}/favourite(id=${subject.id})}" 
+                                   class="text-2xl transition-all duration-300 hover:scale-110 inline-block"
+                                   th:classappend="${isFavourite ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-200'}"
+                                   th:title="${isFavourite ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
+                                    <i th:class="${isFavourite ? 'fas fa-star' : 'far fa-star'}"></i>
+                                </a>
+                            </div>
+                        </div>
                         <p class="text-gray-600 mb-4">Código: 1156 - ETSII - Grado en Ingeniería Informática</p>
 
                         <div class="flex items-center space-x-4 mb-4">

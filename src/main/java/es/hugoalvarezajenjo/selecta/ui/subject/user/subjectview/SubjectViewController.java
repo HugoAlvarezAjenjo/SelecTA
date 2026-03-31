@@ -4,7 +4,11 @@ import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
+import es.hugoalvarezajenjo.selecta.services.user.Student;
+import es.hugoalvarezajenjo.selecta.services.user.User;
+import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +20,12 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/subject")
 @RequiredArgsConstructor
+@Slf4j
 public class SubjectViewController {
     private final SubjectService subjectService;
     private final SubjectResourceService subjectResourceService;
     private final MarkdownService markdownService;
+    private final UserService userService;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
@@ -39,7 +45,25 @@ public class SubjectViewController {
                 .map(s -> SubjectInfoDTO.createFromDomain(s, ""))
                 .toList();
         model.addAttribute("relatedSubjects", relatedSubjects);
+
+        boolean isFavourite = false;
+        final User user = this.userService.getCurrentUser();
+        log.info("SelecTA Log: SubjectView check - User retrieved: {}, isStudent: {}", 
+            user != null ? user.getEmail() : "null", user instanceof Student);
+        
+        if (user instanceof Student student) {
+            isFavourite = student.getFavouriteSubjects().stream()
+                    .anyMatch(s -> s.getId().equals(id));
+            log.info("SelecTA Log: Subject {} isFavourite for student: {}", id, isFavourite);
+        }
+        model.addAttribute("isFavourite", isFavourite);
         
         return "subject/user/subject-view";
+    }
+
+    @GetMapping("/{id}/favourite")
+    public String toggleFavourite(@PathVariable final Long id) {
+        this.userService.toggleFavouriteSubject(id);
+        return "redirect:/subject/" + id;
     }
 }
