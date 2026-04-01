@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class Teacher extends User {
     
-    @ManyToMany(mappedBy = "teachers")
+    @ManyToMany(mappedBy = "teachers", fetch = jakarta.persistence.FetchType.EAGER)
     private java.util.Set<Subject> subjects = new java.util.HashSet<>();
 
     public Teacher() {

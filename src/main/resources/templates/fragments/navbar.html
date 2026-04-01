@@ -25,7 +25,10 @@
                 <a th:href="@{/register}"
                     class="bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-full font-medium transition-all">Registrarse</a>
             </div>
-            <div sec:authorize="isAuthenticated()" class="flex items-center space-x-4">
+            <div sec:authorize="isAuthenticated()" class="flex items-center space-x-6">
+                <a th:href="@{/profile}" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all flex items-center">
+                    <i class="fas fa-user-circle mr-2"></i> Perfil
+                </a>
                 <form th:action="@{/logout}" method="post" class="inline">
                     <button type="submit" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Cerrar Sesión</button>
                 </form>
@@ -57,7 +60,10 @@
             <div sec:authorize="isAnonymous()" class="flex flex-col space-y-2">
                 <a th:href="@{/login}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Acceder</a>
             </div>
-            <div sec:authorize="isAuthenticated()" class="flex flex-col space-y-2">
+            <div sec:authorize="isAuthenticated()" class="flex flex-col space-y-3">
+                <a th:href="@{/profile}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2 flex items-center">
+                    <i class="fas fa-user-circle mr-2"></i> Perfil
+                </a>
                 <form th:action="@{/logout}" method="post">
                     <button type="submit" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Cerrar Sesión</button>
                 </form>
