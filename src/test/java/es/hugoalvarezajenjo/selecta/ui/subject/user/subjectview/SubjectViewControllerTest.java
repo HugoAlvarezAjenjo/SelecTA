@@ -8,6 +8,7 @@ import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
+import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,9 @@ class SubjectViewControllerTest {
 
     @Mock
     private MarkdownService markdownService;
+
+    @Mock
+    private UserService userService;
 
     @Mock
     private Model model;

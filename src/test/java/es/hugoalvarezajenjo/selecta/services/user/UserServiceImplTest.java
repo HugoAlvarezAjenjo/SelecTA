@@ -1,5 +1,6 @@
 package es.hugoalvarezajenjo.selecta.services.user;
 
+import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +30,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private SubjectRepository subjectRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -148,6 +152,7 @@ class UserServiceImplTest {
             user.setEmail(email);
 
             when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.isAuthenticated()).thenReturn(true);
             when(authentication.getPrincipal()).thenReturn(userDetails);
             when(userDetails.getUsername()).thenReturn(email);
             when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
@@ -163,11 +168,9 @@ class UserServiceImplTest {
         @Test
         @DisplayName("Should return null if no user is logged in")
         void shouldReturnNullWhenNoUserLoggedIn() {
-            // Given
+            // Given - isAuthenticated() defaults to false, so getCurrentUser returns null early
             when(securityContext.getAuthentication()).thenReturn(authentication);
-            when(authentication.getPrincipal()).thenReturn(userDetails);
-            when(userDetails.getUsername()).thenReturn("unknown");
-            when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+            when(authentication.isAuthenticated()).thenReturn(false);
 
             // When
             User currentUser = userService.getCurrentUser();
