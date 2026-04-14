@@ -1,8 +1,11 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.teacher.editsubject;
 
+import es.hugoalvarezajenjo.selecta.services.resources.ResourceTag;
+import es.hugoalvarezajenjo.selecta.services.resources.ResourceTagService;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
+import es.hugoalvarezajenjo.selecta.services.resources.repository.SubjectResourceRepository;
 import es.hugoalvarezajenjo.selecta.services.storage.StorageService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -23,6 +27,8 @@ import java.util.Optional;
 public class EditSubjectResourcesView {
     private final SubjectService subjectService;
     private final SubjectResourceService subjectResourceService;
+    private final ResourceTagService resourceTagService;
+    private final SubjectResourceRepository subjectResourceRepository;
     private final StorageService storageService;
 
     @GetMapping
@@ -37,6 +43,23 @@ public class EditSubjectResourcesView {
                 SubjectResourceDTO.createFromDomain(this.subjectResourceService.getResourcesFromSubject(subjectId)));
         model.addAttribute("resourceTypes", ResourceType.values());
 
+        // Tag tree for the sidebar
+        final List<ResourceTagDTO> tagTree = this.resourceTagService.getTagTree(subject.get()).stream()
+                .map(ResourceTagDTO::createFromDomain)
+                .toList();
+        model.addAttribute("tagTree", tagTree);
+
+        // All tags flat for the chip input autocomplete
+        final List<ResourceTagDTO> allTags = this.resourceTagService.getAllTags(subject.get()).stream()
+                .map(ResourceTagDTO::createFlat)
+                .toList();
+        model.addAttribute("allTags", allTags);
+
+        // Uncategorized resources
+        final List<SubjectResourceDTO> uncategorized = SubjectResourceDTO.createFromDomain(
+                this.subjectResourceRepository.findUncategorizedBySubjectId(subjectId));
+        model.addAttribute("uncategorizedResources", uncategorized);
+
         return "subject/teacher/edit-subject-resources";
     }
 
@@ -49,6 +72,7 @@ public class EditSubjectResourcesView {
             @RequestParam final ResourceType type,
             @RequestParam(required = false) final String language,
             @RequestParam(defaultValue = "false") final boolean isPrivate,
+            @RequestParam(required = false) final List<Long> tagIds,
             final RedirectAttributes redirectAttributes) {
 
         final Optional<Subject> subjectOpt = this.subjectService.getSubjectById(subjectId);
@@ -62,7 +86,6 @@ public class EditSubjectResourcesView {
         }
 
         try {
-            // Create and save resource entity first to generate ID
             SubjectResource resource = new SubjectResource();
             resource.setSubjectId(subjectId);
             resource.setName(name);
@@ -75,10 +98,15 @@ public class EditSubjectResourcesView {
 
             resource = this.subjectResourceService.saveResource(resource);
 
+            // Assign tags if provided
+            if (tagIds != null && !tagIds.isEmpty()) {
+                for (final Long tagId : tagIds) {
+                    this.resourceTagService.tagResource(resource.getId(), tagId);
+                }
+            }
+
             // Use the generated ID as the filename
             final String filename = resource.getId().toString();
-
-            // Save file using StorageService
             this.storageService.uploadFile(filename, file.getInputStream(), file.getSize(), file.getContentType());
 
             redirectAttributes.addFlashAttribute("success", "Recurso subido correctamente");
@@ -101,15 +129,12 @@ public class EditSubjectResourcesView {
             return "redirect:/edit/subject/" + subjectId + "/resources";
         }
 
-        // Delete file from storage using the resourceId as filename
         try {
             this.storageService.deleteFile(resourceId.toString());
         } catch (Exception e) {
-            // Log error but continue with database deletion
             System.err.println("Error deleting file: " + e.getMessage());
         }
 
-        // Delete from database
         this.subjectResourceService.deleteResource(resourceId);
 
         redirectAttributes.addFlashAttribute("success", "Recurso eliminado correctamente");
@@ -134,7 +159,4 @@ public class EditSubjectResourcesView {
         redirectAttributes.addFlashAttribute("success", "El recurso ahora es " + status);
         return "redirect:/edit/subject/" + subjectId + "/resources";
     }
-
-    // Download handling has been moved to ResourceDownloadController for better
-    // security and separation of concerns
 }

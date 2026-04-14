@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,4 +28,12 @@ public class SubjectResource {
     private String language;
     private String originalName;
     private boolean isPrivate = false;
+
+    @ManyToMany
+    @JoinTable(
+            name = "resource_tags_mapping",
+            joinColumns = @JoinColumn(name = "resource_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<ResourceTag> tags = new HashSet<>();
 }

@@ -4,6 +4,8 @@ import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
 import lombok.Value;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Value
 public class SubjectResourceDTO {
@@ -14,8 +16,21 @@ public class SubjectResourceDTO {
     private String language;
     private String uploadDate;
     private boolean isPrivate;
+    private Set<TagReference> tags;
+
+    @Value
+    public static class TagReference {
+        Long id;
+        String name;
+    }
 
     public static SubjectResourceDTO createFromDomain(final SubjectResource subjectResource) {
+        final Set<TagReference> tagRefs = subjectResource.getTags() != null
+                ? subjectResource.getTags().stream()
+                    .map(t -> new TagReference(t.getId(), t.getName()))
+                    .collect(Collectors.toSet())
+                : Set.of();
+
         return new SubjectResourceDTO(
                 subjectResource.getId(),
                 subjectResource.getName(),
@@ -23,7 +38,8 @@ public class SubjectResourceDTO {
                 subjectResource.getType().toString(),
                 subjectResource.getLanguage(),
                 subjectResource.getCreationDate().toString(),
-                subjectResource.isPrivate());
+                subjectResource.isPrivate(),
+                tagRefs);
     }
 
     public static List<SubjectResourceDTO> createFromDomain(final List<SubjectResource> subjectResources) {
