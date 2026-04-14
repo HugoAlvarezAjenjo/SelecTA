@@ -90,7 +90,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<Subject> recommendSubjects(final es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria) {
+    public List<Subject> recommendSubjects(final SubjectRecommendationCriteria criteria) {
         if (criteria == null) {
             return getActiveSubjects();
         }

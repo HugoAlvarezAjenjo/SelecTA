@@ -1,9 +1,9 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.recommender;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRecommendationCriteria;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
-import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview.SubjectInfoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,14 @@ public class RecommenderController {
 
     @PostMapping
     public String recommendSubjects(@ModelAttribute("recommenderDTO") SubjectRecommenderDTO dto, Model model) {
-        List<Subject> results = subjectService.recommendSubjects(dto);
+        SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                .semesterTypes(dto.getSemesterTypes())
+                .language(dto.getLanguage())
+                .maxCredits(dto.getMaxCredits())
+                .searchKeywords(dto.getSearchKeywords())
+                .build();
+
+        List<Subject> results = subjectService.recommendSubjects(criteria);
         List<SubjectInfoDTO> recommendedDTOs = results.stream()
                 .map(s -> SubjectInfoDTO.createFromDomain(s, ""))
                 .toList();

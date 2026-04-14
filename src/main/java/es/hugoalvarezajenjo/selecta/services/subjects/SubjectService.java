@@ -20,5 +20,5 @@ public interface SubjectService {
 
     List<Subject> getRelatedSubjects(Long subjectId, int limit);
 
-    List<Subject> recommendSubjects(es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria);
+    List<Subject> recommendSubjects(SubjectRecommendationCriteria criteria);
 }

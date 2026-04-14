@@ -318,10 +318,10 @@ class SubjectServiceImplTest {
     @DisplayName("Should return filtered subjects when criteria is provided without keywords")
     void recommendSubjects_WithCriteriaNoKeywords_ReturnsFilteredSubjects() {
         // Arrange
-        es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria =
-                new es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO();
-        criteria.setMaxCredits(6);
-        criteria.setLanguage(es.hugoalvarezajenjo.selecta.services.types.Languages.SPANISH);
+        SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                .maxCredits(6)
+                .language(es.hugoalvarezajenjo.selecta.services.types.Languages.SPANISH)
+                .build();
 
         List<Subject> filteredSubjects = Arrays.asList(subject1);
         when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
@@ -339,9 +339,9 @@ class SubjectServiceImplTest {
     @DisplayName("Should return sorted and filtered subjects based on keyword relevance")
     void recommendSubjects_WithKeywords_ReturnsSortedSubjects() {
         // Arrange
-        es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO criteria =
-                new es.hugoalvarezajenjo.selecta.ui.subject.user.recommender.SubjectRecommenderDTO();
-        criteria.setSearchKeywords("Physics");
+        SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                .searchKeywords("Physics")
+                .build();
 
         Subject highRelevance = new Subject();
         highRelevance.setId(10L);
