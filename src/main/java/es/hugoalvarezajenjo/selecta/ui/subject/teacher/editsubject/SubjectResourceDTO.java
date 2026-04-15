@@ -16,35 +16,29 @@ public class SubjectResourceDTO {
     private String language;
     private String uploadDate;
     private boolean isPrivate;
-    private Set<TagReference> tags;
+    private Long folderId;
+    private String folderName;
+    private Set<TagRef> tags;
 
     @Value
-    public static class TagReference {
+    public static class TagRef {
         Long id;
         String name;
     }
 
-    public static SubjectResourceDTO createFromDomain(final SubjectResource subjectResource) {
-        final Set<TagReference> tagRefs = subjectResource.getTags() != null
-                ? subjectResource.getTags().stream()
-                    .map(t -> new TagReference(t.getId(), t.getName()))
-                    .collect(Collectors.toSet())
+    public static SubjectResourceDTO createFromDomain(final SubjectResource r) {
+        final Set<TagRef> tagRefs = r.getTags() != null
+                ? r.getTags().stream().map(t -> new TagRef(t.getId(), t.getName())).collect(Collectors.toSet())
                 : Set.of();
-
         return new SubjectResourceDTO(
-                subjectResource.getId(),
-                subjectResource.getName(),
-                subjectResource.getDescription(),
-                subjectResource.getType().toString(),
-                subjectResource.getLanguage(),
-                subjectResource.getCreationDate().toString(),
-                subjectResource.isPrivate(),
+                r.getId(), r.getName(), r.getDescription(), r.getType().toString(),
+                r.getLanguage(), r.getCreationDate().toString(), r.isPrivate(),
+                r.getFolder() != null ? r.getFolder().getId() : null,
+                r.getFolder() != null ? r.getFolder().getName() : null,
                 tagRefs);
     }
 
-    public static List<SubjectResourceDTO> createFromDomain(final List<SubjectResource> subjectResources) {
-        return subjectResources.stream()
-                .map(SubjectResourceDTO::createFromDomain)
-                .toList();
+    public static List<SubjectResourceDTO> createFromDomain(final List<SubjectResource> resources) {
+        return resources.stream().map(SubjectResourceDTO::createFromDomain).toList();
     }
 }

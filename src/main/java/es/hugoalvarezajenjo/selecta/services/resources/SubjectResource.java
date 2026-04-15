@@ -29,6 +29,10 @@ public class SubjectResource {
     private String originalName;
     private boolean isPrivate = false;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "folder_id")
+    private ResourceFolder folder;
+
     @ManyToMany
     @JoinTable(
             name = "resource_tags_mapping",

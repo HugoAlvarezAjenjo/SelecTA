@@ -24,6 +24,9 @@ public interface SubjectResourceRepository extends JpaRepository<SubjectResource
     @Query("SELECT r FROM SubjectResource r JOIN r.tags t WHERE t.id = :tagId")
     List<SubjectResource> findByTagId(@Param("tagId") Long tagId);
 
-    @Query("SELECT r FROM SubjectResource r WHERE r.subjectId = :subjectId AND r.tags IS EMPTY")
-    List<SubjectResource> findUncategorizedBySubjectId(@Param("subjectId") Long subjectId);
+    @Query("SELECT r FROM SubjectResource r WHERE r.subjectId = :subjectId AND r.folder IS NULL")
+    List<SubjectResource> findUnfolderedBySubjectId(@Param("subjectId") Long subjectId);
+
+    @Query("SELECT r FROM SubjectResource r WHERE r.folder.id = :folderId")
+    List<SubjectResource> findByFolderId(@Param("folderId") Long folderId);
 }

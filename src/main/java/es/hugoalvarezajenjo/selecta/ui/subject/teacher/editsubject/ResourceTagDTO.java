@@ -9,35 +9,12 @@ import java.util.List;
 public class ResourceTagDTO {
     Long id;
     String name;
-    Long parentId;
-    String parentName;
-    int displayOrder;
-    List<ResourceTagDTO> children;
 
     public static ResourceTagDTO createFromDomain(final ResourceTag tag) {
-        return new ResourceTagDTO(
-                tag.getId(),
-                tag.getName(),
-                tag.getParent() != null ? tag.getParent().getId() : null,
-                tag.getParent() != null ? tag.getParent().getName() : null,
-                tag.getDisplayOrder(),
-                tag.getChildren() != null
-                        ? tag.getChildren().stream().map(ResourceTagDTO::createFromDomain).toList()
-                        : List.of()
-        );
+        return new ResourceTagDTO(tag.getId(), tag.getName());
     }
 
-    /**
-     * Flat version without children (for autocomplete/search results).
-     */
-    public static ResourceTagDTO createFlat(final ResourceTag tag) {
-        return new ResourceTagDTO(
-                tag.getId(),
-                tag.getName(),
-                tag.getParent() != null ? tag.getParent().getId() : null,
-                tag.getParent() != null ? tag.getParent().getName() : null,
-                tag.getDisplayOrder(),
-                List.of()
-        );
+    public static List<ResourceTagDTO> createListFromDomain(final List<ResourceTag> tags) {
+        return tags.stream().map(ResourceTagDTO::createFromDomain).toList();
     }
 }

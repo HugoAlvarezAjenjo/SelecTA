@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,150 +11,69 @@
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/design-system.css}">
     <link rel="stylesheet" th:href="@{/css/badges.css}">
-    <link rel="stylesheet" th:href="@{/css/modals.css}">
     <link rel="stylesheet" th:href="@{/css/card.css}">
     <style>
-        /* Tag chips */
-        .tag-chip {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 12px; border-radius: var(--radius-full);
-            font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
-            background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE;
-            transition: all var(--transition-fast);
-        }
-        .tag-chip:hover { background: #E0E7FF; }
-        .tag-chip .remove-btn {
-            width: 16px; height: 16px; border-radius: 50%; border: none;
-            background: transparent; color: #6366F1; cursor: pointer;
-            font-size: 14px; line-height: 1; display: inline-flex;
-            align-items: center; justify-content: center;
-        }
-        .tag-chip .remove-btn:hover { background: #C7D2FE; color: #4338CA; }
-
-        /* Sidebar tag items */
-        .sidebar-tag {
-            display: flex; align-items: center; gap: 8px;
-            padding: 8px 12px; border-radius: var(--radius-md);
-            cursor: pointer; transition: all var(--transition-fast);
-            font-size: var(--font-size-sm);
-        }
-        .sidebar-tag:hover { background: var(--color-bg-muted); }
-        .sidebar-tag.active { background: #EEF2FF; color: #4338CA; font-weight: var(--font-weight-medium); }
-        .sidebar-tag .tag-actions { opacity: 0; transition: opacity var(--transition-fast); display: flex; gap: 2px; }
-        .sidebar-tag:hover .tag-actions { opacity: 1; }
-        .sidebar-tag .tag-actions button {
-            width: 24px; height: 24px; border: none; background: transparent;
-            border-radius: var(--radius-sm); cursor: pointer; display: flex;
-            align-items: center; justify-content: center; color: var(--color-text-muted);
-            font-size: 11px;
-        }
-        .sidebar-tag .tag-actions button:hover { background: var(--color-bg-muted); color: var(--color-primary); }
-        .sidebar-tag .tag-actions button.delete-btn:hover { color: var(--color-error); }
-
-        /* Resource type icons */
-        .type-icon {
-            width: 48px; height: 48px; border-radius: var(--radius-lg);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
-        }
-        .type-EXERCISE { background: #FEF3C7; color: #D97706; }
-        .type-PRESENTATION { background: #DBEAFE; color: #2563EB; }
-        .type-NOTES { background: #D1FAE5; color: #059669; }
-        .type-VIDEO { background: #FEE2E2; color: #DC2626; }
-        .type-EXTERNAL_RESOURCE { background: #F3E8FF; color: #7C3AED; }
-
-        /* Autocomplete */
-        .autocomplete-dropdown {
-            position: absolute; z-index: var(--z-dropdown); width: 100%;
-            max-height: 200px; overflow-y: auto; background: white;
-            border: 1px solid var(--color-border); border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg); margin-top: 4px;
-        }
-        .autocomplete-item {
-            padding: 10px 14px; cursor: pointer; font-size: var(--font-size-sm);
-            display: flex; align-items: center; gap: 8px;
-        }
-        .autocomplete-item:hover { background: #EEF2FF; }
-
-        /* View toggle */
-        .view-btn {
-            padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--font-size-sm);
-            cursor: pointer; border: 1px solid var(--color-border); background: white;
-            color: var(--color-text-muted); transition: all var(--transition-fast);
-            font-weight: var(--font-weight-medium);
-        }
-        .view-btn.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
-        .view-btn:not(.active):hover { background: var(--color-bg-muted); }
-
-        /* Action buttons on cards */
-        .action-btn {
-            padding: 6px 12px; border-radius: var(--radius-md);
-            font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
-            cursor: pointer; transition: all var(--transition-fast);
-            display: inline-flex; align-items: center; gap: 4px;
-            border: 1px solid var(--color-border);
-        }
-        .action-btn:hover { background: var(--color-bg-muted); }
-        .action-btn-primary { background: var(--color-primary); color: white; border-color: var(--color-primary); }
-        .action-btn-primary:hover { background: var(--color-primary-hover); }
-        .action-btn-danger { background: white; color: var(--color-error); border-color: #FCA5A5; }
-        .action-btn-danger:hover { background: #FEE2E2; }
-
-        /* Stats badge */
-        .stat-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 4px 12px; border-radius: var(--radius-full);
-            font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
-            background: var(--color-bg-muted); color: var(--color-text-muted);
-        }
-
-        /* Responsive sidebar */
-        @media (max-width: 768px) {
-            .main-layout { flex-direction: column; }
-            .sidebar { width: 100% !important; }
-        }
+        .tag-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 12px;border-radius:9999px;font-size:.75rem;font-weight:500;background:#EEF2FF;color:#4338CA;border:1px solid #C7D2FE}
+        .tag-chip .rm{width:16px;height:16px;border-radius:50%;border:none;background:transparent;color:#6366F1;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center}
+        .tag-chip .rm:hover{background:#C7D2FE}
+        .sidebar-item{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.875rem;transition:background .15s}
+        .sidebar-item:hover{background:#F3F4F6}
+        .sidebar-item.active{background:#EEF2FF;color:#4338CA;font-weight:500}
+        .sidebar-item .actions{opacity:0;transition:opacity .15s;display:flex;gap:2px}
+        .sidebar-item:hover .actions{opacity:1}
+        .sidebar-item .actions button{width:24px;height:24px;border:none;background:transparent;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:11px}
+        .sidebar-item .actions button:hover{background:#E5E7EB;color:#4B5563}
+        .sidebar-item .actions button.del:hover{color:#EF4444}
+        .type-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+        .type-EXERCISE{background:#FEF3C7;color:#D97706}.type-PRESENTATION{background:#DBEAFE;color:#2563EB}
+        .type-NOTES{background:#D1FAE5;color:#059669}.type-VIDEO{background:#FEE2E2;color:#DC2626}
+        .type-EXTERNAL_RESOURCE{background:#F3E8FF;color:#7C3AED}
+        .autocomplete-dropdown{position:absolute;z-index:50;width:100%;max-height:200px;overflow-y:auto;background:#fff;border:1px solid #E5E7EB;border-radius:8px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);margin-top:4px}
+        .autocomplete-item{padding:10px 14px;cursor:pointer;font-size:.875rem;display:flex;align-items:center;gap:8px}
+        .autocomplete-item:hover{background:#EEF2FF}
+        .action-btn{padding:6px 12px;border-radius:8px;font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px;border:1px solid #E5E7EB}
+        .action-btn:hover{background:#F3F4F6}
+        .action-btn-primary{background:#0072CE;color:#fff;border-color:#0072CE}
+        .action-btn-primary:hover{background:#003865}
+        .action-btn-danger{color:#EF4444;border-color:#FCA5A5}
+        .action-btn-danger:hover{background:#FEE2E2}
+        .stat-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:9999px;font-size:.75rem;font-weight:500;background:#F3F4F6;color:#6B7280}
+        .folder-section{border:1px solid #E5E7EB;border-radius:12px;background:#fff;overflow:hidden;margin-bottom:12px}
+        .folder-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .15s}
+        .folder-header:hover{background:#F9FAFB}
+        .folder-content{padding:0 18px 14px}
+        .view-btn{padding:8px 16px;border-radius:8px;font-size:.875rem;cursor:pointer;border:1px solid #E5E7EB;background:#fff;color:#6B7280;font-weight:500;transition:all .15s}
+        .view-btn.active{background:#0072CE;color:#fff;border-color:#0072CE}
+        @media(max-width:768px){.main-layout{flex-direction:column}.sidebar{width:100%!important}}
     </style>
 </head>
-
 <body class="font-sans bg-white text-gray-800">
     <th:block th:replace="~{fragments/navbar :: navbar}" />
 
-    <!-- Subject Header -->
+    <!-- Header -->
     <section class="hero-pattern py-8">
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6">
-                <!-- Navigation breadcrumbs -->
                 <div class="flex items-center gap-3 mb-4 text-sm">
-                    <a th:href="@{'/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue transition-colors">
-                        <i class="fas fa-arrow-left mr-1"></i> Volver a la asignatura
-                    </a>
+                    <a th:href="@{'/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-arrow-left mr-1"></i> Asignatura</a>
                     <span class="text-gray-300">|</span>
-                    <a th:href="@{'/edit/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue transition-colors">
-                        <i class="fas fa-edit mr-1"></i> Editar descripción
-                    </a>
+                    <a th:href="@{'/edit/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-edit mr-1"></i> Descripción</a>
                 </div>
-
-                <!-- Subject title + stats -->
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                        <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-1">
-                            <span th:text="${subjectDTO.subjectName}">Mathematics</span>
-                        </h1>
+                        <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-1" th:text="${subjectDTO.subjectName}">Mathematics</h1>
                         <p class="text-gray-600">Gestión de recursos internos</p>
                     </div>
                     <div class="flex items-center gap-3">
-                        <span class="stat-badge"><i class="fas fa-file"></i> <span id="statResources">0</span> recursos</span>
+                        <span class="stat-badge"><i class="fas fa-file"></i> <span id="statRes">0</span> recursos</span>
+                        <span class="stat-badge"><i class="fas fa-folder"></i> <span id="statFolders">0</span> carpetas</span>
                         <span class="stat-badge"><i class="fas fa-tags"></i> <span id="statTags">0</span> tags</span>
                     </div>
                 </div>
-
-                <!-- Search bar -->
                 <div class="mt-6 relative">
                     <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="globalSearch"
-                        placeholder="Buscar recursos por nombre, descripción o tag... (⌘K)"
-                        class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30 text-base transition-all"
-                        autocomplete="off">
+                    <input type="text" id="globalSearch" placeholder="Buscar recursos por nombre, descripción o tag... (⌘K)"
+                        class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30" autocomplete="off">
                     <div id="searchResults" class="hidden autocomplete-dropdown rounded-xl"></div>
                 </div>
             </div>
@@ -170,609 +88,467 @@
         <div th:replace="~{fragments/ui-components :: alert(type='error', message=${error}, icon='exclamation-circle')}"></div>
     </div>
 
-    <!-- Main Content Area -->
+    <!-- Main -->
     <section class="py-8 bg-upm-gray bg-opacity-30 min-h-screen">
         <div class="container mx-auto px-4">
             <div class="main-layout flex gap-6">
-
                 <!-- Sidebar -->
-                <div class="sidebar" style="width: 280px; flex-shrink: 0;">
+                <div class="sidebar" style="width:280px;flex-shrink:0">
                     <div class="bg-white rounded-xl shadow-sm p-5 sticky top-4">
-                        <div class="flex items-center justify-between mb-5">
-                            <h2 class="text-base font-bold text-upm-blue flex items-center gap-2">
-                                <i class="fas fa-tags"></i> Categorías
-                            </h2>
-                            <button onclick="showCreateTagModal()"
-                                class="w-8 h-8 rounded-lg bg-upm-light-blue bg-opacity-10 text-upm-light-blue hover:bg-opacity-20 flex items-center justify-center transition-all"
-                                title="Crear tag">
-                                <i class="fas fa-plus text-sm"></i>
-                            </button>
+                        <!-- Tags section -->
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-base font-bold text-upm-blue flex items-center gap-2"><i class="fas fa-tags"></i> Tags</h2>
+                            <button onclick="showCreateTagModal()" class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 flex items-center justify-center" title="Crear tag"><i class="fas fa-plus text-sm"></i></button>
                         </div>
-
-                        <!-- All resources filter -->
-                        <div class="sidebar-tag active" onclick="filterByTag(null, this)">
-                            <i class="fas fa-layer-group text-gray-400"></i>
-                            <span class="flex-1">Todos los recursos</span>
+                        <div class="sidebar-item active" onclick="filterByTag(null,this)">
+                            <i class="fas fa-layer-group text-gray-400"></i><span class="flex-1">Todos</span>
                             <span class="text-xs text-gray-400" id="countAll">0</span>
                         </div>
+                        <div id="tagList" class="mt-1 space-y-0.5"></div>
 
-                        <!-- Tag tree (JS rendered) -->
-                        <div id="tagTreeContainer" class="mt-2 space-y-0.5"></div>
-
-                        <!-- Uncategorized -->
-                        <div class="border-t border-gray-100 mt-3 pt-3">
-                            <div class="sidebar-tag" onclick="filterByTag('uncategorized', this)">
-                                <i class="fas fa-inbox text-gray-400"></i>
-                                <span class="flex-1 text-gray-500">Sin categorizar</span>
-                                <span class="text-xs text-gray-400" id="countUncategorized">0</span>
+                        <!-- Folders section -->
+                        <div class="border-t border-gray-100 mt-4 pt-4">
+                            <div class="flex items-center justify-between mb-3">
+                                <h2 class="text-base font-bold text-upm-blue flex items-center gap-2"><i class="fas fa-folder-tree"></i> Carpetas</h2>
+                                <button onclick="showCreateFolderModal()" class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 hover:bg-amber-100 flex items-center justify-center" title="Crear carpeta"><i class="fas fa-plus text-sm"></i></button>
                             </div>
-                        </div>
-
-                        <!-- Quick create tag -->
-                        <div class="mt-4 pt-4 border-t border-gray-100">
-                            <button onclick="showCreateTagModal()"
-                                class="w-full py-2.5 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-upm-light-blue hover:text-upm-light-blue transition-all flex items-center justify-center gap-2">
-                                <i class="fas fa-plus"></i> Crear nuevo tag
+                            <div id="folderList" class="space-y-0.5"></div>
+                            <button onclick="showCreateFolderModal()" class="w-full mt-3 py-2 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-amber-400 hover:text-amber-600 flex items-center justify-center gap-2">
+                                <i class="fas fa-plus"></i> Nueva carpeta
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Content area -->
+                <!-- Content -->
                 <div class="flex-1 min-w-0">
-                    <!-- Toolbar -->
                     <div class="flex items-center justify-between mb-5">
-                        <div class="flex items-center gap-2">
-                            <button class="view-btn active" onclick="setView('grouped', this)">
-                                <i class="fas fa-folder-tree mr-1"></i> Por tags
-                            </button>
-                            <button class="view-btn" onclick="setView('flat', this)">
-                                <i class="fas fa-th-large mr-1"></i> Cuadrícula
-                            </button>
-                        </div>
-                        <button onclick="openUploadModal()"
-                            class="bg-upm-light-blue hover:bg-upm-blue text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
-                            <i class="fas fa-upload"></i> Subir recurso
-                        </button>
+                        <div id="filterLabel" class="text-sm text-gray-500"></div>
+                        <button onclick="openUploadModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-5 py-2.5 rounded-lg font-medium flex items-center gap-2 shadow-sm"><i class="fas fa-upload"></i> Subir recurso</button>
                     </div>
-
-                    <!-- Resources container (JS rendered) -->
                     <div id="resourcesContainer"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Upload Modal (styled like student view) -->
+    <!-- Upload Modal -->
     <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-upm-blue">
-                        <i class="fas fa-upload mr-2"></i>Subir recurso
-                    </h3>
-                    <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
-                </div>
-
-                <form th:action="@{'/edit/subject/' + ${subjectDTO.id} + '/resources/upload'}" method="post" enctype="multipart/form-data" class="space-y-5">
-                    <!-- Drag & Drop area -->
-                    <div id="dropArea" class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center transition-all">
-                        <i class="fas fa-cloud-upload-alt text-upm-light-blue text-4xl mb-3"></i>
-                        <p class="text-gray-600 mb-2 font-medium">Arrastra tu archivo aquí</p>
-                        <p class="text-gray-400 text-sm mb-3">o</p>
-                        <label for="fileInput" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg cursor-pointer transition-all inline-block font-medium">
-                            Seleccionar archivo
-                        </label>
-                        <input type="file" id="fileInput" name="file" required class="hidden">
-                        <p id="selectedFileName" class="text-sm text-gray-500 mt-3 hidden">
-                            <i class="fas fa-file mr-1"></i><span></span>
-                        </p>
-                    </div>
-
-                    <!-- Name -->
-                    <div>
-                        <label class="block text-gray-700 mb-2 font-medium">Nombre del recurso <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" required placeholder="Ej: Tema 1 - Introducción"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Type -->
-                        <div>
-                            <label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label>
-                            <select name="type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
-                                <option value="">Selecciona...</option>
-                                <option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">EXERCISE</option>
-                            </select>
-                        </div>
-                        <!-- Language -->
-                        <div>
-                            <label class="block text-gray-700 mb-2 font-medium">Idioma</label>
-                            <input type="text" name="language" placeholder="Español"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
-                        </div>
-                    </div>
-
-                    <!-- Tags chip input -->
-                    <div>
-                        <label class="block text-gray-700 mb-2 font-medium"><i class="fas fa-tags mr-1 text-indigo-400"></i>Tags</label>
-                        <div class="relative">
-                            <div id="tagInputContainer" class="flex flex-wrap items-center gap-1.5 px-3 py-2.5 border border-gray-300 rounded-lg focus-within:border-upm-light-blue focus-within:ring-2 focus-within:ring-upm-light-blue focus-within:ring-opacity-30 bg-white min-h-[44px] transition-all">
-                                <input type="text" id="tagInput" placeholder="Buscar o crear tags..."
-                                    class="flex-1 min-w-[140px] border-none outline-none text-sm p-0" autocomplete="off">
-                            </div>
-                            <div id="tagHiddenInputs"></div>
-                            <div id="tagAutocomplete" class="autocomplete-dropdown hidden"></div>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-1.5">Escribe y pulsa Enter para crear, o selecciona de la lista</p>
-                    </div>
-
-                    <!-- Description -->
-                    <div>
-                        <label class="block text-gray-700 mb-2 font-medium">Descripción</label>
-                        <textarea name="description" rows="3" placeholder="Breve descripción del contenido..."
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30"></textarea>
-                    </div>
-
-                    <!-- Private toggle -->
-                    <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                        <input type="checkbox" name="isPrivate" class="w-5 h-5 text-upm-light-blue border-gray-300 rounded focus:ring-upm-light-blue">
-                        <div>
-                            <span class="font-medium text-gray-700"><i class="fas fa-lock mr-1 text-gray-400"></i> Recurso privado</span>
-                            <p class="text-xs text-gray-500">Solo visible para profesores de esta asignatura</p>
-                        </div>
-                    </label>
-
-                    <!-- Buttons -->
-                    <div class="flex justify-end gap-3 pt-2">
-                        <button type="button" onclick="closeUploadModal()" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-all">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium transition-all">
-                            <i class="fas fa-upload mr-2"></i>Subir recurso
-                        </button>
-                    </div>
-                </form>
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-upm-blue"><i class="fas fa-upload mr-2"></i>Subir recurso</h3>
+                <button onclick="closeModal('uploadModal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
             </div>
+            <form th:action="@{'/edit/subject/' + ${subjectDTO.id} + '/resources/upload'}" method="post" enctype="multipart/form-data" class="space-y-5">
+                <div id="dropArea" class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
+                    <i class="fas fa-cloud-upload-alt text-upm-light-blue text-4xl mb-3"></i>
+                    <p class="text-gray-600 font-medium mb-1">Arrastra tu archivo aquí</p>
+                    <p class="text-gray-400 text-sm mb-3">o</p>
+                    <label for="fileInput" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg cursor-pointer inline-block font-medium">Seleccionar</label>
+                    <input type="file" id="fileInput" name="file" required class="hidden">
+                    <p id="fileName" class="text-sm text-gray-500 mt-3 hidden"><i class="fas fa-file mr-1"></i><span></span></p>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2 font-medium">Nombre <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required placeholder="Ej: Tema 1 - Introducción" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label>
+                        <select name="type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                            <option value="">Selecciona...</option>
+                            <option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">TYPE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">Carpeta</label>
+                        <select name="folderId" id="uploadFolderSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                            <option value="">Sin carpeta</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2 font-medium"><i class="fas fa-tags mr-1 text-indigo-400"></i>Tags</label>
+                    <div class="relative">
+                        <div id="tagInputC" class="flex flex-wrap items-center gap-1.5 px-3 py-2.5 border border-gray-300 rounded-lg bg-white min-h-[44px]">
+                            <input type="text" id="tagInput" placeholder="Buscar o crear tags..." class="flex-1 min-w-[140px] border-none outline-none text-sm p-0" autocomplete="off">
+                        </div>
+                        <div id="tagHidden"></div>
+                        <div id="tagAC" class="autocomplete-dropdown hidden"></div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2 font-medium">Idioma</label>
+                    <input type="text" name="language" placeholder="Español" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                </div>
+                <div>
+                    <label class="block text-gray-700 mb-2 font-medium">Descripción</label>
+                    <textarea name="description" rows="2" placeholder="Descripción opcional..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
+                </div>
+                <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input type="checkbox" name="isPrivate" class="w-5 h-5 text-upm-light-blue border-gray-300 rounded">
+                    <div><span class="font-medium text-gray-700"><i class="fas fa-lock mr-1 text-gray-400"></i>Privado</span><p class="text-xs text-gray-500">Solo visible para profesores</p></div>
+                </label>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeModal('uploadModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-upload mr-2"></i>Subir</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <!-- Create Tag Modal -->
     <div id="createTagModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
-            <h3 class="text-lg font-bold text-upm-blue mb-5"><i class="fas fa-plus-circle mr-2"></i>Crear categoría</h3>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Nombre</label>
-                    <input type="text" id="newTagName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Ej: Tema 1, Microorganismos...">
-                </div>
-                <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Dentro de (opcional)</label>
-                    <select id="newTagParent" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
-                        <option value="">— Raíz (sin padre) —</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex justify-end gap-3 mt-6">
+            <h3 class="text-lg font-bold text-upm-blue mb-5"><i class="fas fa-plus-circle mr-2"></i>Crear tag</h3>
+            <input type="text" id="newTagName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Nombre del tag...">
+            <div class="flex justify-end gap-3 mt-5">
                 <button onclick="closeModal('createTagModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
                 <button onclick="createTag()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Crear</button>
             </div>
         </div>
     </div>
 
-    <!-- Rename Tag Modal -->
-    <div id="renameTagModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <!-- Create Folder Modal -->
+    <div id="createFolderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
-            <h3 class="text-lg font-bold text-upm-blue mb-5"><i class="fas fa-pen mr-2"></i>Renombrar categoría</h3>
-            <input type="hidden" id="renameTagId">
-            <input type="text" id="renameTagInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
-            <div class="flex justify-end gap-3 mt-6">
-                <button onclick="closeModal('renameTagModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
-                <button onclick="renameTag()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Guardar</button>
+            <h3 class="text-lg font-bold text-upm-blue mb-5"><i class="fas fa-folder-plus mr-2"></i>Crear carpeta</h3>
+            <div class="space-y-4">
+                <input type="text" id="newFolderName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Nombre de la carpeta...">
+                <select id="newFolderParent" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                    <option value="">Raíz (sin padre)</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-3 mt-5">
+                <button onclick="closeModal('createFolderModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
+                <button onclick="createFolder()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Crear</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal (shared) -->
+    <div id="renameModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
+            <h3 class="text-lg font-bold text-upm-blue mb-5" id="renameTitle">Renombrar</h3>
+            <input type="hidden" id="renameId"><input type="hidden" id="renameType">
+            <input type="text" id="renameInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+            <div class="flex justify-end gap-3 mt-5">
+                <button onclick="closeModal('renameModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
+                <button onclick="doRename()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Guardar</button>
             </div>
         </div>
     </div>
 
     <!-- Tag Resource Modal -->
-    <div id="tagResourceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div id="tagResModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
         <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
-            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-tags mr-2"></i>Gestionar tags</h3>
-            <input type="hidden" id="tagResourceId">
-            <div id="tagResourceCurrentTags" class="flex flex-wrap gap-1.5 mb-4 min-h-[32px] p-3 bg-gray-50 rounded-lg"></div>
+            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-tags mr-2"></i>Tags del recurso</h3>
+            <input type="hidden" id="tagResId">
+            <div id="tagResCurrent" class="flex flex-wrap gap-1.5 mb-4 min-h-[32px] p-3 bg-gray-50 rounded-lg"></div>
             <div class="relative">
-                <input type="text" id="tagResourceSearch" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Buscar tags...">
-                <div id="tagResourceAutocomplete" class="autocomplete-dropdown hidden"></div>
+                <input type="text" id="tagResSearch" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Buscar tags...">
+                <div id="tagResAC" class="autocomplete-dropdown hidden"></div>
             </div>
             <div class="flex justify-end mt-5">
-                <button onclick="closeTagResourceModal()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Hecho</button>
+                <button onclick="closeTagResModal()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Hecho</button>
             </div>
         </div>
     </div>
 
-    <form id="togglePrivacyForm" method="post" style="display:none;"></form>
+    <!-- Move Resource Modal -->
+    <div id="moveResModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
+            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-folder-open mr-2"></i>Mover a carpeta</h3>
+            <input type="hidden" id="moveResId">
+            <select id="moveResFolderSelect" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                <option value="">Sin carpeta</option>
+            </select>
+            <div class="flex justify-end gap-3 mt-5">
+                <button onclick="closeModal('moveResModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
+                <button onclick="doMoveResource()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Mover</button>
+            </div>
+        </div>
+    </div>
 
+    <form id="privacyForm" method="post" style="display:none"></form>
     <th:block th:replace="~{fragments/footer :: footer}" />
 
     <script th:inline="javascript">
-        const SUBJECT_ID = /*[[${subjectDTO.id}]]*/ 0;
-        const API_BASE = `/api/subject/${SUBJECT_ID}/tags`;
+        const SID = /*[[${subjectDTO.id}]]*/ 0;
+        const TAG_API = `/api/subject/${SID}/tags`;
+        const FOLDER_API = `/api/subject/${SID}/folders`;
         let allTags = /*[[${allTags}]]*/ [];
-        let allResources = /*[[${subjectResources}]]*/ [];
-        let tagTree = /*[[${tagTree}]]*/ [];
-        let currentView = 'grouped';
+        let allRes = /*[[${subjectResources}]]*/ [];
+        let folderTree = /*[[${folderTree}]]*/ [];
+        let allFolders = /*[[${allFolders}]]*/ [];
+        let activeTagFilter = null;
 
-        const TYPE_ICONS = {
-            EXERCISE: { icon: 'fa-file-lines', class: 'type-EXERCISE' },
-            PRESENTATION: { icon: 'fa-file-powerpoint', class: 'type-PRESENTATION' },
-            NOTES: { icon: 'fa-file-alt', class: 'type-NOTES' },
-            VIDEO: { icon: 'fa-video', class: 'type-VIDEO' },
-            EXTERNAL_RESOURCE: { icon: 'fa-link', class: 'type-EXTERNAL_RESOURCE' }
-        };
+        const ICONS={EXERCISE:{i:'fa-file-lines',c:'type-EXERCISE'},PRESENTATION:{i:'fa-file-powerpoint',c:'type-PRESENTATION'},NOTES:{i:'fa-file-alt',c:'type-NOTES'},VIDEO:{i:'fa-video',c:'type-VIDEO'},EXTERNAL_RESOURCE:{i:'fa-link',c:'type-EXTERNAL_RESOURCE'}};
 
-        // === Render ===
-        function renderAll() {
-            document.getElementById('statResources').textContent = allResources.length;
-            document.getElementById('statTags').textContent = allTags.length;
-            document.getElementById('countAll').textContent = allResources.length;
-            document.getElementById('countUncategorized').textContent = allResources.filter(r => !r.tags || r.tags.length === 0).length;
-            renderTagTree();
-            renderResources();
+        function renderAll(){
+            document.getElementById('statRes').textContent=allRes.length;
+            document.getElementById('statFolders').textContent=allFolders.length;
+            document.getElementById('statTags').textContent=allTags.length;
+            document.getElementById('countAll').textContent=allRes.length;
+            renderTagList(); renderFolderSidebar(); renderResources(); populateFolderSelects();
         }
 
-        function renderTagTree() {
-            document.getElementById('tagTreeContainer').innerHTML = renderTagNodes(tagTree, 0);
-        }
-
-        function renderTagNodes(nodes, depth) {
-            if (!nodes || nodes.length === 0) return '';
-            return nodes.map(t => {
-                const hasChildren = t.children && t.children.length > 0;
-                const icon = hasChildren ? 'fa-folder' : 'fa-tag';
-                const iconColor = hasChildren ? 'text-amber-500' : 'text-indigo-400';
-                const childHtml = hasChildren ? renderTagNodes(t.children, depth + 1) : '';
-                const escapedName = t.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                return `
-                    <div class="sidebar-tag" style="padding-left:${12 + depth * 20}px" onclick="filterByTag(${t.id}, this)" data-tag-id="${t.id}">
-                        <i class="fas ${icon} ${iconColor}" style="font-size:12px"></i>
-                        <span class="flex-1 truncate">${t.name}</span>
-                        <div class="tag-actions">
-                            <button onclick="event.stopPropagation(); showCreateTagModal(${t.id})" title="Sub-tag"><i class="fas fa-plus"></i></button>
-                            <button onclick="event.stopPropagation(); showRenameTagModal(${t.id}, '${escapedName}')" title="Renombrar"><i class="fas fa-pen"></i></button>
-                            <button class="delete-btn" onclick="event.stopPropagation(); deleteTag(${t.id}, '${escapedName}')" title="Eliminar"><i class="fas fa-trash"></i></button>
-                        </div>
+        // === Tags sidebar ===
+        function renderTagList(){
+            const c=document.getElementById('tagList');
+            c.innerHTML=allTags.map(t=>{
+                const count=allRes.filter(r=>r.tags&&r.tags.some(rt=>rt.id===t.id)).length;
+                const esc=t.name.replace(/'/g,"\\'");
+                return `<div class="sidebar-item${activeTagFilter===t.id?' active':''}" onclick="filterByTag(${t.id},this)">
+                    <i class="fas fa-tag text-indigo-400" style="font-size:11px"></i><span class="flex-1 truncate">${t.name}</span>
+                    <span class="text-xs text-gray-400">${count}</span>
+                    <div class="actions">
+                        <button onclick="event.stopPropagation();showRename('tag',${t.id},'${esc}')" title="Renombrar"><i class="fas fa-pen"></i></button>
+                        <button class="del" onclick="event.stopPropagation();deleteTag(${t.id},'${esc}')" title="Eliminar"><i class="fas fa-trash"></i></button>
                     </div>
-                    ${childHtml}`;
+                </div>`;
             }).join('');
         }
 
-        function renderResources() {
-            const container = document.getElementById('resourcesContainer');
-            if (allResources.length === 0) {
-                container.innerHTML = `
-                    <div class="bg-white rounded-xl shadow-sm p-12 text-center">
-                        <div class="w-20 h-20 rounded-full bg-upm-light-blue bg-opacity-10 flex items-center justify-center mx-auto mb-5">
-                            <i class="fas fa-folder-open text-upm-light-blue text-3xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-700 mb-2">No hay recursos aún</h3>
-                        <p class="text-gray-500 mb-6">Sube el primer recurso para empezar a organizar el material de tu asignatura</p>
-                        <button onclick="openUploadModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-lg font-medium transition-all">
-                            <i class="fas fa-upload mr-2"></i>Subir primer recurso
-                        </button>
-                    </div>`;
+        // === Folder sidebar ===
+        function renderFolderSidebar(){
+            document.getElementById('folderList').innerHTML=renderFolderNodes(folderTree,0);
+        }
+        function renderFolderNodes(nodes,d){
+            if(!nodes||!nodes.length)return'';
+            return nodes.map(f=>{
+                const esc=f.name.replace(/'/g,"\\'");
+                const ch=f.children&&f.children.length?renderFolderNodes(f.children,d+1):'';
+                return `<div class="sidebar-item" style="padding-left:${12+d*20}px" data-folder-id="${f.id}">
+                    <i class="fas fa-folder text-amber-500" style="font-size:12px"></i><span class="flex-1 truncate">${f.name}</span>
+                    <div class="actions">
+                        <button onclick="event.stopPropagation();showCreateFolderModal(${f.id})" title="Sub-carpeta"><i class="fas fa-plus"></i></button>
+                        <button onclick="event.stopPropagation();showRename('folder',${f.id},'${esc}')" title="Renombrar"><i class="fas fa-pen"></i></button>
+                        <button class="del" onclick="event.stopPropagation();deleteFolder(${f.id},'${esc}')" title="Eliminar"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>${ch}`;
+            }).join('');
+        }
+
+        // === Resources (collapsible folders) ===
+        function renderResources(){
+            const c=document.getElementById('resourcesContainer');
+            const fl=document.getElementById('filterLabel');
+            let filtered=allRes;
+            if(activeTagFilter!==null){
+                const tag=allTags.find(t=>t.id===activeTagFilter);
+                filtered=allRes.filter(r=>r.tags&&r.tags.some(t=>t.id===activeTagFilter));
+                fl.innerHTML=`<span class="tag-chip"><i class="fas fa-filter mr-1"></i>Filtrando: ${tag?tag.name:''} <button class="rm" onclick="filterByTag(null,document.querySelector('.sidebar-item'))">×</button></span>`;
+            } else { fl.innerHTML=''; }
+
+            if(filtered.length===0){
+                c.innerHTML=`<div class="bg-white rounded-xl shadow-sm p-12 text-center"><div class="w-20 h-20 rounded-full bg-upm-light-blue bg-opacity-10 flex items-center justify-center mx-auto mb-5"><i class="fas fa-folder-open text-upm-light-blue text-3xl"></i></div><h3 class="text-xl font-bold text-gray-700 mb-2">${activeTagFilter?'Sin resultados para este tag':'No hay recursos aún'}</h3><p class="text-gray-500 mb-6">${activeTagFilter?'Prueba otro tag o sube un recurso':'Sube el primer recurso para empezar'}</p><button onclick="openUploadModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-lg font-medium"><i class="fas fa-upload mr-2"></i>Subir recurso</button></div>`;
                 return;
             }
-            if (currentView === 'flat') {
-                container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">' + allResources.map(r => cardHtml(r)).join('') + '</div>';
-            } else {
-                let html = '';
-                function renderGroup(nodes, depth) {
-                    nodes.forEach(t => {
-                        const res = allResources.filter(r => r.tags && r.tags.some(rt => rt.id === t.id));
-                        const hasContent = res.length > 0 || (t.children && t.children.length > 0);
-                        if (hasContent) {
-                            const hasChildren = t.children && t.children.length > 0;
-                            const icon = hasChildren ? 'fa-folder text-amber-500' : 'fa-tag text-indigo-400';
-                            html += `<div class="mb-6" style="margin-left:${depth * 24}px">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"><i class="fas ${icon} text-sm"></i></div>
-                                    <h3 class="text-lg font-bold text-gray-700">${t.name}</h3>
-                                    <span class="stat-badge">${res.length} recursos</span>
-                                </div>`;
-                            if (res.length > 0) {
-                                html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">';
-                                res.forEach(r => html += cardHtml(r));
-                                html += '</div>';
-                            }
-                            if (hasChildren) renderGroup(t.children, depth + 1);
-                            html += '</div>';
-                        }
-                    });
+
+            let html='';
+            // Render folders as collapsible sections
+            function renderFolderSection(folder,depth){
+                const fRes=filtered.filter(r=>r.folderId===folder.id);
+                const hasChildren=folder.children&&folder.children.length>0;
+                const hasContent=fRes.length>0||hasChildren;
+                if(!hasContent)return;
+                html+=`<div class="folder-section" style="margin-left:${depth*16}px">
+                    <div class="folder-header" onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('-rotate-90')">
+                        <i class="fas fa-chevron-down chevron text-gray-400 text-xs transition-transform"></i>
+                        <i class="fas fa-folder text-amber-500"></i>
+                        <span class="font-semibold text-gray-700 flex-1">${folder.name}</span>
+                        <span class="stat-badge">${fRes.length}</span>
+                    </div>
+                    <div class="folder-content">`;
+                if(fRes.length>0){
+                    html+='<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-3">';
+                    fRes.forEach(r=>html+=card(r));
+                    html+='</div>';
                 }
-                renderGroup(tagTree, 0);
-                const uncategorized = allResources.filter(r => !r.tags || r.tags.length === 0);
-                if (uncategorized.length > 0) {
-                    html += `<div class="mb-6">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"><i class="fas fa-inbox text-gray-400 text-sm"></i></div>
-                            <h3 class="text-lg font-bold text-gray-500">Sin categorizar</h3>
-                            <span class="stat-badge">${uncategorized.length} recursos</span>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            ${uncategorized.map(r => cardHtml(r)).join('')}
-                        </div></div>`;
-                }
-                container.innerHTML = html || '<div class="text-center text-gray-400 py-12">No hay recursos en esta categoría</div>';
+                if(hasChildren) folder.children.forEach(ch=>renderFolderSection(ch,depth+1));
+                html+='</div></div>';
             }
+            folderTree.forEach(f=>renderFolderSection(f,0));
+
+            // Unfoldered
+            const unfoldered=filtered.filter(r=>!r.folderId);
+            if(unfoldered.length>0){
+                html+=`<div class="folder-section"><div class="folder-header" onclick="this.nextElementSibling.classList.toggle('hidden');this.querySelector('.chevron').classList.toggle('-rotate-90')">
+                    <i class="fas fa-chevron-down chevron text-gray-400 text-xs transition-transform"></i>
+                    <i class="fas fa-inbox text-gray-400"></i>
+                    <span class="font-semibold text-gray-500 flex-1">Sin carpeta</span>
+                    <span class="stat-badge">${unfoldered.length}</span>
+                </div><div class="folder-content"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${unfoldered.map(r=>card(r)).join('')}</div></div></div>`;
+            }
+            c.innerHTML=html;
         }
 
-        function cardHtml(res) {
-            const typeInfo = TYPE_ICONS[res.type] || { icon: 'fa-file', class: 'type-NOTES' };
-            const tagsHtml = res.tags && res.tags.length > 0
-                ? `<div class="flex flex-wrap gap-1.5 mb-3">${res.tags.map(t => `<span class="tag-chip">${t.name}</span>`).join('')}</div>` : '';
-            const privateLabel = res.private ? '<span class="text-red-500 text-xs ml-2"><i class="fas fa-lock"></i> Privado</span>' : '';
-            return `
-                <div class="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all resource-card" data-resource-id="${res.id}">
-                    <div class="flex items-start gap-4 mb-3">
-                        <div class="type-icon ${typeInfo.class}">
-                            <i class="fas ${typeInfo.icon}"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-gray-800 truncate">${res.name}</h4>
-                            <p class="text-sm text-gray-500">
-                                <span class="font-medium">${res.type}</span>
-                                ${res.language ? ' · ' + res.language : ''}
-                                ${privateLabel}
-                            </p>
-                        </div>
-                    </div>
-                    ${tagsHtml}
-                    ${res.description ? `<p class="text-sm text-gray-600 mb-3 line-clamp-2">${res.description}</p>` : ''}
-                    <div class="text-xs text-gray-400 mb-3">
-                        <i class="fas fa-calendar mr-1"></i>${res.uploadDate}
-                    </div>
-                    <div class="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
-                        <a href="/download/resource/${res.id}" class="action-btn action-btn-primary"><i class="fas fa-download"></i> Descargar</a>
-                        <button onclick="openTagResourceModal(${res.id})" class="action-btn"><i class="fas fa-tags text-indigo-400"></i> Tags</button>
-                        <button onclick="confirmTogglePrivacy(${res.id}, ${res.private})" class="action-btn">
-                            <i class="fas fa-${res.private ? 'eye' : 'eye-slash'} text-gray-400"></i>
-                        </button>
-                        <form action="/edit/subject/${SUBJECT_ID}/resources/${res.id}/delete" method="post" onsubmit="return confirm('¿Eliminar este recurso?');" class="inline">
-                            <button type="submit" class="action-btn action-btn-danger"><i class="fas fa-trash"></i></button>
-                        </form>
-                    </div>
-                </div>`;
+        function card(r){
+            const ti=ICONS[r.type]||{i:'fa-file',c:'type-NOTES'};
+            const tags=r.tags&&r.tags.length?`<div class="flex flex-wrap gap-1 mb-2">${r.tags.map(t=>`<span class="tag-chip">${t.name}</span>`).join('')}</div>`:'';
+            const priv=r.private?'<span class="text-red-500 text-xs ml-2"><i class="fas fa-lock"></i></span>':'';
+            return `<div class="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all resource-card" data-resource-id="${r.id}">
+                <div class="flex items-start gap-4 mb-2"><div class="type-icon ${ti.c}"><i class="fas ${ti.i}"></i></div>
+                <div class="flex-1 min-w-0"><h4 class="font-bold text-gray-800 truncate">${r.name}</h4>
+                <p class="text-sm text-gray-500"><span class="font-medium">${r.type}</span>${r.language?' · '+r.language:''}${priv}</p></div></div>
+                ${tags}${r.description?`<p class="text-sm text-gray-600 mb-2 line-clamp-2">${r.description}</p>`:''}
+                <div class="text-xs text-gray-400 mb-3"><i class="fas fa-calendar mr-1"></i>${r.uploadDate}</div>
+                <div class="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                    <a href="/download/resource/${r.id}" class="action-btn action-btn-primary"><i class="fas fa-download"></i> Descargar</a>
+                    <button onclick="openTagResModal(${r.id})" class="action-btn"><i class="fas fa-tags text-indigo-400"></i></button>
+                    <button onclick="openMoveResModal(${r.id})" class="action-btn"><i class="fas fa-folder-open text-amber-500"></i></button>
+                    <button onclick="togglePrivacy(${r.id},${r.private})" class="action-btn"><i class="fas fa-${r.private?'eye':'eye-slash'} text-gray-400"></i></button>
+                    <form action="/edit/subject/${SID}/resources/${r.id}/delete" method="post" onsubmit="return confirm('¿Eliminar?')" class="inline">
+                        <button type="submit" class="action-btn action-btn-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div></div>`;
         }
 
-        // === UI Actions ===
-        function openUploadModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
-        function closeUploadModal() { document.getElementById('uploadModal').classList.add('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        // === Actions ===
+        function openUploadModal(){populateFolderSelects();document.getElementById('uploadModal').classList.remove('hidden')}
+        function closeModal(id){document.getElementById(id).classList.add('hidden')}
+        function togglePrivacy(id,priv){if(confirm(`¿${priv?'Publicar':'Privatizar'}?`)){document.getElementById('privacyForm').action=`/edit/subject/${SID}/resources/${id}/toggle-privacy`;document.getElementById('privacyForm').submit()}}
 
-        function setView(view, btn) {
-            currentView = view;
-            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function filterByTag(tagId,el){
+            activeTagFilter=tagId;
+            document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
+            if(el)el.classList.add('active');
             renderResources();
         }
 
-        function filterByTag(tagId, el) {
-            document.querySelectorAll('.sidebar-tag').forEach(i => i.classList.remove('active'));
-            if (el) el.classList.add('active');
-        }
-
-        function confirmTogglePrivacy(resourceId, isPrivate) {
-            if (confirm(`¿${isPrivate ? 'Hacer público' : 'Hacer privado'} este recurso?`)) {
-                document.getElementById('togglePrivacyForm').action = `/edit/subject/${SUBJECT_ID}/resources/${resourceId}/toggle-privacy`;
-                document.getElementById('togglePrivacyForm').submit();
-            }
-        }
-
         // === Tag CRUD ===
-        function showCreateTagModal(parentId) {
-            const select = document.getElementById('newTagParent');
-            select.innerHTML = '<option value="">— Raíz (sin padre) —</option>';
-            allTags.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.id;
-                opt.textContent = (t.parentName ? t.parentName + ' → ' : '') + t.name;
-                if (parentId && t.id == parentId) opt.selected = true;
-                select.appendChild(opt);
-            });
-            document.getElementById('newTagName').value = '';
-            document.getElementById('createTagModal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('newTagName').focus(), 100);
+        function showCreateTagModal(){document.getElementById('newTagName').value='';document.getElementById('createTagModal').classList.remove('hidden');setTimeout(()=>document.getElementById('newTagName').focus(),100)}
+        async function createTag(){
+            const n=document.getElementById('newTagName').value.trim();if(!n)return;
+            const r=await fetch(TAG_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});
+            if(r.ok){closeModal('createTagModal');location.reload()}else{const e=await r.json();alert(e.error||'Error')}
         }
+        async function deleteTag(id,name){if(!confirm(`¿Eliminar tag "${name}"?`))return;const r=await fetch(`${TAG_API}/${id}`,{method:'DELETE'});if(r.ok)location.reload()}
 
-        async function createTag() {
-            const name = document.getElementById('newTagName').value.trim();
-            const parentId = document.getElementById('newTagParent').value ? parseInt(document.getElementById('newTagParent').value) : null;
-            if (!name) return;
-            const res = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, parentId }) });
-            if (res.ok) { closeModal('createTagModal'); location.reload(); }
-            else { const err = await res.json(); alert(err.error || 'Error al crear'); }
+        // === Folder CRUD ===
+        function showCreateFolderModal(parentId){
+            const sel=document.getElementById('newFolderParent');
+            sel.innerHTML='<option value="">Raíz</option>';
+            allFolders.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.textContent=(f.parentName?f.parentName+' → ':'')+f.name;if(parentId&&f.id==parentId)o.selected=true;sel.appendChild(o)});
+            document.getElementById('newFolderName').value='';
+            document.getElementById('createFolderModal').classList.remove('hidden');
+            setTimeout(()=>document.getElementById('newFolderName').focus(),100);
         }
-
-        function showRenameTagModal(tagId, name) {
-            document.getElementById('renameTagId').value = tagId;
-            document.getElementById('renameTagInput').value = name;
-            document.getElementById('renameTagModal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('renameTagInput').focus(), 100);
+        async function createFolder(){
+            const n=document.getElementById('newFolderName').value.trim();if(!n)return;
+            const p=document.getElementById('newFolderParent').value;
+            const r=await fetch(FOLDER_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,parentId:p?parseInt(p):null})});
+            if(r.ok){closeModal('createFolderModal');location.reload()}else{const e=await r.json();alert(e.error||'Error')}
         }
+        async function deleteFolder(id,name){if(!confirm(`¿Eliminar carpeta "${name}"?\nLos recursos se moverán al nivel superior.`))return;const r=await fetch(`${FOLDER_API}/${id}`,{method:'DELETE'});if(r.ok)location.reload()}
 
-        async function renameTag() {
-            const tagId = document.getElementById('renameTagId').value;
-            const name = document.getElementById('renameTagInput').value.trim();
-            if (!name) return;
-            const res = await fetch(`${API_BASE}/${tagId}/rename`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
-            if (res.ok) { closeModal('renameTagModal'); location.reload(); }
-            else { const err = await res.json(); alert(err.error || 'Error'); }
+        // === Rename (shared) ===
+        function showRename(type,id,name){
+            document.getElementById('renameType').value=type;document.getElementById('renameId').value=id;
+            document.getElementById('renameInput').value=name;
+            document.getElementById('renameTitle').textContent=type==='tag'?'Renombrar tag':'Renombrar carpeta';
+            document.getElementById('renameModal').classList.remove('hidden');
+            setTimeout(()=>document.getElementById('renameInput').focus(),100);
         }
-
-        async function deleteTag(tagId, tagName) {
-            if (!confirm(`¿Eliminar la categoría "${tagName}"?\nLos recursos no se eliminarán.`)) return;
-            const res = await fetch(`${API_BASE}/${tagId}`, { method: 'DELETE' });
-            if (res.ok) location.reload();
-            else { const err = await res.json(); alert(err.error || 'Error'); }
-        }
-
-        // === Upload: Tag Chip Input ===
-        const selectedUploadTags = new Set();
-        document.getElementById('tagInput').addEventListener('input', function () {
-            const q = this.value.trim().toLowerCase();
-            const dd = document.getElementById('tagAutocomplete');
-            if (!q) { dd.classList.add('hidden'); return; }
-            const matches = allTags.filter(t => t.name.toLowerCase().includes(q) && !selectedUploadTags.has(t.id));
-            dd.innerHTML = matches.length === 0
-                ? `<div class="autocomplete-item text-gray-400"><i class="fas fa-plus-circle mr-2"></i>Pulsa Enter para crear "${this.value.trim()}"</div>`
-                : matches.map(t => `<div class="autocomplete-item" onclick="selectUploadTag(${t.id})"><i class="fas fa-tag text-indigo-400"></i>${t.name}</div>`).join('');
-            dd.classList.remove('hidden');
-        });
-        document.getElementById('tagInput').addEventListener('keydown', async function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const name = this.value.trim(); if (!name) return;
-                const existing = allTags.find(t => t.name.toLowerCase() === name.toLowerCase());
-                if (existing) selectUploadTag(existing.id);
-                else {
-                    const res = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, parentId: null }) });
-                    if (res.ok) { const t = await res.json(); allTags.push(t); selectUploadTag(t.id); }
-                }
-                this.value = '';
-                document.getElementById('tagAutocomplete').classList.add('hidden');
-            } else if (e.key === 'Escape') document.getElementById('tagAutocomplete').classList.add('hidden');
-        });
-        function selectUploadTag(id) { if (selectedUploadTags.has(id)) return; selectedUploadTags.add(id); renderUploadChips(); }
-        function removeUploadTag(id) { selectedUploadTags.delete(id); renderUploadChips(); }
-        function renderUploadChips() {
-            const c = document.getElementById('tagInputContainer'), inp = document.getElementById('tagInput'), h = document.getElementById('tagHiddenInputs');
-            c.querySelectorAll('.tag-chip').forEach(x => x.remove()); h.innerHTML = '';
-            selectedUploadTags.forEach(id => {
-                const t = allTags.find(x => x.id === id); if (!t) return;
-                const chip = document.createElement('span'); chip.className = 'tag-chip';
-                chip.innerHTML = `${t.name} <button type="button" class="remove-btn" onclick="removeUploadTag(${id})">×</button>`;
-                c.insertBefore(chip, inp);
-                const hi = document.createElement('input'); hi.type = 'hidden'; hi.name = 'tagIds'; hi.value = id; h.appendChild(hi);
-            });
+        async function doRename(){
+            const type=document.getElementById('renameType').value;const id=document.getElementById('renameId').value;
+            const name=document.getElementById('renameInput').value.trim();if(!name)return;
+            const url=type==='tag'?`${TAG_API}/${id}/rename`:`${FOLDER_API}/${id}/rename`;
+            const r=await fetch(url,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name})});
+            if(r.ok){closeModal('renameModal');location.reload()}else{const e=await r.json();alert(e.error||'Error')}
         }
 
         // === Tag Resource Modal ===
-        let currentTagResId = null, currentResTags = new Set();
-        function openTagResourceModal(resourceId) {
-            currentTagResId = resourceId;
-            document.getElementById('tagResourceSearch').value = '';
-            const resource = allResources.find(r => r.id === resourceId);
-            currentResTags = new Set(resource && resource.tags ? resource.tags.map(t => t.id) : []);
-            renderResTagChips();
-            document.getElementById('tagResourceModal').classList.remove('hidden');
+        let curTagResId=null,curResTags=new Set();
+        function openTagResModal(id){curTagResId=id;document.getElementById('tagResSearch').value='';const res=allRes.find(r=>r.id===id);curResTags=new Set(res&&res.tags?res.tags.map(t=>t.id):[]);renderResTags();document.getElementById('tagResModal').classList.remove('hidden')}
+        function closeTagResModal(){document.getElementById('tagResModal').classList.add('hidden');location.reload()}
+        function renderResTags(){
+            const c=document.getElementById('tagResCurrent');
+            if(!curResTags.size){c.innerHTML='<span class="text-sm text-gray-400 italic">Sin tags</span>';return}
+            c.innerHTML='';curResTags.forEach(id=>{const t=allTags.find(x=>x.id===id);if(!t)return;const ch=document.createElement('span');ch.className='tag-chip';ch.innerHTML=`${t.name} <button class="rm" onclick="untagR(${id})">×</button>`;c.appendChild(ch)})
         }
-        function closeTagResourceModal() { document.getElementById('tagResourceModal').classList.add('hidden'); location.reload(); }
-        function renderResTagChips() {
-            const c = document.getElementById('tagResourceCurrentTags');
-            if (currentResTags.size === 0) { c.innerHTML = '<span class="text-sm text-gray-400 italic">Sin tags asignados — busca abajo para añadir</span>'; return; }
-            c.innerHTML = '';
-            currentResTags.forEach(id => {
-                const t = allTags.find(x => x.id === id); if (!t) return;
-                const chip = document.createElement('span'); chip.className = 'tag-chip';
-                chip.innerHTML = `${t.name} <button class="remove-btn" onclick="untagRes(${id})">×</button>`;
-                c.appendChild(chip);
-            });
-        }
-        document.getElementById('tagResourceSearch').addEventListener('input', function () {
-            const q = this.value.trim().toLowerCase(), dd = document.getElementById('tagResourceAutocomplete');
-            if (!q) { dd.classList.add('hidden'); return; }
-            const matches = allTags.filter(t => t.name.toLowerCase().includes(q) && !currentResTags.has(t.id));
-            dd.innerHTML = matches.map(t => `<div class="autocomplete-item" onclick="tagRes(${t.id})"><i class="fas fa-tag text-indigo-400"></i>${t.name}</div>`).join('') || '<div class="autocomplete-item text-gray-400">Sin resultados</div>';
-            dd.classList.remove('hidden');
+        document.getElementById('tagResSearch').addEventListener('input',function(){
+            const q=this.value.trim().toLowerCase(),dd=document.getElementById('tagResAC');
+            if(!q){dd.classList.add('hidden');return}
+            const m=allTags.filter(t=>t.name.toLowerCase().includes(q)&&!curResTags.has(t.id));
+            dd.innerHTML=m.map(t=>`<div class="autocomplete-item" onclick="tagR(${t.id})"><i class="fas fa-tag text-indigo-400"></i>${t.name}</div>`).join('')||'<div class="autocomplete-item text-gray-400">Sin resultados</div>';
+            dd.classList.remove('hidden')
         });
-        async function tagRes(tagId) {
-            await fetch(`${API_BASE}/${tagId}/resources/${currentTagResId}`, { method: 'POST' });
-            currentResTags.add(tagId);
-            const r = allResources.find(x => x.id === currentTagResId);
-            if (r) { if (!r.tags) r.tags = []; const t = allTags.find(x => x.id === tagId); r.tags.push({ id: tagId, name: t.name }); }
-            renderResTagChips();
-            document.getElementById('tagResourceSearch').value = '';
-            document.getElementById('tagResourceAutocomplete').classList.add('hidden');
+        async function tagR(tagId){await fetch(`${TAG_API}/${tagId}/resources/${curTagResId}`,{method:'POST'});curResTags.add(tagId);const r=allRes.find(x=>x.id===curTagResId);if(r){if(!r.tags)r.tags=[];const t=allTags.find(x=>x.id===tagId);r.tags.push({id:tagId,name:t.name})}renderResTags();document.getElementById('tagResSearch').value='';document.getElementById('tagResAC').classList.add('hidden')}
+        async function untagR(tagId){await fetch(`${TAG_API}/${tagId}/resources/${curTagResId}`,{method:'DELETE'});curResTags.delete(tagId);const r=allRes.find(x=>x.id===curTagResId);if(r)r.tags=r.tags.filter(t=>t.id!==tagId);renderResTags()}
+
+        // === Move Resource Modal ===
+        function openMoveResModal(id){document.getElementById('moveResId').value=id;populateMoveSelect(id);document.getElementById('moveResModal').classList.remove('hidden')}
+        function populateMoveSelect(resId){
+            const sel=document.getElementById('moveResFolderSelect');sel.innerHTML='<option value="">Sin carpeta</option>';
+            const res=allRes.find(r=>r.id===resId);
+            allFolders.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.textContent=(f.parentName?f.parentName+' → ':'')+f.name;if(res&&res.folderId===f.id)o.selected=true;sel.appendChild(o)})
         }
-        async function untagRes(tagId) {
-            await fetch(`${API_BASE}/${tagId}/resources/${currentTagResId}`, { method: 'DELETE' });
-            currentResTags.delete(tagId);
-            const r = allResources.find(x => x.id === currentTagResId);
-            if (r) r.tags = r.tags.filter(t => t.id !== tagId);
-            renderResTagChips();
+        async function doMoveResource(){
+            const resId=document.getElementById('moveResId').value;const fId=document.getElementById('moveResFolderSelect').value;
+            if(fId){await fetch(`${FOLDER_API}/${fId}/resources/${resId}`,{method:'POST'})}else{await fetch(`${FOLDER_API}/resources/${resId}`,{method:'DELETE'})}
+            closeModal('moveResModal');location.reload()
+        }
+
+        // === Upload tag chips ===
+        const selTags=new Set();
+        document.getElementById('tagInput').addEventListener('input',function(){
+            const q=this.value.trim().toLowerCase(),dd=document.getElementById('tagAC');
+            if(!q){dd.classList.add('hidden');return}
+            const m=allTags.filter(t=>t.name.toLowerCase().includes(q)&&!selTags.has(t.id));
+            dd.innerHTML=m.length?m.map(t=>`<div class="autocomplete-item" onclick="selTag(${t.id})"><i class="fas fa-tag text-indigo-400"></i>${t.name}</div>`).join(''):`<div class="autocomplete-item text-gray-400">Enter para crear "${this.value.trim()}"</div>`;
+            dd.classList.remove('hidden')
+        });
+        document.getElementById('tagInput').addEventListener('keydown',async function(e){
+            if(e.key==='Enter'){e.preventDefault();const n=this.value.trim();if(!n)return;const ex=allTags.find(t=>t.name.toLowerCase()===n.toLowerCase());if(ex)selTag(ex.id);else{const r=await fetch(TAG_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})});if(r.ok){const t=await r.json();allTags.push(t);selTag(t.id)}}this.value='';document.getElementById('tagAC').classList.add('hidden')}
+            if(e.key==='Escape')document.getElementById('tagAC').classList.add('hidden')
+        });
+        function selTag(id){if(selTags.has(id))return;selTags.add(id);renderUpChips()}
+        function rmTag(id){selTags.delete(id);renderUpChips()}
+        function renderUpChips(){
+            const c=document.getElementById('tagInputC'),inp=document.getElementById('tagInput'),h=document.getElementById('tagHidden');
+            c.querySelectorAll('.tag-chip').forEach(x=>x.remove());h.innerHTML='';
+            selTags.forEach(id=>{const t=allTags.find(x=>x.id===id);if(!t)return;const ch=document.createElement('span');ch.className='tag-chip';ch.innerHTML=`${t.name} <button type="button" class="rm" onclick="rmTag(${id})">×</button>`;c.insertBefore(ch,inp);const hi=document.createElement('input');hi.type='hidden';hi.name='tagIds';hi.value=id;h.appendChild(hi)})
+        }
+
+        // === Folder selects ===
+        function populateFolderSelects(){
+            const sel=document.getElementById('uploadFolderSelect');if(!sel)return;
+            sel.innerHTML='<option value="">Sin carpeta</option>';
+            allFolders.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.textContent=(f.parentName?f.parentName+' → ':'')+f.name;sel.appendChild(o)})
         }
 
         // === Search ===
-        let searchTO;
-        document.getElementById('globalSearch').addEventListener('input', function () {
-            clearTimeout(searchTO);
-            const q = this.value.trim(), rd = document.getElementById('searchResults');
-            if (q.length < 2) { rd.classList.add('hidden'); return; }
-            searchTO = setTimeout(async () => {
-                const res = await fetch(`${API_BASE}/resources/search?q=${encodeURIComponent(q)}`);
-                if (!res.ok) return;
-                const results = await res.json();
-                rd.innerHTML = results.length === 0
-                    ? '<div class="px-4 py-4 text-gray-400 text-center">No se encontraron resultados</div>'
-                    : results.map(r => {
-                        const ti = TYPE_ICONS[r.type] || { icon: 'fa-file', class: 'type-NOTES' };
-                        return `<div class="autocomplete-item" onclick="document.getElementById('globalSearch').value='';document.getElementById('searchResults').classList.add('hidden');highlightRes(${r.id})">
-                            <div class="type-icon ${ti.class}" style="width:32px;height:32px;font-size:14px"><i class="fas ${ti.icon}"></i></div>
-                            <div><div class="font-medium text-gray-800">${r.name}</div><div class="text-xs text-gray-400">${r.type}${r.language ? ' · ' + r.language : ''}</div></div>
-                        </div>`;
-                    }).join('');
-                rd.classList.remove('hidden');
-            }, 300);
-        });
-        document.getElementById('globalSearch').addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.getElementById('searchResults').classList.add('hidden'); this.blur(); } });
-        function highlightRes(id) {
-            if (currentView !== 'flat') { currentView = 'flat'; renderResources(); document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.view-btn')[1].classList.add('active'); }
-            setTimeout(() => {
-                const card = document.querySelector(`.resource-card[data-resource-id="${id}"]`);
-                if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); card.style.boxShadow = '0 0 0 3px #0072CE'; setTimeout(() => card.style.boxShadow = '', 3000); }
-            }, 100);
-        }
-
-        // === File upload drag & drop ===
-        const dropArea = document.getElementById('dropArea');
-        const fileInput = document.getElementById('fileInput');
-        if (dropArea && fileInput) {
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(ev => dropArea.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
-            ['dragenter', 'dragover'].forEach(ev => dropArea.addEventListener(ev, () => dropArea.classList.add('border-upm-light-blue', 'bg-blue-50')));
-            ['dragleave', 'drop'].forEach(ev => dropArea.addEventListener(ev, () => dropArea.classList.remove('border-upm-light-blue', 'bg-blue-50')));
-            dropArea.addEventListener('drop', e => { fileInput.files = e.dataTransfer.files; showFileName(); });
-            fileInput.addEventListener('change', showFileName);
-        }
-        function showFileName() {
-            const el = document.getElementById('selectedFileName');
-            if (fileInput.files.length > 0) {
-                el.querySelector('span').textContent = fileInput.files[0].name + ' (' + (fileInput.files[0].size / 1024 / 1024).toFixed(1) + ' MB)';
-                el.classList.remove('hidden');
-            }
-        }
-
-        // Close dropdowns on outside click
-        document.addEventListener('click', e => {
-            if (!e.target.closest('#tagInputContainer') && !e.target.closest('#tagAutocomplete')) document.getElementById('tagAutocomplete').classList.add('hidden');
-            if (!e.target.closest('#tagResourceSearch') && !e.target.closest('#tagResourceAutocomplete')) document.getElementById('tagResourceAutocomplete').classList.add('hidden');
-            if (!e.target.closest('#globalSearch') && !e.target.closest('#searchResults')) document.getElementById('searchResults').classList.add('hidden');
+        let sTO;
+        document.getElementById('globalSearch').addEventListener('input',function(){
+            clearTimeout(sTO);const q=this.value.trim(),rd=document.getElementById('searchResults');
+            if(q.length<2){rd.classList.add('hidden');return}
+            sTO=setTimeout(async()=>{const r=await fetch(`${TAG_API}/resources/search?q=${encodeURIComponent(q)}`);if(!r.ok)return;const res=await r.json();
+            rd.innerHTML=res.length?res.map(r=>{const ti=ICONS[r.type]||{i:'fa-file',c:'type-NOTES'};return`<div class="autocomplete-item" onclick="document.getElementById('globalSearch').value='';document.getElementById('searchResults').classList.add('hidden')"><div class="type-icon ${ti.c}" style="width:32px;height:32px;font-size:14px"><i class="fas ${ti.i}"></i></div><div><div class="font-medium text-gray-800">${r.name}</div><div class="text-xs text-gray-400">${r.type}</div></div></div>`}).join(''):'<div class="autocomplete-item text-gray-400">Sin resultados</div>';
+            rd.classList.remove('hidden')},300)
         });
 
-        // Close modals on backdrop click
-        document.querySelectorAll('#uploadModal, #createTagModal, #renameTagModal, #tagResourceModal').forEach(modal => {
-            modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+        // === File D&D ===
+        const da=document.getElementById('dropArea'),fi=document.getElementById('fileInput');
+        if(da&&fi){['dragenter','dragover','dragleave','drop'].forEach(e=>da.addEventListener(e,ev=>{ev.preventDefault();ev.stopPropagation()}));
+        ['dragenter','dragover'].forEach(e=>da.addEventListener(e,()=>da.classList.add('border-upm-light-blue','bg-blue-50')));
+        ['dragleave','drop'].forEach(e=>da.addEventListener(e,()=>da.classList.remove('border-upm-light-blue','bg-blue-50')));
+        da.addEventListener('drop',e=>{fi.files=e.dataTransfer.files;showFN()});fi.addEventListener('change',showFN)}
+        function showFN(){const el=document.getElementById('fileName');if(fi.files.length){el.querySelector('span').textContent=fi.files[0].name+' ('+(fi.files[0].size/1024/1024).toFixed(1)+' MB)';el.classList.remove('hidden')}}
+
+        // === Global listeners ===
+        document.addEventListener('click',e=>{
+            if(!e.target.closest('#tagInputC')&&!e.target.closest('#tagAC'))document.getElementById('tagAC').classList.add('hidden');
+            if(!e.target.closest('#tagResSearch')&&!e.target.closest('#tagResAC'))document.getElementById('tagResAC').classList.add('hidden');
+            if(!e.target.closest('#globalSearch')&&!e.target.closest('#searchResults'))document.getElementById('searchResults').classList.add('hidden');
         });
-
-        // Ctrl+K / Cmd+K
-        document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('globalSearch').focus(); } });
-
-        // Enter in modals
-        document.getElementById('newTagName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); createTag(); } });
-        document.getElementById('renameTagInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); renameTag(); } });
-
-        // Init
-        document.addEventListener('DOMContentLoaded', renderAll);
+        document.querySelectorAll('#uploadModal,#createTagModal,#createFolderModal,#renameModal,#tagResModal,#moveResModal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.add('hidden')}));
+        document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();document.getElementById('globalSearch').focus()}});
+        document.getElementById('newTagName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();createTag()}});
+        document.getElementById('newFolderName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();createFolder()}});
+        document.getElementById('renameInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doRename()}});
+        document.addEventListener('DOMContentLoaded',renderAll);
     </script>
 </body>
 </html>

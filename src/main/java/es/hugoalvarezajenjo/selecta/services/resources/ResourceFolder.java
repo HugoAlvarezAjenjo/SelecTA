@@ -7,13 +7,16 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"subject_id", "name"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"subject_id", "name", "parent_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResourceTag {
+public class ResourceFolder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,12 +28,19 @@ public class ResourceTag {
     @Column(nullable = false)
     private String name;
 
-    /**
-     * Normalizes tag name: trims whitespace and capitalizes first letter.
-     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private ResourceFolder parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC")
+    private List<ResourceFolder> children = new ArrayList<>();
+
+    private int displayOrder;
+
     public static String normalizeName(final String rawName) {
         if (rawName == null || rawName.isBlank()) {
-            throw new IllegalArgumentException("Tag name cannot be empty");
+            throw new IllegalArgumentException("Folder name cannot be empty");
         }
         final String trimmed = rawName.trim();
         return trimmed.substring(0, 1).toUpperCase() + trimmed.substring(1);
