@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/edit/subject/{subjectId}/resources")
+@RequestMapping("/teacher/subject/{subjectId}/resources")
 @RequiredArgsConstructor
 public class EditSubjectResourcesView {
     private final SubjectService subjectService;
@@ -67,7 +67,7 @@ public class EditSubjectResourcesView {
 
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Por favor, selecciona un archivo");
-            return "redirect:/edit/subject/" + subjectId + "/resources";
+            return "redirect:/teacher/subject/" + subjectId + "/resources";
         }
 
         try {
@@ -101,7 +101,7 @@ public class EditSubjectResourcesView {
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("error", "Error al subir el archivo: " + e.getMessage());
         }
-        return "redirect:/edit/subject/" + subjectId + "/resources";
+        return "redirect:/teacher/subject/" + subjectId + "/resources";
     }
 
     @PostMapping("/{resourceId}/delete")
@@ -110,13 +110,13 @@ public class EditSubjectResourcesView {
         final SubjectResource resource = this.subjectResourceService.findById(resourceId);
         if (resource == null) {
             redirectAttributes.addFlashAttribute("error", "Recurso no encontrado");
-            return "redirect:/edit/subject/" + subjectId + "/resources";
+            return "redirect:/teacher/subject/" + subjectId + "/resources";
         }
         try { this.storageService.deleteFile(resourceId.toString()); }
         catch (Exception e) { System.err.println("Error deleting file: " + e.getMessage()); }
         this.subjectResourceService.deleteResource(resourceId);
         redirectAttributes.addFlashAttribute("success", "Recurso eliminado correctamente");
-        return "redirect:/edit/subject/" + subjectId + "/resources";
+        return "redirect:/teacher/subject/" + subjectId + "/resources";
     }
 
     @PostMapping("/{resourceId}/toggle-privacy")
@@ -125,11 +125,11 @@ public class EditSubjectResourcesView {
         final SubjectResource resource = this.subjectResourceService.findById(resourceId);
         if (resource == null) {
             redirectAttributes.addFlashAttribute("error", "Recurso no encontrado");
-            return "redirect:/edit/subject/" + subjectId + "/resources";
+            return "redirect:/teacher/subject/" + subjectId + "/resources";
         }
         this.subjectResourceService.togglePrivacy(resourceId);
         final String status = !resource.isPrivate() ? "privado" : "público";
         redirectAttributes.addFlashAttribute("success", "El recurso ahora es " + status);
-        return "redirect:/edit/subject/" + subjectId + "/resources";
+        return "redirect:/teacher/subject/" + subjectId + "/resources";
     }
 }

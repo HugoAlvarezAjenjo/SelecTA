@@ -57,7 +57,7 @@
                 <div class="flex items-center gap-3 mb-4 text-sm">
                     <a th:href="@{'/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-arrow-left mr-1"></i> Asignatura</a>
                     <span class="text-gray-300">|</span>
-                    <a th:href="@{'/edit/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-edit mr-1"></i> Descripción</a>
+                    <a th:href="@{'/teacher/subject/' + ${subjectDTO.id} + '/description'}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-edit mr-1"></i> Descripción</a>
                 </div>
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
@@ -139,7 +139,7 @@
                 <h3 class="text-xl font-bold text-upm-blue"><i class="fas fa-upload mr-2"></i>Subir recurso</h3>
                 <button onclick="closeModal('uploadModal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
             </div>
-            <form th:action="@{'/edit/subject/' + ${subjectDTO.id} + '/resources/upload'}" method="post" enctype="multipart/form-data" class="space-y-5">
+            <form th:action="@{'/teacher/subject/' + ${subjectDTO.id} + '/resources/upload'}" method="post" enctype="multipart/form-data" class="space-y-5">
                 <div id="dropArea" class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center">
                     <i class="fas fa-cloud-upload-alt text-upm-light-blue text-4xl mb-3"></i>
                     <p class="text-gray-600 font-medium mb-1">Arrastra tu archivo aquí</p>
@@ -402,7 +402,7 @@
                     <button onclick="openTagResModal(${r.id})" class="action-btn"><i class="fas fa-tags text-indigo-400"></i></button>
                     <button onclick="openMoveResModal(${r.id})" class="action-btn"><i class="fas fa-folder-open text-amber-500"></i></button>
                     <button onclick="togglePrivacy(${r.id},${r.private})" class="action-btn"><i class="fas fa-${r.private?'eye':'eye-slash'} text-gray-400"></i></button>
-                    <form action="/edit/subject/${SID}/resources/${r.id}/delete" method="post" onsubmit="return confirm('¿Eliminar?')" class="inline">
+                    <form action="/teacher/subject/${SID}/resources/${r.id}/delete" method="post" onsubmit="return confirm('¿Eliminar?')" class="inline">
                         <button type="submit" class="action-btn action-btn-danger"><i class="fas fa-trash"></i></button>
                     </form>
                 </div></div>`;
@@ -411,7 +411,7 @@
         // === Actions ===
         function openUploadModal(){populateFolderSelects();document.getElementById('uploadModal').classList.remove('hidden')}
         function closeModal(id){document.getElementById(id).classList.add('hidden')}
-        function togglePrivacy(id,priv){if(confirm(`¿${priv?'Publicar':'Privatizar'}?`)){document.getElementById('privacyForm').action=`/edit/subject/${SID}/resources/${id}/toggle-privacy`;document.getElementById('privacyForm').submit()}}
+        function togglePrivacy(id,priv){if(confirm(`¿${priv?'Publicar':'Privatizar'}?`)){document.getElementById('privacyForm').action=`/teacher/subject/${SID}/resources/${id}/toggle-privacy`;document.getElementById('privacyForm').submit()}}
 
         function toggleTagFilter(tagId){
             if(tagId===null){activeTagFilters.clear();}

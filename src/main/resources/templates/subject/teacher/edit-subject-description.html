@@ -35,7 +35,7 @@
                     class="inline-flex items-center text-upm-blue hover:text-upm-light-blue mb-4">
                     <i class="fas fa-arrow-left mr-2"></i> Volver a la asignatura
                 </a>
-                <a th:href="@{/edit/subject/{id}/resources(id=${subject.id})}"
+                <a th:href="@{/teacher/subject/{id}/resources(id=${subject.id})}"
                     class="inline-flex items-center text-upm-blue hover:text-upm-light-blue mb-4 ml-4">
                     <i class="fas fa-file-alt mr-2"></i> Gestionar Recursos
                 </a>
@@ -48,7 +48,7 @@
             </div>
 
             <!-- Edit Form -->
-            <form id="editSubjectForm" th:action="@{/edit/subject/{id}(id=${subject.id})}" method="post"
+            <form id="editSubjectForm" th:action="@{/teacher/subject/{id}/description(id=${subject.id})}" method="post"
                 class="bg-white rounded-xl shadow-sm p-6">
 
                 <!-- Short Description (From Header) -->

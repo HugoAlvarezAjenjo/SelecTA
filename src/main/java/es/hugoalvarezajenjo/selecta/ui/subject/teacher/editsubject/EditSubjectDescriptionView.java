@@ -11,12 +11,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/edit/subject")
+@RequestMapping("/teacher/subject")
 @RequiredArgsConstructor
 public class EditSubjectDescriptionView {
     private final SubjectService subjectService;
 
+    /**
+     * /teacher/subject/{id} → redirect to resources (main teacher landing)
+     */
     @GetMapping("/{id}")
+    public String teacherSubjectLanding(@PathVariable final Long id) {
+        return "redirect:/teacher/subject/" + id + "/resources";
+    }
+
+    @GetMapping("/{id}/description")
     public String editSubjectDescriptionView(@PathVariable final Long id, final Model model) {
         final Optional<Subject> subject = this.subjectService.getSubjectById(id);
         if (subject.isEmpty()) {
@@ -26,7 +34,7 @@ public class EditSubjectDescriptionView {
         return "subject/teacher/edit-subject-description";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{id}/description")
     public String updateSubjectDescription(
             @PathVariable final Long id,
             @RequestParam String shortDescription,
@@ -39,14 +47,11 @@ public class EditSubjectDescriptionView {
         }
 
         Subject subject = subjectOpt.get();
-        // Update the subject with new descriptions
         subject.setDescription(shortDescription);
         subject.setLongDescription(longDescription);
-
-        // Save the updated subject
         this.subjectService.saveSubject(subject);
 
         redirectAttributes.addFlashAttribute("success", "Descripción actualizada correctamente");
-        return "redirect:/edit/subject/" + id;
+        return "redirect:/teacher/subject/" + id + "/description";
     }
 }
