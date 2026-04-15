@@ -12,213 +12,381 @@
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/design-system.css}">
     <link rel="stylesheet" th:href="@{/css/badges.css}">
-    <link rel="stylesheet" th:href="@{/css/forms.css}">
+    <link rel="stylesheet" th:href="@{/css/modals.css}">
     <link rel="stylesheet" th:href="@{/css/card.css}">
     <style>
-        .tag-chip { display:inline-flex; align-items:center; gap:4px; padding:2px 10px; border-radius:9999px; font-size:.75rem; font-weight:500; background:#e0e7ff; color:#3730a3; }
-        .tag-chip button { width:16px; height:16px; border-radius:50%; border:none; background:transparent; color:#6366f1; cursor:pointer; font-size:14px; line-height:1; display:inline-flex; align-items:center; justify-content:center; }
-        .tag-chip button:hover { background:#c7d2fe; color:#4338ca; }
-        .tag-tree-item { cursor:pointer; transition:background .15s; border-radius:.5rem; }
-        .tag-tree-item:hover { background:#f1f5f9; }
-        .tag-tree-item.active { background:#e0e7ff; color:#3730a3; }
-        .autocomplete-dropdown { position:absolute; z-index:50; width:100%; max-height:200px; overflow-y:auto; background:white; border:1px solid #e2e8f0; border-radius:.5rem; box-shadow:0 10px 15px -3px rgba(0,0,0,.1); }
-        .autocomplete-item { padding:8px 12px; cursor:pointer; font-size:.875rem; }
-        .autocomplete-item:hover { background:#e0e7ff; }
-        .tag-mgmt-btn { opacity:0; transition:opacity .15s; }
-        .tag-tree-item:hover .tag-mgmt-btn { opacity:1; }
-        .view-toggle-btn { padding:6px 12px; border-radius:.375rem; font-size:.875rem; cursor:pointer; border:1px solid #e2e8f0; background:white; color:#64748b; }
-        .view-toggle-btn.active { background:#3b82f6; color:white; border-color:#3b82f6; }
+        /* Tag chips */
+        .tag-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 12px; border-radius: var(--radius-full);
+            font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
+            background: #EEF2FF; color: #4338CA; border: 1px solid #C7D2FE;
+            transition: all var(--transition-fast);
+        }
+        .tag-chip:hover { background: #E0E7FF; }
+        .tag-chip .remove-btn {
+            width: 16px; height: 16px; border-radius: 50%; border: none;
+            background: transparent; color: #6366F1; cursor: pointer;
+            font-size: 14px; line-height: 1; display: inline-flex;
+            align-items: center; justify-content: center;
+        }
+        .tag-chip .remove-btn:hover { background: #C7D2FE; color: #4338CA; }
+
+        /* Sidebar tag items */
+        .sidebar-tag {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px; border-radius: var(--radius-md);
+            cursor: pointer; transition: all var(--transition-fast);
+            font-size: var(--font-size-sm);
+        }
+        .sidebar-tag:hover { background: var(--color-bg-muted); }
+        .sidebar-tag.active { background: #EEF2FF; color: #4338CA; font-weight: var(--font-weight-medium); }
+        .sidebar-tag .tag-actions { opacity: 0; transition: opacity var(--transition-fast); display: flex; gap: 2px; }
+        .sidebar-tag:hover .tag-actions { opacity: 1; }
+        .sidebar-tag .tag-actions button {
+            width: 24px; height: 24px; border: none; background: transparent;
+            border-radius: var(--radius-sm); cursor: pointer; display: flex;
+            align-items: center; justify-content: center; color: var(--color-text-muted);
+            font-size: 11px;
+        }
+        .sidebar-tag .tag-actions button:hover { background: var(--color-bg-muted); color: var(--color-primary); }
+        .sidebar-tag .tag-actions button.delete-btn:hover { color: var(--color-error); }
+
+        /* Resource type icons */
+        .type-icon {
+            width: 48px; height: 48px; border-radius: var(--radius-lg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; flex-shrink: 0;
+        }
+        .type-EXERCISE { background: #FEF3C7; color: #D97706; }
+        .type-PRESENTATION { background: #DBEAFE; color: #2563EB; }
+        .type-NOTES { background: #D1FAE5; color: #059669; }
+        .type-VIDEO { background: #FEE2E2; color: #DC2626; }
+        .type-EXTERNAL_RESOURCE { background: #F3E8FF; color: #7C3AED; }
+
+        /* Autocomplete */
+        .autocomplete-dropdown {
+            position: absolute; z-index: var(--z-dropdown); width: 100%;
+            max-height: 200px; overflow-y: auto; background: white;
+            border: 1px solid var(--color-border); border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg); margin-top: 4px;
+        }
+        .autocomplete-item {
+            padding: 10px 14px; cursor: pointer; font-size: var(--font-size-sm);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .autocomplete-item:hover { background: #EEF2FF; }
+
+        /* View toggle */
+        .view-btn {
+            padding: 8px 16px; border-radius: var(--radius-md); font-size: var(--font-size-sm);
+            cursor: pointer; border: 1px solid var(--color-border); background: white;
+            color: var(--color-text-muted); transition: all var(--transition-fast);
+            font-weight: var(--font-weight-medium);
+        }
+        .view-btn.active { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .view-btn:not(.active):hover { background: var(--color-bg-muted); }
+
+        /* Action buttons on cards */
+        .action-btn {
+            padding: 6px 12px; border-radius: var(--radius-md);
+            font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
+            cursor: pointer; transition: all var(--transition-fast);
+            display: inline-flex; align-items: center; gap: 4px;
+            border: 1px solid var(--color-border);
+        }
+        .action-btn:hover { background: var(--color-bg-muted); }
+        .action-btn-primary { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+        .action-btn-primary:hover { background: var(--color-primary-hover); }
+        .action-btn-danger { background: white; color: var(--color-error); border-color: #FCA5A5; }
+        .action-btn-danger:hover { background: #FEE2E2; }
+
+        /* Stats badge */
+        .stat-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 12px; border-radius: var(--radius-full);
+            font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
+            background: var(--color-bg-muted); color: var(--color-text-muted);
+        }
+
+        /* Responsive sidebar */
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; }
+            .sidebar { width: 100% !important; }
+        }
     </style>
 </head>
 
-<body class="font-sans bg-gray-50 text-gray-800">
+<body class="font-sans bg-white text-gray-800">
     <th:block th:replace="~{fragments/navbar :: navbar}" />
 
+    <!-- Subject Header -->
     <section class="hero-pattern py-8">
         <div class="container mx-auto px-4">
-            <!-- Header -->
-            <div class="mb-6">
-                <div class="flex items-center gap-4 mb-4">
-                    <a th:href="@{'/subject/' + ${subjectDTO.id}}" class="inline-flex items-center text-upm-blue hover:text-upm-light-blue">
-                        <i class="fas fa-arrow-left mr-2"></i> Volver a la asignatura
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <!-- Navigation breadcrumbs -->
+                <div class="flex items-center gap-3 mb-4 text-sm">
+                    <a th:href="@{'/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue transition-colors">
+                        <i class="fas fa-arrow-left mr-1"></i> Volver a la asignatura
                     </a>
-                    <span class="text-gray-400">|</span>
-                    <a th:href="@{'/edit/subject/' + ${subjectDTO.id}}" class="inline-flex items-center text-upm-blue hover:text-upm-light-blue">
-                        <i class="fas fa-edit mr-2"></i> Editar descripción
+                    <span class="text-gray-300">|</span>
+                    <a th:href="@{'/edit/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue transition-colors">
+                        <i class="fas fa-edit mr-1"></i> Editar descripción
                     </a>
                 </div>
-                <h1 class="text-3xl font-bold text-upm-blue">
-                    <i class="fas fa-file-alt mr-2"></i> Gestionar Recursos:
-                    <span th:text="${subjectDTO.subjectName}">Inteligencia Artificial</span>
-                </h1>
-                <p class="text-gray-600">Organiza y gestiona los materiales de tu asignatura</p>
-            </div>
 
-            <!-- Alerts -->
-            <div th:if="${success != null}">
-                <div th:replace="~{fragments/ui-components :: alert(type='success', message=${success}, icon='check-circle')}"></div>
-            </div>
-            <div th:if="${error != null}">
-                <div th:replace="~{fragments/ui-components :: alert(type='error', message=${error}, icon='exclamation-circle')}"></div>
-            </div>
+                <!-- Subject title + stats -->
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-1">
+                            <span th:text="${subjectDTO.subjectName}">Mathematics</span>
+                        </h1>
+                        <p class="text-gray-600">Gestión de recursos internos</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="stat-badge"><i class="fas fa-file"></i> <span id="statResources">0</span> recursos</span>
+                        <span class="stat-badge"><i class="fas fa-tags"></i> <span id="statTags">0</span> tags</span>
+                    </div>
+                </div>
 
-            <!-- Quick Search Bar -->
-            <div class="mb-6 relative">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text" id="globalSearch" placeholder="Buscar recursos por nombre, descripción o tag... (Ctrl+K)"
-                    class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-50 text-lg" autocomplete="off">
-                <div id="searchResults" class="hidden absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-xl shadow-lg max-h-96 overflow-y-auto z-50"></div>
+                <!-- Search bar -->
+                <div class="mt-6 relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="globalSearch"
+                        placeholder="Buscar recursos por nombre, descripción o tag... (⌘K)"
+                        class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30 text-base transition-all"
+                        autocomplete="off">
+                    <div id="searchResults" class="hidden autocomplete-dropdown rounded-xl"></div>
+                </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Main Layout -->
-            <div class="flex gap-6">
-                <!-- Sidebar: Tag Tree -->
-                <div class="w-72 flex-shrink-0">
-                    <div class="bg-white rounded-xl shadow-sm p-4 sticky top-4">
-                        <div class="flex items-center justify-between mb-4">
-                            <h2 class="text-lg font-bold text-upm-blue"><i class="fas fa-tags mr-1"></i> Tags</h2>
-                            <button onclick="showCreateTagModal()" class="text-upm-light-blue hover:text-upm-blue" title="Crear tag">
-                                <i class="fas fa-plus-circle text-lg"></i>
+    <!-- Alerts -->
+    <div class="container mx-auto px-4 -mt-2 mb-2" th:if="${success != null}">
+        <div th:replace="~{fragments/ui-components :: alert(type='success', message=${success}, icon='check-circle')}"></div>
+    </div>
+    <div class="container mx-auto px-4 -mt-2 mb-2" th:if="${error != null}">
+        <div th:replace="~{fragments/ui-components :: alert(type='error', message=${error}, icon='exclamation-circle')}"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <section class="py-8 bg-upm-gray bg-opacity-30 min-h-screen">
+        <div class="container mx-auto px-4">
+            <div class="main-layout flex gap-6">
+
+                <!-- Sidebar -->
+                <div class="sidebar" style="width: 280px; flex-shrink: 0;">
+                    <div class="bg-white rounded-xl shadow-sm p-5 sticky top-4">
+                        <div class="flex items-center justify-between mb-5">
+                            <h2 class="text-base font-bold text-upm-blue flex items-center gap-2">
+                                <i class="fas fa-tags"></i> Categorías
+                            </h2>
+                            <button onclick="showCreateTagModal()"
+                                class="w-8 h-8 rounded-lg bg-upm-light-blue bg-opacity-10 text-upm-light-blue hover:bg-opacity-20 flex items-center justify-center transition-all"
+                                title="Crear tag">
+                                <i class="fas fa-plus text-sm"></i>
                             </button>
                         </div>
-                        <div class="tag-tree-item active flex items-center gap-2 px-3 py-2 mb-1" onclick="filterByTag(null, this)">
-                            <i class="fas fa-layer-group text-sm text-gray-500"></i>
-                            <span class="text-sm font-medium">Todos los recursos</span>
-                            <span class="ml-auto text-xs text-gray-400" th:text="${#lists.size(subjectResources)}">0</span>
+
+                        <!-- All resources filter -->
+                        <div class="sidebar-tag active" onclick="filterByTag(null, this)">
+                            <i class="fas fa-layer-group text-gray-400"></i>
+                            <span class="flex-1">Todos los recursos</span>
+                            <span class="text-xs text-gray-400" id="countAll">0</span>
                         </div>
-                        <!-- Tag tree rendered by JS -->
+
+                        <!-- Tag tree (JS rendered) -->
                         <div id="tagTreeContainer" class="mt-2 space-y-0.5"></div>
-                        <div class="tag-tree-item flex items-center gap-2 px-3 py-2 mt-2 border-t border-gray-100 pt-3" onclick="filterByTag('uncategorized', this)">
-                            <i class="fas fa-inbox text-sm text-gray-400"></i>
-                            <span class="text-sm text-gray-500">Sin categorizar</span>
-                            <span class="ml-auto text-xs text-gray-400" th:text="${#lists.size(uncategorizedResources)}">0</span>
+
+                        <!-- Uncategorized -->
+                        <div class="border-t border-gray-100 mt-3 pt-3">
+                            <div class="sidebar-tag" onclick="filterByTag('uncategorized', this)">
+                                <i class="fas fa-inbox text-gray-400"></i>
+                                <span class="flex-1 text-gray-500">Sin categorizar</span>
+                                <span class="text-xs text-gray-400" id="countUncategorized">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Quick create tag -->
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <button onclick="showCreateTagModal()"
+                                class="w-full py-2.5 px-4 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-upm-light-blue hover:text-upm-light-blue transition-all flex items-center justify-center gap-2">
+                                <i class="fas fa-plus"></i> Crear nuevo tag
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Content -->
+                <!-- Content area -->
                 <div class="flex-1 min-w-0">
-                    <div class="flex items-center justify-between mb-4">
+                    <!-- Toolbar -->
+                    <div class="flex items-center justify-between mb-5">
                         <div class="flex items-center gap-2">
-                            <button class="view-toggle-btn active" onclick="setView('grouped', this)"><i class="fas fa-folder-tree mr-1"></i> Por tags</button>
-                            <button class="view-toggle-btn" onclick="setView('flat', this)"><i class="fas fa-list mr-1"></i> Lista plana</button>
+                            <button class="view-btn active" onclick="setView('grouped', this)">
+                                <i class="fas fa-folder-tree mr-1"></i> Por tags
+                            </button>
+                            <button class="view-btn" onclick="setView('flat', this)">
+                                <i class="fas fa-th-large mr-1"></i> Cuadrícula
+                            </button>
                         </div>
-                        <button onclick="toggleUploadForm()" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg text-sm">
-                            <i class="fas fa-upload mr-1"></i> Subir Recurso
+                        <button onclick="openUploadModal()"
+                            class="bg-upm-light-blue hover:bg-upm-blue text-white px-5 py-2.5 rounded-lg font-medium transition-all flex items-center gap-2 shadow-sm">
+                            <i class="fas fa-upload"></i> Subir recurso
                         </button>
                     </div>
 
-                    <!-- Upload Form -->
-                    <div id="uploadForm" class="hidden bg-white rounded-xl shadow-sm p-6 mb-6">
-                        <h2 class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-upload mr-2"></i> Subir Nuevo Recurso</h2>
-                        <form th:action="@{'/edit/subject/' + ${subjectDTO.id} + '/resources/upload'}" method="post" enctype="multipart/form-data" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label for="file" class="block text-gray-700 mb-1 font-medium text-sm">Archivo <span class="text-red-500">*</span></label>
-                                    <input type="file" id="file" name="file" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                </div>
-                                <div>
-                                    <label for="resName" class="block text-gray-700 mb-1 font-medium text-sm">Nombre <span class="text-red-500">*</span></label>
-                                    <input type="text" id="resName" name="name" required placeholder="Ej: Tema 1 - Introducción" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label for="type" class="block text-gray-700 mb-1 font-medium text-sm">Tipo <span class="text-red-500">*</span></label>
-                                    <select id="type" name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                        <option value="">Selecciona...</option>
-                                        <option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">EXERCISE</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label for="language" class="block text-gray-700 mb-1 font-medium text-sm">Idioma</label>
-                                    <input type="text" id="language" name="language" placeholder="Español" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                                </div>
-                                <div class="flex items-end pb-1">
-                                    <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="checkbox" name="isPrivate" class="w-4 h-4 text-upm-light-blue border-gray-300 rounded">
-                                        <span class="text-sm text-gray-700"><i class="fas fa-lock mr-1"></i> Privado</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <!-- Tags chip input -->
-                            <div>
-                                <label class="block text-gray-700 mb-1 font-medium text-sm"><i class="fas fa-tags mr-1"></i> Tags</label>
-                                <div class="relative">
-                                    <div id="tagInputContainer" class="flex flex-wrap items-center gap-1 px-3 py-2 border border-gray-300 rounded-lg bg-white min-h-[38px]">
-                                        <input type="text" id="tagInput" placeholder="Escribe para buscar tags..." class="flex-1 min-w-[120px] border-none outline-none text-sm p-0" autocomplete="off">
-                                    </div>
-                                    <div id="tagHiddenInputs"></div>
-                                    <div id="tagAutocomplete" class="autocomplete-dropdown hidden"></div>
-                                </div>
-                                <p class="text-xs text-gray-400 mt-1">Escribe para buscar tags existentes o pulsa Enter para crear uno nuevo</p>
-                            </div>
-                            <div>
-                                <label for="description" class="block text-gray-700 mb-1 font-medium text-sm">Descripción</label>
-                                <textarea id="description" name="description" rows="2" placeholder="Descripción opcional..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"></textarea>
-                            </div>
-                            <div class="flex justify-end gap-2">
-                                <button type="button" onclick="toggleUploadForm()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm">Cancelar</button>
-                                <button type="submit" class="px-6 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg text-sm"><i class="fas fa-upload mr-1"></i> Subir</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Resources rendered entirely by JS -->
+                    <!-- Resources container (JS rendered) -->
                     <div id="resourcesContainer"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Modal: Create Tag -->
+    <!-- Upload Modal (styled like student view) -->
+    <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-upm-blue">
+                        <i class="fas fa-upload mr-2"></i>Subir recurso
+                    </h3>
+                    <button onclick="closeUploadModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+
+                <form th:action="@{'/edit/subject/' + ${subjectDTO.id} + '/resources/upload'}" method="post" enctype="multipart/form-data" class="space-y-5">
+                    <!-- Drag & Drop area -->
+                    <div id="dropArea" class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center transition-all">
+                        <i class="fas fa-cloud-upload-alt text-upm-light-blue text-4xl mb-3"></i>
+                        <p class="text-gray-600 mb-2 font-medium">Arrastra tu archivo aquí</p>
+                        <p class="text-gray-400 text-sm mb-3">o</p>
+                        <label for="fileInput" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg cursor-pointer transition-all inline-block font-medium">
+                            Seleccionar archivo
+                        </label>
+                        <input type="file" id="fileInput" name="file" required class="hidden">
+                        <p id="selectedFileName" class="text-sm text-gray-500 mt-3 hidden">
+                            <i class="fas fa-file mr-1"></i><span></span>
+                        </p>
+                    </div>
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">Nombre del recurso <span class="text-red-500">*</span></label>
+                        <input type="text" name="name" required placeholder="Ej: Tema 1 - Introducción"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Type -->
+                        <div>
+                            <label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label>
+                            <select name="type" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                                <option value="">Selecciona...</option>
+                                <option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">EXERCISE</option>
+                            </select>
+                        </div>
+                        <!-- Language -->
+                        <div>
+                            <label class="block text-gray-700 mb-2 font-medium">Idioma</label>
+                            <input type="text" name="language" placeholder="Español"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                        </div>
+                    </div>
+
+                    <!-- Tags chip input -->
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium"><i class="fas fa-tags mr-1 text-indigo-400"></i>Tags</label>
+                        <div class="relative">
+                            <div id="tagInputContainer" class="flex flex-wrap items-center gap-1.5 px-3 py-2.5 border border-gray-300 rounded-lg focus-within:border-upm-light-blue focus-within:ring-2 focus-within:ring-upm-light-blue focus-within:ring-opacity-30 bg-white min-h-[44px] transition-all">
+                                <input type="text" id="tagInput" placeholder="Buscar o crear tags..."
+                                    class="flex-1 min-w-[140px] border-none outline-none text-sm p-0" autocomplete="off">
+                            </div>
+                            <div id="tagHiddenInputs"></div>
+                            <div id="tagAutocomplete" class="autocomplete-dropdown hidden"></div>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-1.5">Escribe y pulsa Enter para crear, o selecciona de la lista</p>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="block text-gray-700 mb-2 font-medium">Descripción</label>
+                        <textarea name="description" rows="3" placeholder="Breve descripción del contenido..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue focus:ring-2 focus:ring-upm-light-blue focus:ring-opacity-30"></textarea>
+                    </div>
+
+                    <!-- Private toggle -->
+                    <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
+                        <input type="checkbox" name="isPrivate" class="w-5 h-5 text-upm-light-blue border-gray-300 rounded focus:ring-upm-light-blue">
+                        <div>
+                            <span class="font-medium text-gray-700"><i class="fas fa-lock mr-1 text-gray-400"></i> Recurso privado</span>
+                            <p class="text-xs text-gray-500">Solo visible para profesores de esta asignatura</p>
+                        </div>
+                    </label>
+
+                    <!-- Buttons -->
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" onclick="closeUploadModal()" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-all">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium transition-all">
+                            <i class="fas fa-upload mr-2"></i>Subir recurso
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Tag Modal -->
     <div id="createTagModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-plus-circle mr-2"></i>Crear Tag</h3>
-            <div class="space-y-3">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
+            <h3 class="text-lg font-bold text-upm-blue mb-5"><i class="fas fa-plus-circle mr-2"></i>Crear categoría</h3>
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del tag</label>
-                    <input type="text" id="newTagName" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Ej: Tema 1, Microorganismos...">
+                    <label class="block text-gray-700 mb-2 font-medium">Nombre</label>
+                    <input type="text" id="newTagName" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Ej: Tema 1, Microorganismos...">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Tag padre (opcional)</label>
-                    <select id="newTagParent" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    <label class="block text-gray-700 mb-2 font-medium">Dentro de (opcional)</label>
+                    <select id="newTagParent" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
                         <option value="">— Raíz (sin padre) —</option>
                     </select>
                 </div>
             </div>
-            <div class="flex justify-end gap-2 mt-4">
-                <button onclick="closeModal('createTagModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-sm">Cancelar</button>
-                <button onclick="createTag()" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg text-sm">Crear</button>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeModal('createTagModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
+                <button onclick="createTag()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Crear</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Rename Tag -->
+    <!-- Rename Tag Modal -->
     <div id="renameTagModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-pen mr-2"></i>Renombrar Tag</h3>
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
+            <h3 class="text-lg font-bold text-upm-blue mb-5"><i class="fas fa-pen mr-2"></i>Renombrar categoría</h3>
             <input type="hidden" id="renameTagId">
-            <input type="text" id="renameTagInput" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
-            <div class="flex justify-end gap-2 mt-4">
-                <button onclick="closeModal('renameTagModal')" class="px-4 py-2 border border-gray-300 rounded-lg text-sm">Cancelar</button>
-                <button onclick="renameTag()" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg text-sm">Guardar</button>
+            <input type="text" id="renameTagInput" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeModal('renameTagModal')" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</button>
+                <button onclick="renameTag()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Guardar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Tag a Resource -->
+    <!-- Tag Resource Modal -->
     <div id="tagResourceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
-            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-tags mr-2"></i>Gestionar Tags del Recurso</h3>
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6">
+            <h3 class="text-lg font-bold text-upm-blue mb-4"><i class="fas fa-tags mr-2"></i>Gestionar tags</h3>
             <input type="hidden" id="tagResourceId">
-            <div id="tagResourceCurrentTags" class="flex flex-wrap gap-1 mb-3 min-h-[28px]"></div>
+            <div id="tagResourceCurrentTags" class="flex flex-wrap gap-1.5 mb-4 min-h-[32px] p-3 bg-gray-50 rounded-lg"></div>
             <div class="relative">
-                <input type="text" id="tagResourceSearch" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="Buscar tags para asignar...">
+                <input type="text" id="tagResourceSearch" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue" placeholder="Buscar tags...">
                 <div id="tagResourceAutocomplete" class="autocomplete-dropdown hidden"></div>
             </div>
-            <div class="flex justify-end mt-4">
-                <button onclick="closeTagResourceModal()" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg text-sm">Cerrar</button>
+            <div class="flex justify-end mt-5">
+                <button onclick="closeTagResourceModal()" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">Hecho</button>
             </div>
         </div>
     </div>
@@ -235,134 +403,171 @@
         let tagTree = /*[[${tagTree}]]*/ [];
         let currentView = 'grouped';
 
+        const TYPE_ICONS = {
+            EXERCISE: { icon: 'fa-file-lines', class: 'type-EXERCISE' },
+            PRESENTATION: { icon: 'fa-file-powerpoint', class: 'type-PRESENTATION' },
+            NOTES: { icon: 'fa-file-alt', class: 'type-NOTES' },
+            VIDEO: { icon: 'fa-video', class: 'type-VIDEO' },
+            EXTERNAL_RESOURCE: { icon: 'fa-link', class: 'type-EXTERNAL_RESOURCE' }
+        };
+
         // === Render ===
         function renderAll() {
+            document.getElementById('statResources').textContent = allResources.length;
+            document.getElementById('statTags').textContent = allTags.length;
+            document.getElementById('countAll').textContent = allResources.length;
+            document.getElementById('countUncategorized').textContent = allResources.filter(r => !r.tags || r.tags.length === 0).length;
             renderTagTree();
             renderResources();
         }
 
         function renderTagTree() {
-            const container = document.getElementById('tagTreeContainer');
-            container.innerHTML = renderTagNodes(tagTree, 0);
+            document.getElementById('tagTreeContainer').innerHTML = renderTagNodes(tagTree, 0);
         }
 
         function renderTagNodes(nodes, depth) {
+            if (!nodes || nodes.length === 0) return '';
             return nodes.map(t => {
-                const icon = t.children && t.children.length > 0
-                    ? '<i class="fas fa-folder text-xs text-amber-500"></i>'
-                    : '<i class="fas fa-tag text-xs text-indigo-400"></i>';
-                const childrenHtml = t.children && t.children.length > 0 ? renderTagNodes(t.children, depth + 1) : '';
+                const hasChildren = t.children && t.children.length > 0;
+                const icon = hasChildren ? 'fa-folder' : 'fa-tag';
+                const iconColor = hasChildren ? 'text-amber-500' : 'text-indigo-400';
+                const childHtml = hasChildren ? renderTagNodes(t.children, depth + 1) : '';
+                const escapedName = t.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 return `
-                    <div class="tag-tree-item flex items-center gap-2 px-3 py-1.5 group" style="padding-left:${12 + depth * 16}px" onclick="filterByTag(${t.id}, this)" data-tag-id="${t.id}">
-                        ${icon}
-                        <span class="text-sm flex-1 truncate">${t.name}</span>
-                        <div class="tag-mgmt-btn flex items-center gap-1">
-                            <button onclick="event.stopPropagation(); showCreateTagModal(${t.id})" class="text-gray-400 hover:text-indigo-500" title="Crear sub-tag"><i class="fas fa-plus text-xs"></i></button>
-                            <button onclick="event.stopPropagation(); showRenameTagModal(${t.id}, '${t.name.replace(/'/g, "\\'")}')" class="text-gray-400 hover:text-blue-500" title="Renombrar"><i class="fas fa-pen text-xs"></i></button>
-                            <button onclick="event.stopPropagation(); deleteTag(${t.id}, '${t.name.replace(/'/g, "\\'")}')" class="text-gray-400 hover:text-red-500" title="Eliminar"><i class="fas fa-trash text-xs"></i></button>
+                    <div class="sidebar-tag" style="padding-left:${12 + depth * 20}px" onclick="filterByTag(${t.id}, this)" data-tag-id="${t.id}">
+                        <i class="fas ${icon} ${iconColor}" style="font-size:12px"></i>
+                        <span class="flex-1 truncate">${t.name}</span>
+                        <div class="tag-actions">
+                            <button onclick="event.stopPropagation(); showCreateTagModal(${t.id})" title="Sub-tag"><i class="fas fa-plus"></i></button>
+                            <button onclick="event.stopPropagation(); showRenameTagModal(${t.id}, '${escapedName}')" title="Renombrar"><i class="fas fa-pen"></i></button>
+                            <button class="delete-btn" onclick="event.stopPropagation(); deleteTag(${t.id}, '${escapedName}')" title="Eliminar"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
-                    ${childrenHtml}`;
+                    ${childHtml}`;
             }).join('');
         }
 
         function renderResources() {
             const container = document.getElementById('resourcesContainer');
             if (allResources.length === 0) {
-                container.innerHTML = '<div class="bg-white rounded-xl shadow-sm p-8 text-center text-gray-400"><i class="fas fa-folder-open text-4xl mb-3"></i><p class="font-medium">No hay recursos disponibles aún</p><p class="text-sm">Sube el primer recurso usando el botón de arriba</p></div>';
+                container.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+                        <div class="w-20 h-20 rounded-full bg-upm-light-blue bg-opacity-10 flex items-center justify-center mx-auto mb-5">
+                            <i class="fas fa-folder-open text-upm-light-blue text-3xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-700 mb-2">No hay recursos aún</h3>
+                        <p class="text-gray-500 mb-6">Sube el primer recurso para empezar a organizar el material de tu asignatura</p>
+                        <button onclick="openUploadModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-lg font-medium transition-all">
+                            <i class="fas fa-upload mr-2"></i>Subir primer recurso
+                        </button>
+                    </div>`;
                 return;
             }
             if (currentView === 'flat') {
-                container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">' + allResources.map(r => resourceCardHtml(r)).join('') + '</div>';
+                container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">' + allResources.map(r => cardHtml(r)).join('') + '</div>';
             } else {
                 let html = '';
-                // Grouped by tags
-                const rendered = new Set();
-                function renderTagGroup(nodes, depth) {
+                function renderGroup(nodes, depth) {
                     nodes.forEach(t => {
-                        const tagResources = allResources.filter(r => r.tags && r.tags.some(rt => rt.id === t.id));
-                        const hasContent = tagResources.length > 0 || (t.children && t.children.length > 0);
+                        const res = allResources.filter(r => r.tags && r.tags.some(rt => rt.id === t.id));
+                        const hasContent = res.length > 0 || (t.children && t.children.length > 0);
                         if (hasContent) {
-                            const indent = depth * 16;
-                            const icon = t.children && t.children.length > 0 ? '<i class="fas fa-folder text-amber-500"></i>' : '<i class="fas fa-tag text-indigo-400"></i>';
-                            html += `<div class="mb-3" style="margin-left:${indent}px">
-                                <div class="flex items-center gap-2 mb-2 px-1">${icon}<h3 class="font-semibold text-gray-700">${t.name}</h3>
-                                <span class="text-xs text-gray-400">(${tagResources.length})</span></div>`;
-                            if (tagResources.length > 0) {
-                                html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-3 ml-6 mb-2">';
-                                tagResources.forEach(r => { html += resourceCardHtml(r); rendered.add(r.id); });
+                            const hasChildren = t.children && t.children.length > 0;
+                            const icon = hasChildren ? 'fa-folder text-amber-500' : 'fa-tag text-indigo-400';
+                            html += `<div class="mb-6" style="margin-left:${depth * 24}px">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"><i class="fas ${icon} text-sm"></i></div>
+                                    <h3 class="text-lg font-bold text-gray-700">${t.name}</h3>
+                                    <span class="stat-badge">${res.length} recursos</span>
+                                </div>`;
+                            if (res.length > 0) {
+                                html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">';
+                                res.forEach(r => html += cardHtml(r));
                                 html += '</div>';
                             }
-                            if (t.children && t.children.length > 0) {
-                                renderTagGroup(t.children, depth + 1);
-                            }
+                            if (hasChildren) renderGroup(t.children, depth + 1);
                             html += '</div>';
                         }
                     });
                 }
-                renderTagGroup(tagTree, 0);
-                // Uncategorized
+                renderGroup(tagTree, 0);
                 const uncategorized = allResources.filter(r => !r.tags || r.tags.length === 0);
                 if (uncategorized.length > 0) {
-                    html += `<div class="mb-3"><div class="flex items-center gap-2 mb-2 px-1"><i class="fas fa-inbox text-gray-400"></i><h3 class="font-semibold text-gray-500">Sin categorizar</h3><span class="text-xs text-gray-400">(${uncategorized.length})</span></div>`;
-                    html += '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">';
-                    uncategorized.forEach(r => html += resourceCardHtml(r));
-                    html += '</div></div>';
+                    html += `<div class="mb-6">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center"><i class="fas fa-inbox text-gray-400 text-sm"></i></div>
+                            <h3 class="text-lg font-bold text-gray-500">Sin categorizar</h3>
+                            <span class="stat-badge">${uncategorized.length} recursos</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            ${uncategorized.map(r => cardHtml(r)).join('')}
+                        </div></div>`;
                 }
-                container.innerHTML = html || '<div class="text-center text-gray-400 py-8">No hay recursos en esta categoría</div>';
+                container.innerHTML = html || '<div class="text-center text-gray-400 py-12">No hay recursos en esta categoría</div>';
             }
         }
 
-        function resourceCardHtml(res) {
+        function cardHtml(res) {
+            const typeInfo = TYPE_ICONS[res.type] || { icon: 'fa-file', class: 'type-NOTES' };
             const tagsHtml = res.tags && res.tags.length > 0
-                ? `<div class="flex flex-wrap gap-1 mb-2">${res.tags.map(t => `<span class="tag-chip">${t.name}</span>`).join('')}</div>` : '';
-            const privateHtml = res.private
-                ? '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"><i class="fas fa-lock mr-1"></i>Privado</span>' : '';
+                ? `<div class="flex flex-wrap gap-1.5 mb-3">${res.tags.map(t => `<span class="tag-chip">${t.name}</span>`).join('')}</div>` : '';
+            const privateLabel = res.private ? '<span class="text-red-500 text-xs ml-2"><i class="fas fa-lock"></i> Privado</span>' : '';
             return `
-                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow resource-card" data-resource-id="${res.id}">
-                    <div class="flex justify-between items-start mb-2">
+                <div class="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all resource-card" data-resource-id="${res.id}">
+                    <div class="flex items-start gap-4 mb-3">
+                        <div class="type-icon ${typeInfo.class}">
+                            <i class="fas ${typeInfo.icon}"></i>
+                        </div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-gray-800 text-sm truncate">${res.name}</h4>
-                            <div class="flex items-center gap-2 mt-1 flex-wrap">
-                                <span class="badge text-xs badge-${res.type.toLowerCase()}">${res.type}</span>
-                                ${privateHtml}
-                            </div>
+                            <h4 class="font-bold text-gray-800 truncate">${res.name}</h4>
+                            <p class="text-sm text-gray-500">
+                                <span class="font-medium">${res.type}</span>
+                                ${res.language ? ' · ' + res.language : ''}
+                                ${privateLabel}
+                            </p>
                         </div>
                     </div>
                     ${tagsHtml}
-                    ${res.description ? `<p class="text-xs text-gray-500 mb-2">${res.description}</p>` : ''}
-                    <div class="text-xs text-gray-400 mb-2">
-                        ${res.language ? `<i class="fas fa-language mr-1"></i>${res.language} · ` : ''}
+                    ${res.description ? `<p class="text-sm text-gray-600 mb-3 line-clamp-2">${res.description}</p>` : ''}
+                    <div class="text-xs text-gray-400 mb-3">
                         <i class="fas fa-calendar mr-1"></i>${res.uploadDate}
                     </div>
-                    <div class="flex gap-1.5 pt-2 border-t border-gray-100">
-                        <a href="/download/resource/${res.id}" class="flex-1 px-2 py-1.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded text-center text-xs"><i class="fas fa-download mr-1"></i>Descargar</a>
-                        <button onclick="openTagResourceModal(${res.id})" class="px-2 py-1.5 border border-indigo-200 hover:bg-indigo-50 text-indigo-600 rounded text-xs" title="Tags"><i class="fas fa-tags"></i></button>
-                        <button onclick="confirmTogglePrivacy(${res.id}, ${res.private})" class="px-2 py-1.5 border border-gray-200 hover:bg-gray-50 text-gray-600 rounded text-xs"><i class="fas fa-${res.private ? 'eye' : 'eye-slash'}"></i></button>
-                        <form action="/edit/subject/${SUBJECT_ID}/resources/${res.id}/delete" method="post" onsubmit="return confirm('¿Eliminar este recurso?');">
-                            <button type="submit" class="px-2 py-1.5 bg-red-500 hover:bg-red-600 text-white rounded text-xs"><i class="fas fa-trash"></i></button>
+                    <div class="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+                        <a href="/download/resource/${res.id}" class="action-btn action-btn-primary"><i class="fas fa-download"></i> Descargar</a>
+                        <button onclick="openTagResourceModal(${res.id})" class="action-btn"><i class="fas fa-tags text-indigo-400"></i> Tags</button>
+                        <button onclick="confirmTogglePrivacy(${res.id}, ${res.private})" class="action-btn">
+                            <i class="fas fa-${res.private ? 'eye' : 'eye-slash'} text-gray-400"></i>
+                        </button>
+                        <form action="/edit/subject/${SUBJECT_ID}/resources/${res.id}/delete" method="post" onsubmit="return confirm('¿Eliminar este recurso?');" class="inline">
+                            <button type="submit" class="action-btn action-btn-danger"><i class="fas fa-trash"></i></button>
                         </form>
                     </div>
                 </div>`;
         }
 
         // === UI Actions ===
-        function toggleUploadForm() { document.getElementById('uploadForm').classList.toggle('hidden'); }
+        function openUploadModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
+        function closeUploadModal() { document.getElementById('uploadModal').classList.add('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function setView(view, btn) {
             currentView = view;
-            document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderResources();
         }
 
         function filterByTag(tagId, el) {
-            document.querySelectorAll('.tag-tree-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.sidebar-tag').forEach(i => i.classList.remove('active'));
             if (el) el.classList.add('active');
-            // TODO: could filter allResources shown, for now just visual
         }
 
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function confirmTogglePrivacy(resourceId, isPrivate) {
+            if (confirm(`¿${isPrivate ? 'Hacer público' : 'Hacer privado'} este recurso?`)) {
+                document.getElementById('togglePrivacyForm').action = `/edit/subject/${SUBJECT_ID}/resources/${resourceId}/toggle-privacy`;
+                document.getElementById('togglePrivacyForm').submit();
+            }
+        }
 
         // === Tag CRUD ===
         function showCreateTagModal(parentId) {
@@ -384,14 +589,14 @@
             const name = document.getElementById('newTagName').value.trim();
             const parentId = document.getElementById('newTagParent').value ? parseInt(document.getElementById('newTagParent').value) : null;
             if (!name) return;
-            const res = await fetch(API_BASE, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name, parentId}) });
+            const res = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, parentId }) });
             if (res.ok) { closeModal('createTagModal'); location.reload(); }
-            else { const err = await res.json(); alert(err.error || 'Error'); }
+            else { const err = await res.json(); alert(err.error || 'Error al crear'); }
         }
 
-        function showRenameTagModal(tagId, currentName) {
+        function showRenameTagModal(tagId, name) {
             document.getElementById('renameTagId').value = tagId;
-            document.getElementById('renameTagInput').value = currentName;
+            document.getElementById('renameTagInput').value = name;
             document.getElementById('renameTagModal').classList.remove('hidden');
             setTimeout(() => document.getElementById('renameTagInput').focus(), 100);
         }
@@ -400,70 +605,55 @@
             const tagId = document.getElementById('renameTagId').value;
             const name = document.getElementById('renameTagInput').value.trim();
             if (!name) return;
-            const res = await fetch(`${API_BASE}/${tagId}/rename`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name}) });
+            const res = await fetch(`${API_BASE}/${tagId}/rename`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
             if (res.ok) { closeModal('renameTagModal'); location.reload(); }
             else { const err = await res.json(); alert(err.error || 'Error'); }
         }
 
         async function deleteTag(tagId, tagName) {
-            if (!confirm(`¿Eliminar el tag "${tagName}"? Los recursos no se eliminarán.`)) return;
-            const res = await fetch(`${API_BASE}/${tagId}`, { method:'DELETE' });
+            if (!confirm(`¿Eliminar la categoría "${tagName}"?\nLos recursos no se eliminarán.`)) return;
+            const res = await fetch(`${API_BASE}/${tagId}`, { method: 'DELETE' });
             if (res.ok) location.reload();
             else { const err = await res.json(); alert(err.error || 'Error'); }
         }
 
-        function confirmTogglePrivacy(resourceId, isPrivate) {
-            const action = isPrivate ? 'hacer público' : 'hacer privado';
-            if (confirm(`¿${action} este recurso?`)) {
-                const form = document.getElementById('togglePrivacyForm');
-                form.action = `/edit/subject/${SUBJECT_ID}/resources/${resourceId}/toggle-privacy`;
-                form.submit();
-            }
-        }
-
-        // === Tag Chip Input ===
+        // === Upload: Tag Chip Input ===
         const selectedUploadTags = new Set();
-        document.getElementById('tagInput').addEventListener('input', function() {
+        document.getElementById('tagInput').addEventListener('input', function () {
             const q = this.value.trim().toLowerCase();
             const dd = document.getElementById('tagAutocomplete');
             if (!q) { dd.classList.add('hidden'); return; }
             const matches = allTags.filter(t => t.name.toLowerCase().includes(q) && !selectedUploadTags.has(t.id));
             dd.innerHTML = matches.length === 0
-                ? `<div class="autocomplete-item text-gray-400 italic">Pulsa Enter para crear "${this.value.trim()}"</div>`
-                : matches.map(t => `<div class="autocomplete-item" onclick="selectUploadTag(${t.id},'${t.name.replace(/'/g,"\\'")}')"><i class="fas fa-tag mr-2 text-indigo-400"></i>${t.name}</div>`).join('');
+                ? `<div class="autocomplete-item text-gray-400"><i class="fas fa-plus-circle mr-2"></i>Pulsa Enter para crear "${this.value.trim()}"</div>`
+                : matches.map(t => `<div class="autocomplete-item" onclick="selectUploadTag(${t.id})"><i class="fas fa-tag text-indigo-400"></i>${t.name}</div>`).join('');
             dd.classList.remove('hidden');
         });
-        document.getElementById('tagInput').addEventListener('keydown', async function(e) {
+        document.getElementById('tagInput').addEventListener('keydown', async function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 const name = this.value.trim(); if (!name) return;
                 const existing = allTags.find(t => t.name.toLowerCase() === name.toLowerCase());
-                if (existing) { selectUploadTag(existing.id, existing.name); }
+                if (existing) selectUploadTag(existing.id);
                 else {
-                    const res = await fetch(API_BASE, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name, parentId:null}) });
-                    if (res.ok) { const t = await res.json(); allTags.push(t); selectUploadTag(t.id, t.name); }
+                    const res = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, parentId: null }) });
+                    if (res.ok) { const t = await res.json(); allTags.push(t); selectUploadTag(t.id); }
                 }
                 this.value = '';
                 document.getElementById('tagAutocomplete').classList.add('hidden');
             } else if (e.key === 'Escape') document.getElementById('tagAutocomplete').classList.add('hidden');
         });
-        function selectUploadTag(id) {
-            if (selectedUploadTags.has(id)) return;
-            selectedUploadTags.add(id);
-            renderUploadChips();
-        }
+        function selectUploadTag(id) { if (selectedUploadTags.has(id)) return; selectedUploadTags.add(id); renderUploadChips(); }
         function removeUploadTag(id) { selectedUploadTags.delete(id); renderUploadChips(); }
         function renderUploadChips() {
             const c = document.getElementById('tagInputContainer'), inp = document.getElementById('tagInput'), h = document.getElementById('tagHiddenInputs');
-            c.querySelectorAll('.tag-chip').forEach(x => x.remove());
-            h.innerHTML = '';
+            c.querySelectorAll('.tag-chip').forEach(x => x.remove()); h.innerHTML = '';
             selectedUploadTags.forEach(id => {
                 const t = allTags.find(x => x.id === id); if (!t) return;
                 const chip = document.createElement('span'); chip.className = 'tag-chip';
-                chip.innerHTML = `${t.name} <button type="button" onclick="removeUploadTag(${id})">×</button>`;
+                chip.innerHTML = `${t.name} <button type="button" class="remove-btn" onclick="removeUploadTag(${id})">×</button>`;
                 c.insertBefore(chip, inp);
-                const hi = document.createElement('input'); hi.type = 'hidden'; hi.name = 'tagIds'; hi.value = id;
-                h.appendChild(hi);
+                const hi = document.createElement('input'); hi.type = 'hidden'; hi.name = 'tagIds'; hi.value = id; h.appendChild(hi);
             });
         }
 
@@ -480,42 +670,42 @@
         function closeTagResourceModal() { document.getElementById('tagResourceModal').classList.add('hidden'); location.reload(); }
         function renderResTagChips() {
             const c = document.getElementById('tagResourceCurrentTags');
-            if (currentResTags.size === 0) { c.innerHTML = '<span class="text-xs text-gray-400 italic">Sin tags</span>'; return; }
+            if (currentResTags.size === 0) { c.innerHTML = '<span class="text-sm text-gray-400 italic">Sin tags asignados — busca abajo para añadir</span>'; return; }
             c.innerHTML = '';
             currentResTags.forEach(id => {
                 const t = allTags.find(x => x.id === id); if (!t) return;
                 const chip = document.createElement('span'); chip.className = 'tag-chip';
-                chip.innerHTML = `${t.name} <button onclick="untagRes(${id})">×</button>`;
+                chip.innerHTML = `${t.name} <button class="remove-btn" onclick="untagRes(${id})">×</button>`;
                 c.appendChild(chip);
             });
         }
-        document.getElementById('tagResourceSearch').addEventListener('input', function() {
+        document.getElementById('tagResourceSearch').addEventListener('input', function () {
             const q = this.value.trim().toLowerCase(), dd = document.getElementById('tagResourceAutocomplete');
             if (!q) { dd.classList.add('hidden'); return; }
             const matches = allTags.filter(t => t.name.toLowerCase().includes(q) && !currentResTags.has(t.id));
-            dd.innerHTML = matches.map(t => `<div class="autocomplete-item" onclick="tagRes(${t.id})"><i class="fas fa-tag mr-2 text-indigo-400"></i>${t.name}</div>`).join('') || '<div class="autocomplete-item text-gray-400">Sin resultados</div>';
+            dd.innerHTML = matches.map(t => `<div class="autocomplete-item" onclick="tagRes(${t.id})"><i class="fas fa-tag text-indigo-400"></i>${t.name}</div>`).join('') || '<div class="autocomplete-item text-gray-400">Sin resultados</div>';
             dd.classList.remove('hidden');
         });
         async function tagRes(tagId) {
-            await fetch(`${API_BASE}/${tagId}/resources/${currentTagResId}`, {method:'POST'});
+            await fetch(`${API_BASE}/${tagId}/resources/${currentTagResId}`, { method: 'POST' });
             currentResTags.add(tagId);
             const r = allResources.find(x => x.id === currentTagResId);
-            if (r) { if (!r.tags) r.tags = []; const t = allTags.find(x => x.id === tagId); r.tags.push({id:tagId,name:t.name}); }
+            if (r) { if (!r.tags) r.tags = []; const t = allTags.find(x => x.id === tagId); r.tags.push({ id: tagId, name: t.name }); }
             renderResTagChips();
             document.getElementById('tagResourceSearch').value = '';
             document.getElementById('tagResourceAutocomplete').classList.add('hidden');
         }
         async function untagRes(tagId) {
-            await fetch(`${API_BASE}/${tagId}/resources/${currentTagResId}`, {method:'DELETE'});
+            await fetch(`${API_BASE}/${tagId}/resources/${currentTagResId}`, { method: 'DELETE' });
             currentResTags.delete(tagId);
             const r = allResources.find(x => x.id === currentTagResId);
             if (r) r.tags = r.tags.filter(t => t.id !== tagId);
             renderResTagChips();
         }
 
-        // === Global Search ===
+        // === Search ===
         let searchTO;
-        document.getElementById('globalSearch').addEventListener('input', function() {
+        document.getElementById('globalSearch').addEventListener('input', function () {
             clearTimeout(searchTO);
             const q = this.value.trim(), rd = document.getElementById('searchResults');
             if (q.length < 2) { rd.classList.add('hidden'); return; }
@@ -524,27 +714,62 @@
                 if (!res.ok) return;
                 const results = await res.json();
                 rd.innerHTML = results.length === 0
-                    ? '<div class="px-4 py-3 text-gray-400 text-sm">Sin resultados</div>'
-                    : results.map(r => `<div class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100" onclick="document.getElementById('globalSearch').value='';document.getElementById('searchResults').classList.add('hidden');highlightRes(${r.id})"><div class="flex items-center gap-2"><i class="fas fa-file text-gray-400"></i><span class="font-medium text-sm">${r.name}</span><span class="badge text-xs badge-${r.type.toLowerCase()}">${r.type}</span></div></div>`).join('');
+                    ? '<div class="px-4 py-4 text-gray-400 text-center">No se encontraron resultados</div>'
+                    : results.map(r => {
+                        const ti = TYPE_ICONS[r.type] || { icon: 'fa-file', class: 'type-NOTES' };
+                        return `<div class="autocomplete-item" onclick="document.getElementById('globalSearch').value='';document.getElementById('searchResults').classList.add('hidden');highlightRes(${r.id})">
+                            <div class="type-icon ${ti.class}" style="width:32px;height:32px;font-size:14px"><i class="fas ${ti.icon}"></i></div>
+                            <div><div class="font-medium text-gray-800">${r.name}</div><div class="text-xs text-gray-400">${r.type}${r.language ? ' · ' + r.language : ''}</div></div>
+                        </div>`;
+                    }).join('');
                 rd.classList.remove('hidden');
             }, 300);
         });
-        document.getElementById('globalSearch').addEventListener('keydown', function(e) { if (e.key==='Escape') { document.getElementById('searchResults').classList.add('hidden'); this.blur(); } });
+        document.getElementById('globalSearch').addEventListener('keydown', function (e) { if (e.key === 'Escape') { document.getElementById('searchResults').classList.add('hidden'); this.blur(); } });
         function highlightRes(id) {
-            if (currentView !== 'flat') { currentView = 'flat'; renderResources(); document.querySelectorAll('.view-toggle-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.view-toggle-btn')[1].classList.add('active'); }
+            if (currentView !== 'flat') { currentView = 'flat'; renderResources(); document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.view-btn')[1].classList.add('active'); }
             setTimeout(() => {
                 const card = document.querySelector(`.resource-card[data-resource-id="${id}"]`);
-                if (card) { card.scrollIntoView({behavior:'smooth',block:'center'}); card.classList.add('ring-2','ring-indigo-400'); setTimeout(()=>card.classList.remove('ring-2','ring-indigo-400'),3000); }
+                if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); card.style.boxShadow = '0 0 0 3px #0072CE'; setTimeout(() => card.style.boxShadow = '', 3000); }
             }, 100);
         }
 
+        // === File upload drag & drop ===
+        const dropArea = document.getElementById('dropArea');
+        const fileInput = document.getElementById('fileInput');
+        if (dropArea && fileInput) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(ev => dropArea.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); }));
+            ['dragenter', 'dragover'].forEach(ev => dropArea.addEventListener(ev, () => dropArea.classList.add('border-upm-light-blue', 'bg-blue-50')));
+            ['dragleave', 'drop'].forEach(ev => dropArea.addEventListener(ev, () => dropArea.classList.remove('border-upm-light-blue', 'bg-blue-50')));
+            dropArea.addEventListener('drop', e => { fileInput.files = e.dataTransfer.files; showFileName(); });
+            fileInput.addEventListener('change', showFileName);
+        }
+        function showFileName() {
+            const el = document.getElementById('selectedFileName');
+            if (fileInput.files.length > 0) {
+                el.querySelector('span').textContent = fileInput.files[0].name + ' (' + (fileInput.files[0].size / 1024 / 1024).toFixed(1) + ' MB)';
+                el.classList.remove('hidden');
+            }
+        }
+
         // Close dropdowns on outside click
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', e => {
             if (!e.target.closest('#tagInputContainer') && !e.target.closest('#tagAutocomplete')) document.getElementById('tagAutocomplete').classList.add('hidden');
             if (!e.target.closest('#tagResourceSearch') && !e.target.closest('#tagResourceAutocomplete')) document.getElementById('tagResourceAutocomplete').classList.add('hidden');
+            if (!e.target.closest('#globalSearch') && !e.target.closest('#searchResults')) document.getElementById('searchResults').classList.add('hidden');
         });
-        // Ctrl+K
-        document.addEventListener('keydown', function(e) { if ((e.ctrlKey||e.metaKey)&&e.key==='k') { e.preventDefault(); document.getElementById('globalSearch').focus(); } });
+
+        // Close modals on backdrop click
+        document.querySelectorAll('#uploadModal, #createTagModal, #renameTagModal, #tagResourceModal').forEach(modal => {
+            modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+        });
+
+        // Ctrl+K / Cmd+K
+        document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); document.getElementById('globalSearch').focus(); } });
+
+        // Enter in modals
+        document.getElementById('newTagName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); createTag(); } });
+        document.getElementById('renameTagInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); renameTag(); } });
 
         // Init
         document.addEventListener('DOMContentLoaded', renderAll);
