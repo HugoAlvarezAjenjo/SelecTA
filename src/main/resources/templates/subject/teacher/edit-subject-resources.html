@@ -100,7 +100,7 @@
                             <h2 class="text-base font-bold text-upm-blue flex items-center gap-2"><i class="fas fa-tags"></i> Tags</h2>
                             <button onclick="showCreateTagModal()" class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 hover:bg-indigo-100 flex items-center justify-center" title="Crear tag"><i class="fas fa-plus text-sm"></i></button>
                         </div>
-                        <div class="sidebar-item active" onclick="filterByTag(null,this)">
+                        <div id="tagAllBtn" class="sidebar-item active" onclick="toggleTagFilter(null)">
                             <i class="fas fa-layer-group text-gray-400"></i><span class="flex-1">Todos</span>
                             <span class="text-xs text-gray-400" id="countAll">0</span>
                         </div>
@@ -186,7 +186,7 @@
                     <textarea name="description" rows="2" placeholder="Descripción opcional..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
                 </div>
                 <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                    <input type="checkbox" name="isPrivate" class="w-5 h-5 text-upm-light-blue border-gray-300 rounded">
+                    <input type="checkbox" name="isPrivate" checked class="w-5 h-5 text-upm-light-blue border-gray-300 rounded">
                     <div><span class="font-medium text-gray-700"><i class="fas fa-lock mr-1 text-gray-400"></i>Privado</span><p class="text-xs text-gray-500">Solo visible para profesores</p></div>
                 </label>
                 <div class="flex justify-end gap-3 pt-2">
@@ -281,7 +281,7 @@
         let allRes = /*[[${subjectResources}]]*/ [];
         let folderTree = /*[[${folderTree}]]*/ [];
         let allFolders = /*[[${allFolders}]]*/ [];
-        let activeTagFilter = null;
+        let activeTagFilters = new Set();
 
         const ICONS={EXERCISE:{i:'fa-file-lines',c:'type-EXERCISE'},PRESENTATION:{i:'fa-file-powerpoint',c:'type-PRESENTATION'},NOTES:{i:'fa-file-alt',c:'type-NOTES'},VIDEO:{i:'fa-video',c:'type-VIDEO'},EXTERNAL_RESOURCE:{i:'fa-link',c:'type-EXTERNAL_RESOURCE'}};
 
@@ -295,11 +295,13 @@
 
         // === Tags sidebar ===
         function renderTagList(){
+            const allBtn=document.getElementById('tagAllBtn');
+            if(allBtn){allBtn.className='sidebar-item'+(activeTagFilters.size===0?' active':'');}
             const c=document.getElementById('tagList');
             c.innerHTML=allTags.map(t=>{
                 const count=allRes.filter(r=>r.tags&&r.tags.some(rt=>rt.id===t.id)).length;
                 const esc=t.name.replace(/'/g,"\\'");
-                return `<div class="sidebar-item${activeTagFilter===t.id?' active':''}" onclick="filterByTag(${t.id},this)">
+                return `<div class="sidebar-item${activeTagFilters.has(t.id)?' active':''}" onclick="toggleTagFilter(${t.id})">
                     <i class="fas fa-tag text-indigo-400" style="font-size:11px"></i><span class="flex-1 truncate">${t.name}</span>
                     <span class="text-xs text-gray-400">${count}</span>
                     <div class="actions">
@@ -335,14 +337,15 @@
             const c=document.getElementById('resourcesContainer');
             const fl=document.getElementById('filterLabel');
             let filtered=allRes;
-            if(activeTagFilter!==null){
-                const tag=allTags.find(t=>t.id===activeTagFilter);
-                filtered=allRes.filter(r=>r.tags&&r.tags.some(t=>t.id===activeTagFilter));
-                fl.innerHTML=`<span class="tag-chip"><i class="fas fa-filter mr-1"></i>Filtrando: ${tag?tag.name:''} <button class="rm" onclick="filterByTag(null,document.querySelector('.sidebar-item'))">×</button></span>`;
+            const hasFilters=activeTagFilters.size>0;
+            if(hasFilters){
+                filtered=allRes.filter(r=>r.tags&&[...activeTagFilters].every(fId=>r.tags.some(t=>t.id===fId)));
+                const names=[...activeTagFilters].map(id=>{const t=allTags.find(x=>x.id===id);return t?t.name:'?'});
+                fl.innerHTML=`<div class="flex flex-wrap gap-1.5 items-center"><i class="fas fa-filter text-gray-400 mr-1"></i>${names.map(n=>`<span class="tag-chip">${n}</span>`).join('')}<button class="action-btn" style="padding:3px 8px" onclick="clearAllTagFilters()"><i class="fas fa-times mr-1"></i>Limpiar</button></div>`;
             } else { fl.innerHTML=''; }
 
             if(filtered.length===0){
-                c.innerHTML=`<div class="bg-white rounded-xl shadow-sm p-12 text-center"><div class="w-20 h-20 rounded-full bg-upm-light-blue bg-opacity-10 flex items-center justify-center mx-auto mb-5"><i class="fas fa-folder-open text-upm-light-blue text-3xl"></i></div><h3 class="text-xl font-bold text-gray-700 mb-2">${activeTagFilter?'Sin resultados para este tag':'No hay recursos aún'}</h3><p class="text-gray-500 mb-6">${activeTagFilter?'Prueba otro tag o sube un recurso':'Sube el primer recurso para empezar'}</p><button onclick="openUploadModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-lg font-medium"><i class="fas fa-upload mr-2"></i>Subir recurso</button></div>`;
+                c.innerHTML=`<div class="bg-white rounded-xl shadow-sm p-12 text-center"><div class="w-20 h-20 rounded-full bg-upm-light-blue bg-opacity-10 flex items-center justify-center mx-auto mb-5"><i class="fas fa-folder-open text-upm-light-blue text-3xl"></i></div><h3 class="text-xl font-bold text-gray-700 mb-2">${hasFilters?'Sin resultados para estos tags':'No hay recursos aún'}</h3><p class="text-gray-500 mb-6">${hasFilters?'Prueba otra combinación de tags':'Sube el primer recurso para empezar'}</p><button onclick="openUploadModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-lg font-medium"><i class="fas fa-upload mr-2"></i>Subir recurso</button></div>`;
                 return;
             }
 
@@ -410,12 +413,13 @@
         function closeModal(id){document.getElementById(id).classList.add('hidden')}
         function togglePrivacy(id,priv){if(confirm(`¿${priv?'Publicar':'Privatizar'}?`)){document.getElementById('privacyForm').action=`/edit/subject/${SID}/resources/${id}/toggle-privacy`;document.getElementById('privacyForm').submit()}}
 
-        function filterByTag(tagId,el){
-            activeTagFilter=tagId;
-            document.querySelectorAll('.sidebar-item').forEach(i=>i.classList.remove('active'));
-            if(el)el.classList.add('active');
-            renderResources();
+        function toggleTagFilter(tagId){
+            if(tagId===null){activeTagFilters.clear();}
+            else if(activeTagFilters.has(tagId)){activeTagFilters.delete(tagId);}
+            else{activeTagFilters.add(tagId);}
+            renderTagList(); renderResources();
         }
+        function clearAllTagFilters(){activeTagFilters.clear();renderTagList();renderResources();}
 
         // === Tag CRUD ===
         function showCreateTagModal(){document.getElementById('newTagName').value='';document.getElementById('createTagModal').classList.remove('hidden');setTimeout(()=>document.getElementById('newTagName').focus(),100)}

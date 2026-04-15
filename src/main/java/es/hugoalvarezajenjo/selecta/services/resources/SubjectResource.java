@@ -27,7 +27,7 @@ public class SubjectResource {
     private ResourceType type;
     private String language;
     private String originalName;
-    private boolean isPrivate = false;
+    private boolean isPrivate = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_id")

@@ -57,7 +57,7 @@ public class EditSubjectResourcesView {
             @RequestParam(required = false) final String description,
             @RequestParam final ResourceType type,
             @RequestParam(required = false) final String language,
-            @RequestParam(defaultValue = "false") final boolean isPrivate,
+            @RequestParam(defaultValue = "true") final boolean isPrivate,
             @RequestParam(required = false) final List<Long> tagIds,
             @RequestParam(required = false) final Long folderId,
             final RedirectAttributes redirectAttributes) {
