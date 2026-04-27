@@ -67,7 +67,12 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
         log.info("SelecTA Log: Loading user by email: {}", email);
         final User user = this.getUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email));
-        log.info("SelecTA Log: Found user in DB: {}, role stored: {}", user.getEmail(), user.getRole());
+        log.info("SelecTA Log: Found user in DB: {}, role stored: {}, approved: {}", user.getEmail(), user.getRole(), user.isApproved());
+        
+        if (!user.isApproved()) {
+            throw new UsernameNotFoundException("La cuenta de " + email + " está pendiente de aprobación");
+        }
+        
         return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
                 .password(user.getPassword())
                 .roles(user.getRole().name())

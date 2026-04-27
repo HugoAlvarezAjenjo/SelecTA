@@ -1,9 +1,9 @@
 package es.hugoalvarezajenjo.selecta.ui.auth;
 
-import es.hugoalvarezajenjo.selecta.services.user.Admin;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
+import es.hugoalvarezajenjo.selecta.services.user.UserRole;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,18 +27,23 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("userRegistration") final UserRegistrationDto registrationDto) {
+        // Only STUDENT and TEACHER can self-register
+        if (registrationDto.getRole() != UserRole.STUDENT && registrationDto.getRole() != UserRole.TEACHER) {
+            return "redirect:/register?error=role";
+        }
+
         User user;
         switch (registrationDto.getRole()) {
             case STUDENT:
                 Student student = new Student();
                 student.setTitulation(registrationDto.getTitulation());
+                student.setApproved(true); // Students are approved immediately
                 user = student;
                 break;
             case TEACHER:
-                user = new Teacher();
-                break;
-            case ADMIN:
-                user = new Admin();
+                Teacher teacher = new Teacher();
+                teacher.setApproved(false); // Teachers need admin approval
+                user = teacher;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid user role");
@@ -46,11 +51,17 @@ public class AuthenticationController {
 
         user.setEmail(registrationDto.getEmail());
         user.setPassword(registrationDto.getPassword());
-        user.setUsername(registrationDto.getName()); // Map name to username
+        user.setUsername(registrationDto.getName());
         user.setRole(registrationDto.getRole());
 
         this.userService.registerUser(user);
-        return "redirect:/login";
+
+        // Teachers get redirected to a pending approval page
+        if (registrationDto.getRole() == UserRole.TEACHER) {
+            return "authentication/pending-approval";
+        }
+
+        return "redirect:/login?registered";
     }
 
     @GetMapping("/login")

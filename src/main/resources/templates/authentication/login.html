@@ -13,10 +13,13 @@
   <div class="card shadow p-4" style="max-width: 400px; width: 100%;">
     <h2 class="mb-4 text-center">Iniciar Sesión</h2>
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
-      Nombre de usuario o contraseña incorrectos.
+      Nombre de usuario o contraseña incorrectos. Si eres profesor, tu cuenta podría estar pendiente de aprobación.
     </div>
     <div th:if="${param.logout}" class="alert alert-success" role="alert">
       Has cerrado sesión correctamente.
+    </div>
+    <div th:if="${param.registered}" class="alert alert-success" role="alert">
+      ¡Cuenta creada correctamente! Ya puedes iniciar sesión.
     </div>
 
     <form action="/login" method="post">

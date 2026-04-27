@@ -27,4 +27,6 @@ public abstract class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    private boolean approved = true;
 }

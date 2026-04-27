@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Solicitud Pendiente - SelecTA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container d-flex align-items-center justify-content-center vh-100">
+  <div class="card shadow p-5 text-center" style="max-width: 550px; width: 100%;">
+    <div class="mb-4">
+      <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" 
+           style="width: 80px; height: 80px;">
+        <i class="fas fa-hourglass-half text-warning" style="font-size: 2.5rem;"></i>
+      </div>
+    </div>
+    
+    <h2 class="mb-3 text-primary">¡Solicitud enviada!</h2>
+    
+    <p class="text-muted mb-4">
+      Tu cuenta de profesor ha sido creada correctamente. Sin embargo, necesita ser 
+      <strong>aprobada por un administrador</strong> antes de que puedas acceder a la plataforma.
+    </p>
+
+    <div class="alert alert-info text-start">
+      <h6 class="alert-heading mb-2">
+        <i class="fas fa-info-circle me-1"></i> ¿Qué ocurre ahora?
+      </h6>
+      <ul class="mb-0 ps-3">
+        <li>Un administrador revisará tu solicitud</li>
+        <li>Una vez aprobada, podrás iniciar sesión con tu email y contraseña</li>
+        <li>Si tu solicitud es rechazada, podrás contactar con el administrador</li>
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <a th:href="@{/login}" class="btn btn-primary">
+        <i class="fas fa-arrow-left me-1"></i> Volver al inicio de sesión
+      </a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>
