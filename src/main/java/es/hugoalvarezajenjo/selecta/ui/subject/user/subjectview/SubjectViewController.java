@@ -1,6 +1,7 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
 import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
+import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class SubjectViewController {
     private final SubjectService subjectService;
     private final SubjectResourceService subjectResourceService;
+    private final ResourceVoteService resourceVoteService;
     private final MarkdownService markdownService;
     private final UserService userService;
 
@@ -39,7 +41,11 @@ public class SubjectViewController {
 
         model.addAttribute("subject", SubjectInfoDTO.createFromDomain(subject.get(), longDescriptionHtml));
         model.addAttribute("resources",
-                SubjectResourceDTO.createFromDomain(this.subjectResourceService.getPublicResourcesFromSubject(id)));
+                SubjectResourceDTO.createFromDomain(
+                        this.subjectResourceService.getPublicResourcesFromSubject(id),
+                        resourceVoteService::getUpvoteCount,
+                        resourceVoteService::getDownvoteCount,
+                        resourceVoteService::getUserVote));
         
         java.util.List<SubjectInfoDTO> relatedSubjects = this.subjectService.getRelatedSubjects(id, 3).stream()
                 .map(s -> SubjectInfoDTO.createFromDomain(s, ""))

@@ -60,3 +60,20 @@ INSERT INTO subject_teachers (subject_id, teacher_id) VALUES
 (3, 1),
 (3, 2),
 (5, 2);
+
+-- Insert Students (using BCrypt for 'password')
+INSERT INTO accounts (username, password, email, user_type, role, titulation) VALUES
+('carlos', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'carlos@example.com', 'STUDENT', 'STUDENT', 'Grado en Ingeniería Informática'),
+('maria', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'maria@example.com', 'STUDENT', 'STUDENT', 'Grado en Ingeniería Informática');
+
+-- Insert Resource Votes (student carlos=3, maria=4 voting on resources)
+INSERT INTO resource_vote (resource_id, user_id, vote_type) VALUES
+(1, 3, 'UPVOTE'),
+(2, 3, 'UPVOTE'),
+(3, 3, 'DOWNVOTE'),
+(4, 3, 'UPVOTE'),
+(5, 3, 'UPVOTE'),
+(1, 4, 'UPVOTE'),
+(2, 4, 'DOWNVOTE'),
+(4, 4, 'UPVOTE'),
+(6, 4, 'UPVOTE');

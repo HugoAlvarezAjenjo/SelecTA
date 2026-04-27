@@ -2,6 +2,7 @@ package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
 import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
+import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
@@ -35,6 +36,9 @@ class SubjectViewControllerTest {
 
     @Mock
     private SubjectResourceService subjectResourceService;
+
+    @Mock
+    private ResourceVoteService resourceVoteService;
 
     @Mock
     private MarkdownService markdownService;
