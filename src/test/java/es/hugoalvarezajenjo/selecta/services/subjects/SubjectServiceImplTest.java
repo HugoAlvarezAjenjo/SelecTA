@@ -1,17 +1,19 @@
 package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
+import es.hugoalvarezajenjo.selecta.services.user.Student;
+import es.hugoalvarezajenjo.selecta.services.user.Teacher;
+import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,6 +23,9 @@ class SubjectServiceImplTest {
 
     @Mock
     private SubjectRepository subjectRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private SubjectServiceImpl subjectService;
@@ -370,5 +375,84 @@ class SubjectServiceImplTest {
         assertEquals(2, result.size()); // noRelevance is filtered out
         assertEquals(10L, result.get(0).getId()); // highRelevance should be first
         assertEquals(11L, result.get(1).getId()); // lowRelevance should be second
+    }
+
+    @Nested
+    @DisplayName("Teacher Management")
+    class TeacherManagementTests {
+
+        @Test
+        @DisplayName("Should add teacher to subject")
+        void shouldAddTeacherToSubject() {
+            Subject subject = new Subject();
+            subject.setId(1L);
+            subject.setTeachers(new HashSet<>());
+
+            Teacher teacher = new Teacher();
+            teacher.setId(10L);
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+            when(userRepository.findById(10L)).thenReturn(Optional.of(teacher));
+
+            subjectService.addTeacherToSubject(1L, 10L);
+
+            assertTrue(subject.getTeachers().contains(teacher));
+            verify(subjectRepository).save(subject);
+        }
+
+        @Test
+        @DisplayName("Should remove teacher from subject")
+        void shouldRemoveTeacherFromSubject() {
+            Teacher teacher = new Teacher();
+            teacher.setId(10L);
+
+            Subject subject = new Subject();
+            subject.setId(1L);
+            subject.setTeachers(new HashSet<>(Set.of(teacher)));
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+            when(userRepository.findById(10L)).thenReturn(Optional.of(teacher));
+
+            subjectService.removeTeacherFromSubject(1L, 10L);
+
+            assertFalse(subject.getTeachers().contains(teacher));
+            verify(subjectRepository).save(subject);
+        }
+
+        @Test
+        @DisplayName("Should throw when subject not found for add")
+        void shouldThrowWhenSubjectNotFoundForAdd() {
+            when(subjectRepository.findById(999L)).thenReturn(Optional.empty());
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> subjectService.addTeacherToSubject(999L, 10L));
+        }
+
+        @Test
+        @DisplayName("Should throw when teacher not found for add")
+        void shouldThrowWhenTeacherNotFoundForAdd() {
+            Subject subject = new Subject();
+            subject.setId(1L);
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+            when(userRepository.findById(999L)).thenReturn(Optional.empty());
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> subjectService.addTeacherToSubject(1L, 999L));
+        }
+
+        @Test
+        @DisplayName("Should throw when user is not a teacher")
+        void shouldThrowWhenUserIsNotATeacher() {
+            Subject subject = new Subject();
+            subject.setId(1L);
+            Student student = new Student();
+            student.setId(10L);
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+            when(userRepository.findById(10L)).thenReturn(Optional.of(student));
+
+            assertThrows(IllegalArgumentException.class,
+                    () -> subjectService.addTeacherToSubject(1L, 10L));
+        }
     }
 }

@@ -21,4 +21,6 @@ public interface UserService {
     void rejectUser(Long userId);
 
     boolean existsByEmail(String email);
+
+    List<User> getApprovedTeachers();
 }

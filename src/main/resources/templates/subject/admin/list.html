@@ -82,6 +82,11 @@
                             </td>
                             <td class="px-6 py-4 text-right">
                                 <div class="flex justify-end space-x-2">
+                                    <a th:href="@{/admin/subjects/{id}/teachers(id=${subject.id})}"
+                                        class="p-2 text-green-600 hover:text-green-800 transition-colors"
+                                        title="Gestionar Profesores">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                    </a>
                                     <a th:href="@{/admin/subjects/{id}/edit(id=${subject.id})}"
                                         class="p-2 text-upm-light-blue hover:text-upm-blue transition-colors"
                                         title="Editar">

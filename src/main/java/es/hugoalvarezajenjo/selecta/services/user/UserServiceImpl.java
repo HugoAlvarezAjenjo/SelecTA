@@ -140,6 +140,11 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
         return this.userRepository.existsByEmail(email);
     }
 
+    @Override
+    public List<User> getApprovedTeachers() {
+        return this.userRepository.findByRoleAndApprovedTrue(UserRole.TEACHER);
+    }
+
     private Optional<User> getUserByEmail(final String email) {
         return this.userRepository.findByEmail(email);
     }

@@ -2,9 +2,13 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectSpecifications;
+import es.hugoalvarezajenjo.selecta.services.user.Teacher;
+import es.hugoalvarezajenjo.selecta.services.user.User;
+import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,9 +16,12 @@ import java.util.Optional;
 @Service
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
+    private final UserRepository userRepository;
 
-    public SubjectServiceImpl(@Autowired final SubjectRepository subjectRepository) {
+    public SubjectServiceImpl(@Autowired final SubjectRepository subjectRepository,
+                              @Autowired final UserRepository userRepository) {
         this.subjectRepository = subjectRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -162,5 +169,33 @@ public class SubjectServiceImpl implements SubjectService {
             }
         }
         return score;
+    }
+
+    @Override
+    @Transactional
+    public void addTeacherToSubject(final Long subjectId, final Long teacherId) {
+        final Subject subject = this.subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + subjectId));
+        final User user = this.userRepository.findById(teacherId)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher not found: " + teacherId));
+        if (!(user instanceof Teacher teacher)) {
+            throw new IllegalArgumentException("User " + teacherId + " is not a teacher");
+        }
+        subject.getTeachers().add(teacher);
+        this.subjectRepository.save(subject);
+    }
+
+    @Override
+    @Transactional
+    public void removeTeacherFromSubject(final Long subjectId, final Long teacherId) {
+        final Subject subject = this.subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + subjectId));
+        final User user = this.userRepository.findById(teacherId)
+                .orElseThrow(() -> new IllegalArgumentException("Teacher not found: " + teacherId));
+        if (!(user instanceof Teacher teacher)) {
+            throw new IllegalArgumentException("User " + teacherId + " is not a teacher");
+        }
+        subject.getTeachers().remove(teacher);
+        this.subjectRepository.save(subject);
     }
 }
