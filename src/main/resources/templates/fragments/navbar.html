@@ -12,10 +12,11 @@
         <nav sec:authorize="isAuthenticated()" class="hidden md:flex space-x-8">
             <a th:href="@{/subjects}" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Buscar
                 Asignaturas</a>
-            <a th:href="@{/admin/subjects}"
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/subjects}"
                 class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Administrar Asignaturas</a>
+            <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}"
+                class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Gestionar Usuarios</a>
             <a th:href="@{/recommender}" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recomendador</a>
-            <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium transition-all">Recursos</a>
         </nav>
  
         <div class="flex items-center space-x-4">
@@ -51,11 +52,12 @@
             <div sec:authorize="isAuthenticated()" class="flex flex-col space-y-3">
                 <a th:href="@{/subjects}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Buscar
                     Asignaturas</a>
-                <a th:href="@{/admin/subjects}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Administrar
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/subjects}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Administrar
                     Asignaturas</a>
+                <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Gestionar
+                    Usuarios</a>
                 <a th:href="@{/recommender}"
                     class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recomendador</a>
-                <a href="#" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Recursos</a>
             </div>
             <div sec:authorize="isAnonymous()" class="flex flex-col space-y-2">
                 <a th:href="@{/login}" class="text-upm-blue hover:text-upm-light-blue font-medium py-2">Acceder</a>

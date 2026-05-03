@@ -22,7 +22,7 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/css/**"
                         ).permitAll()
-                        //.requestMatchers("/admin/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(login -> login

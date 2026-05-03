@@ -51,12 +51,12 @@ ALTER TABLE subject ALTER COLUMN id RESTART WITH 6;
 
 -- Insert Admin (using BCrypt for 'password')
 INSERT INTO accounts (username, password, email, user_type, role, approved) VALUES
-('admin', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'admin@selecta.com', 'ADMIN', 'ADMIN', true);
+('admin', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'admin@selecta.com', 'ADMIN', 'ADMIN', true);
 
 -- Insert Teachers (using BCrypt for 'password')
 INSERT INTO accounts (username, password, email, user_type, role, approved) VALUES
-('hugo', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'hugo@example.com', 'TEACHER', 'TEACHER', true),
-('alicia', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'alicia@example.com', 'TEACHER', 'TEACHER', true);
+('hugo', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'hugo@example.com', 'TEACHER', 'TEACHER', true),
+('alicia', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'alicia@example.com', 'TEACHER', 'TEACHER', true);
 
 -- Link Teachers to Subjects (admin=1, hugo=2, alicia=3)
 INSERT INTO subject_teachers (subject_id, teacher_id) VALUES
@@ -65,19 +65,25 @@ INSERT INTO subject_teachers (subject_id, teacher_id) VALUES
 (3, 3),
 (5, 3);
 
+-- Insert a pending teacher (awaiting admin approval)
+INSERT INTO accounts (username, password, email, user_type, role, approved) VALUES
+('pedro', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'pedro@example.com', 'TEACHER', 'TEACHER', false),
+('laura', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'laura@example.com', 'TEACHER', 'TEACHER', false);
+
 -- Insert Students (using BCrypt for 'password')
 INSERT INTO accounts (username, password, email, user_type, role, approved, titulation) VALUES
-('carlos', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'carlos@example.com', 'STUDENT', 'STUDENT', true, 'Grado en Ingeniería Informática'),
-('maria', '$2a$10$8.UnVuG9HHgffUDAlk8Kn.2NvEnJ.nyqZWy926utmGi/S8H5fU1uS', 'maria@example.com', 'STUDENT', 'STUDENT', true, 'Grado en Ingeniería Informática');
+('carlos', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'carlos@example.com', 'STUDENT', 'STUDENT', true, 'Grado en Ingeniería Informática'),
+('maria', '$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS', 'maria@example.com', 'STUDENT', 'STUDENT', true, 'Grado en Ingeniería Informática');
 
--- Insert Resource Votes (student carlos=4, maria=5 voting on resources)
+-- Insert Resource Votes (student carlos=6, maria=7 voting on resources)
+-- IDs: admin=1, hugo=2, alicia=3, pedro=4, laura=5, carlos=6, maria=7
 INSERT INTO resource_vote (resource_id, user_id, vote_type) VALUES
-(1, 4, 'UPVOTE'),
-(2, 4, 'UPVOTE'),
-(3, 4, 'DOWNVOTE'),
-(4, 4, 'UPVOTE'),
-(5, 4, 'UPVOTE'),
-(1, 5, 'UPVOTE'),
-(2, 5, 'DOWNVOTE'),
-(4, 5, 'UPVOTE'),
-(6, 5, 'UPVOTE');
+(1, 6, 'UPVOTE'),
+(2, 6, 'UPVOTE'),
+(3, 6, 'DOWNVOTE'),
+(4, 6, 'UPVOTE'),
+(5, 6, 'UPVOTE'),
+(1, 7, 'UPVOTE'),
+(2, 7, 'DOWNVOTE'),
+(4, 7, 'UPVOTE'),
+(6, 7, 'UPVOTE');

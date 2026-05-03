@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -103,6 +104,35 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
                 user.getEmail(), user.getClass().getSimpleName(), user.getRole());
         }
         return user;
+    }
+
+    @Override
+    public List<User> getPendingUsers() {
+        return this.userRepository.findByApprovedFalse();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return this.userRepository.findAllByOrderByIdAsc();
+    }
+
+    @Override
+    @Transactional
+    public void approveUser(final Long userId) {
+        final User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+        user.setApproved(true);
+        this.userRepository.save(user);
+        log.info("SelecTA Log: User {} approved by admin", user.getEmail());
+    }
+
+    @Override
+    @Transactional
+    public void rejectUser(final Long userId) {
+        final User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+        log.info("SelecTA Log: User {} rejected and deleted by admin", user.getEmail());
+        this.userRepository.delete(user);
     }
 
     private Optional<User> getUserByEmail(final String email) {

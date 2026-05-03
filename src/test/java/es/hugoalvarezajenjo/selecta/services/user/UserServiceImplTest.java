@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -126,6 +127,21 @@ class UserServiceImplTest {
             // When & Then
             assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("nonexistent@example.com"));
         }
+
+        @Test
+        @DisplayName("Should throw exception when user is not approved")
+        void shouldThrowExceptionWhenUserNotApproved() {
+            // Given
+            String email = "pending@example.com";
+            User user = new Teacher();
+            user.setEmail(email);
+            user.setPassword("hashedPassword");
+            user.setApproved(false);
+            when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+            // When & Then
+            assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(email));
+        }
     }
 
     @Nested
@@ -177,6 +193,103 @@ class UserServiceImplTest {
 
             // Then
             assertNull(currentUser);
+        }
+    }
+
+    @Nested
+    @DisplayName("User Approval Management")
+    class ApprovalTests {
+
+        @Test
+        @DisplayName("Should return pending users")
+        void shouldReturnPendingUsers() {
+            // Given
+            Teacher pending1 = new Teacher();
+            pending1.setId(1L);
+            pending1.setApproved(false);
+            Teacher pending2 = new Teacher();
+            pending2.setId(2L);
+            pending2.setApproved(false);
+            when(userRepository.findByApprovedFalse()).thenReturn(List.of(pending1, pending2));
+
+            // When
+            List<User> pendingUsers = userService.getPendingUsers();
+
+            // Then
+            assertEquals(2, pendingUsers.size());
+            verify(userRepository).findByApprovedFalse();
+        }
+
+        @Test
+        @DisplayName("Should return all users ordered by ID")
+        void shouldReturnAllUsers() {
+            // Given
+            Student student = new Student();
+            student.setId(1L);
+            Teacher teacher = new Teacher();
+            teacher.setId(2L);
+            when(userRepository.findAllByOrderByIdAsc()).thenReturn(List.of(student, teacher));
+
+            // When
+            List<User> allUsers = userService.getAllUsers();
+
+            // Then
+            assertEquals(2, allUsers.size());
+            verify(userRepository).findAllByOrderByIdAsc();
+        }
+
+        @Test
+        @DisplayName("Should approve a user")
+        void shouldApproveUser() {
+            // Given
+            Teacher teacher = new Teacher();
+            teacher.setId(1L);
+            teacher.setApproved(false);
+            when(userRepository.findById(1L)).thenReturn(Optional.of(teacher));
+            when(userRepository.save(any(User.class))).thenReturn(teacher);
+
+            // When
+            userService.approveUser(1L);
+
+            // Then
+            assertTrue(teacher.isApproved());
+            verify(userRepository).save(teacher);
+        }
+
+        @Test
+        @DisplayName("Should throw when approving non-existent user")
+        void shouldThrowWhenApprovingNonExistentUser() {
+            // Given
+            when(userRepository.findById(999L)).thenReturn(Optional.empty());
+
+            // When & Then
+            assertThrows(IllegalArgumentException.class, () -> userService.approveUser(999L));
+        }
+
+        @Test
+        @DisplayName("Should reject and delete a user")
+        void shouldRejectUser() {
+            // Given
+            Teacher teacher = new Teacher();
+            teacher.setId(1L);
+            teacher.setEmail("rejected@example.com");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(teacher));
+
+            // When
+            userService.rejectUser(1L);
+
+            // Then
+            verify(userRepository).delete(teacher);
+        }
+
+        @Test
+        @DisplayName("Should throw when rejecting non-existent user")
+        void shouldThrowWhenRejectingNonExistentUser() {
+            // Given
+            when(userRepository.findById(999L)).thenReturn(Optional.empty());
+
+            // When & Then
+            assertThrows(IllegalArgumentException.class, () -> userService.rejectUser(999L));
         }
     }
 }
