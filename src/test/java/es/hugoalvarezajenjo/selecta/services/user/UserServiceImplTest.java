@@ -291,5 +291,25 @@ class UserServiceImplTest {
             // When & Then
             assertThrows(IllegalArgumentException.class, () -> userService.rejectUser(999L));
         }
+
+        @Test
+        @DisplayName("Should return true when email exists")
+        void shouldReturnTrueWhenEmailExists() {
+            // Given
+            when(userRepository.existsByEmail("existing@example.com")).thenReturn(true);
+
+            // When & Then
+            assertTrue(userService.existsByEmail("existing@example.com"));
+        }
+
+        @Test
+        @DisplayName("Should return false when email does not exist")
+        void shouldReturnFalseWhenEmailDoesNotExist() {
+            // Given
+            when(userRepository.existsByEmail("new@example.com")).thenReturn(false);
+
+            // When & Then
+            assertFalse(userService.existsByEmail("new@example.com"));
+        }
     }
 }

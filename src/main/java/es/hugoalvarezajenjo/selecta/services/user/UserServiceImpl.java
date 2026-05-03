@@ -135,6 +135,11 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
         this.userRepository.delete(user);
     }
 
+    @Override
+    public boolean existsByEmail(final String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
     private Optional<User> getUserByEmail(final String email) {
         return this.userRepository.findByEmail(email);
     }

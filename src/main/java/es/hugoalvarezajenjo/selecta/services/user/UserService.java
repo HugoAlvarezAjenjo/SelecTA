@@ -19,4 +19,6 @@ public interface UserService {
     void approveUser(Long userId);
 
     void rejectUser(Long userId);
+
+    boolean existsByEmail(String email);
 }
