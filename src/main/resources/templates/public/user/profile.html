@@ -1,41 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <title th:text="${user.username} + ' | SelecTA'">Perfil de Usuario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/tailwind-config.js}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/hero.css}">
+    <link rel="stylesheet" th:href="@{/css/card.css}">
 </head>
+<body class="font-sans bg-gray-50 text-gray-800">
 
-<body>
+<header th:replace="~{fragments/navbar :: navbar}"></header>
 
-    <div class="container">
-        <!-- Profile Section -->
-        <div class="profile-card">
-            <div class="profile-details">
-                <img src="https://www.github.com/hugoalvarezajenjo.png" alt="Profile Picture" class="profile-picture">
-                <div class="profile-info">
-                    <h2 th:text="${user.username}">John Doe</h2>
-                    <p th:text="${user.career}">Software Engineering Student</p>
-                    <div class="profile-stats">
-
-                        <div class="profile-stat">
-                            <h6>340</h6>
-                            <p>Followers</p>
-                        </div>
-                        <div class="profile-stat">
-                            <h6>150</h6>
-                            <p>Following</p>
-                        </div>
-                    </div>
+<main class="container mx-auto px-4 py-12">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <!-- Avatar -->
+            <div class="w-28 h-28 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-lg"
+                 th:classappend="${isTeacher} ? 'bg-upm-light-blue' : 'bg-upm-blue'">
+                <span th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}">U</span>
+            </div>
+            
+            <div class="flex-grow text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start gap-3 mb-2">
+                    <h1 class="text-3xl font-bold text-upm-blue" th:text="${user.username}">Nombre de Usuario</h1>
+                    <span th:if="${isTeacher}" class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">
+                        <i class="fas fa-chalkboard-teacher mr-1"></i> Profesor
+                    </span>
+                    <span th:if="${isStudent}" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">
+                        <i class="fas fa-graduation-cap mr-1"></i> Estudiante
+                    </span>
+                </div>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-gray-600">
+                    <span class="flex items-center">
+                        <i class="fas fa-envelope mr-2 text-upm-light-blue"></i>
+                        <span th:text="${user.email}">user@example.com</span>
+                    </span>
+                    <span th:if="${isStudent}" class="flex items-center">
+                        <i class="fas fa-graduation-cap mr-2 text-upm-light-blue"></i>
+                        <span th:text="${titulation}">Titulación</span>
+                    </span>
                 </div>
             </div>
-            <button class="btn btn-outline-primary">Edit Profile</button>
         </div>
     </div>
-</body>
 
+    <!-- Teacher subjects section -->
+    <section th:if="${isTeacher}">
+        <h2 class="text-2xl font-bold text-upm-blue mb-8 flex items-center">
+            <i class="fas fa-book-open mr-3 text-upm-light-blue"></i>
+            <span th:text="${subjectsTitle}">Asignaturas que imparte</span>
+        </h2>
+
+        <div th:if="${subjects.isEmpty()}" class="bg-white rounded-xl p-12 text-center border-2 border-dashed border-gray-200">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-book text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-600 mb-2">Este profesor no tiene asignaturas asignadas</h3>
+            <p class="text-gray-400">Aún no se le han asignado asignaturas para impartir.</p>
+        </div>
+
+        <div th:unless="${subjects.isEmpty()}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <a th:each="subject : ${subjects}" 
+               th:href="@{/subject/{id}(id=${subject.id})}"
+               class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full group block">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-xl font-bold text-upm-blue group-hover:text-upm-light-blue transition-colors" th:text="${subject.name}">Nombre de la Asignatura</h3>
+                    <i class="fas fa-chalkboard text-upm-light-blue"></i>
+                </div>
+                <p class="text-gray-600 mb-6 flex-grow line-clamp-3" th:text="${subject.description}">Descripción de la asignatura.</p>
+                <div class="flex flex-wrap gap-2 mt-auto">
+                    <span th:each="attr : ${subject.attributes}" 
+                          class="bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold" 
+                          th:text="${attr}">Attribute</span>
+                </div>
+                <div class="mt-4 pt-3 border-t border-gray-100">
+                    <span class="text-sm text-upm-light-blue font-medium group-hover:text-upm-blue">
+                        Ver asignatura <i class="fas fa-arrow-right ml-1"></i>
+                    </span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Student info section (minimal for now) -->
+    <section th:if="${isStudent}">
+        <div class="bg-white rounded-xl p-8 border border-gray-100 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user text-green-600 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-600">Perfil de estudiante</h3>
+            <p class="text-gray-400 mt-2">La información detallada del estudiante no es pública.</p>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+</body>
 </html>

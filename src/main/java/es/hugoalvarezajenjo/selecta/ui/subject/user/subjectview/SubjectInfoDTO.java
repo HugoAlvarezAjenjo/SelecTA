@@ -20,6 +20,7 @@ public class SubjectInfoDTO {
 
     @Value
     public static class TeacherInfo {
+        Long id;
         String name;
         String email;
     }
@@ -37,7 +38,7 @@ public class SubjectInfoDTO {
         final List<TeacherInfo> teachersList = new ArrayList<>();
         if (subject.getTeachers() != null) {
             for (final var teacher : subject.getTeachers()) {
-                teachersList.add(new TeacherInfo(teacher.getUsername(), teacher.getEmail()));
+                teachersList.add(new TeacherInfo(teacher.getId(), teacher.getUsername(), teacher.getEmail()));
             }
         }
 
