@@ -1,0 +1,23 @@
+checks:
+  # Build tools
+  - name: Java 21
+    type: command
+    command: java --version
+    expected: ">=21"
+
+  - name: Maven wrapper
+    type: file
+    path: mvnw
+
+  # Project structure
+  - name: POM file
+    type: file
+    path: pom.xml
+
+  - name: Application entry point
+    type: file
+    path: src/main/java/es/hugoalvarezajenjo/selecta/SelecTaApplication.java
+
+  - name: Application properties
+    type: file
+    path: src/main/resources/application.properties
