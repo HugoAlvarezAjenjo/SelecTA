@@ -34,17 +34,17 @@ INSERT INTO subject_tags (subject_id, tags) VALUES
                                                 (5, 'Computer Science'), (5, 'Software Engineering'), (5, 'Web');
 
 -- Insert Subject Resources
-INSERT INTO subject_resource (subject_id, name, description, creation_date, type, language, original_name, is_private) VALUES
-                                                                                                         (1, 'Math Syllabus', 'Complete course syllabus for Mathematics', '2024-01-15', 'EXERCISE', 'ENGLISH', 'math_syllabus.pdf', false),
-                                                                                                         (1, 'Algebra Exercises', 'Practice exercises for algebra with solutions', '2024-01-20', 'EXERCISE', 'SPANISH', 'algebra_exercises.zip', false),
-                                                                                                         (2, 'Physics Lab Guide', 'Step-by-step laboratory guide for physics experiments', '2024-02-01', 'NOTES', 'ENGLISH', 'lab_guide.pdf', false),
-                                                                                                         (3, 'Java Tutorial PDF', 'Complete introduction to Java programming language', '2024-02-10', 'NOTES', 'SPANISH', 'java_tutorial.pdf', false),
-                                                                                                         (3, 'OOP Presentation', 'Object-Oriented Programming concepts slides', '2024-02-15', 'PRESENTATION', 'SPANISH', 'oop_slides.pptx', false),
-                                                                                                         (4, 'SQL Video Tutorial', 'Video tutorial on SQL queries and database design', '2024-02-20', 'VIDEO', 'ENGLISH', 'sql_tutorial.mp4', false),
-                                                                                                         (5, 'React Official Docs', 'Link to React official documentation', '2024-02-25', 'EXTERNAL_RESOURCE', 'ENGLISH', 'react_docs.url', false),
-                                                                                                         (5, 'Spring Boot Guide', 'Comprehensive Spring Boot development guide', '2024-03-01', 'NOTES', 'SPANISH', 'spring_guide.pdf', false),
-                                                                                                         (2, 'Mechanics Video Lectures', 'Video lectures on classical mechanics', '2024-03-05', 'VIDEO', 'ENGLISH', 'mechanics.mp4', false),
-                                                                                                         (1, 'Calculus Presentation', 'Slides for calculus concepts and formulas', '2024-03-10', 'PRESENTATION', 'ENGLISH', 'calculus.pptx', false);
+INSERT INTO subject_resource (subject_id, name, description, creation_date, type, language, original_name, is_private, official) VALUES
+                                                                                                         (1, 'Math Syllabus', 'Complete course syllabus for Mathematics', '2024-01-15', 'EXERCISE', 'ENGLISH', 'math_syllabus.pdf', false, true),
+                                                                                                         (1, 'Algebra Exercises', 'Practice exercises for algebra with solutions', '2024-01-20', 'EXERCISE', 'SPANISH', 'algebra_exercises.zip', false, true),
+                                                                                                         (2, 'Physics Lab Guide', 'Step-by-step laboratory guide for physics experiments', '2024-02-01', 'NOTES', 'ENGLISH', 'lab_guide.pdf', false, true),
+                                                                                                         (3, 'Java Tutorial PDF', 'Complete introduction to Java programming language', '2024-02-10', 'NOTES', 'SPANISH', 'java_tutorial.pdf', false, true),
+                                                                                                         (3, 'OOP Presentation', 'Object-Oriented Programming concepts slides', '2024-02-15', 'PRESENTATION', 'SPANISH', 'oop_slides.pptx', false, true),
+                                                                                                         (4, 'SQL Video Tutorial', 'Video tutorial on SQL queries and database design', '2024-02-20', 'VIDEO', 'ENGLISH', 'sql_tutorial.mp4', false, true),
+                                                                                                         (5, 'React Official Docs', 'Link to React official documentation', '2024-02-25', 'EXTERNAL_RESOURCE', 'ENGLISH', 'react_docs.url', false, true),
+                                                                                                         (5, 'Spring Boot Guide', 'Comprehensive Spring Boot development guide', '2024-03-01', 'NOTES', 'SPANISH', 'spring_guide.pdf', false, true),
+                                                                                                         (2, 'Mechanics Video Lectures', 'Video lectures on classical mechanics', '2024-03-05', 'VIDEO', 'ENGLISH', 'mechanics.mp4', false, true),
+                                                                                                         (1, 'Calculus Presentation', 'Slides for calculus concepts and formulas', '2024-03-10', 'PRESENTATION', 'ENGLISH', 'calculus.pptx', false, true);
 
 -- Reset identity counters to avoid primary key violations with prepopulated data
 ALTER TABLE subject ALTER COLUMN id RESTART WITH 6;

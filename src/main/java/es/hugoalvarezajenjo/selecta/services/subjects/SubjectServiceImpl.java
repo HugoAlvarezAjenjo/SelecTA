@@ -2,6 +2,7 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectSpecifications;
+import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
@@ -197,5 +198,42 @@ public class SubjectServiceImpl implements SubjectService {
         }
         subject.getTeachers().remove(teacher);
         this.subjectRepository.save(subject);
+    }
+
+    @Override
+    @Transactional
+    public void addContributor(final Long subjectId, final Long studentId) {
+        final Subject subject = this.subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + subjectId));
+        final User user = this.userRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentId));
+        if (!(user instanceof Student student)) {
+            throw new IllegalArgumentException("User " + studentId + " is not a student");
+        }
+        subject.getContributors().add(student);
+        this.subjectRepository.save(subject);
+    }
+
+    @Override
+    @Transactional
+    public void removeContributor(final Long subjectId, final Long studentId) {
+        final Subject subject = this.subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + subjectId));
+        final User user = this.userRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentId));
+        if (!(user instanceof Student student)) {
+            throw new IllegalArgumentException("User " + studentId + " is not a student");
+        }
+        subject.getContributors().remove(student);
+        this.subjectRepository.save(subject);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isContributor(final Long subjectId, final Long userId) {
+        final Optional<Subject> subjectOpt = this.subjectRepository.findById(subjectId);
+        if (subjectOpt.isEmpty()) return false;
+        return subjectOpt.get().getContributors().stream()
+                .anyMatch(c -> c.getId().equals(userId));
     }
 }

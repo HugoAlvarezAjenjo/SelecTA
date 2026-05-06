@@ -1,5 +1,7 @@
 package es.hugoalvarezajenjo.selecta.ui.profile;
 
+import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
+import es.hugoalvarezajenjo.selecta.services.resources.repository.SubjectResourceRepository;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
@@ -21,6 +23,7 @@ import java.util.List;
 @Slf4j
 public class ProfileController {
     private final UserService userService;
+    private final SubjectResourceRepository subjectResourceRepository;
 
     @GetMapping
     public String showProfile(final Model model) {
@@ -51,6 +54,12 @@ public class ProfileController {
         }
 
         model.addAttribute("subjects", subjects);
+
+        // Uploaded resources (for students who are contributors)
+        final List<SubjectResource> uploadedResources = this.subjectResourceRepository.findByUploadedById(currentUser.getId());
+        model.addAttribute("uploadedResources", uploadedResources);
+        model.addAttribute("uploadedResourcesCount", uploadedResources.size());
+
         return "profile";
     }
 }

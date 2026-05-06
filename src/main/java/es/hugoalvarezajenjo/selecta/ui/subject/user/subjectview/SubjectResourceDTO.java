@@ -15,6 +15,8 @@ public class SubjectResourceDTO {
     private String language;
     private String uploadDate;
     private boolean isPrivate;
+    private boolean official;
+    private String uploadedByName;
     private long upvotes;
     private long downvotes;
     private String userVote; // "UPVOTE", "DOWNVOTE", or null
@@ -31,6 +33,8 @@ public class SubjectResourceDTO {
                 subjectResource.getLanguage(),
                 subjectResource.getCreationDate().toString(),
                 subjectResource.isPrivate(),
+                subjectResource.isOfficial(),
+                subjectResource.getUploadedBy() != null ? subjectResource.getUploadedBy().getUsername() : null,
                 upvotes,
                 downvotes,
                 userVote != null ? userVote.name() : null);

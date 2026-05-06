@@ -25,4 +25,10 @@ public interface SubjectService {
     void addTeacherToSubject(Long subjectId, Long teacherId);
 
     void removeTeacherFromSubject(Long subjectId, Long teacherId);
+
+    void addContributor(Long subjectId, Long studentId);
+
+    void removeContributor(Long subjectId, Long studentId);
+
+    boolean isContributor(Long subjectId, Long userId);
 }

@@ -29,4 +29,7 @@ public interface SubjectResourceRepository extends JpaRepository<SubjectResource
 
     @Query("SELECT r FROM SubjectResource r WHERE r.folder.id = :folderId")
     List<SubjectResource> findByFolderId(@Param("folderId") Long folderId);
+
+    @Query("SELECT r FROM SubjectResource r WHERE r.uploadedBy.id = :userId")
+    List<SubjectResource> findByUploadedById(@Param("userId") Long userId);
 }

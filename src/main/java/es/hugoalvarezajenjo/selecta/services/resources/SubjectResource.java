@@ -1,5 +1,6 @@
 package es.hugoalvarezajenjo.selecta.services.resources;
 
+import es.hugoalvarezajenjo.selecta.services.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,11 @@ public class SubjectResource {
     private String language;
     private String originalName;
     private boolean isPrivate = true;
+    private boolean official = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "uploaded_by")
+    private User uploadedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_id")

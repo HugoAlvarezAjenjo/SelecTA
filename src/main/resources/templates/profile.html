@@ -50,18 +50,18 @@
         </div>
     </div>
 
-    <!-- Stats Summary -->
+    <!-- Stats as Tabs -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+        <div id="stat-subjects" class="bg-white p-6 rounded-xl shadow-sm border-2 border-upm-light-blue text-center cursor-pointer transition-all" onclick="switchTab('subjects')">
             <div class="text-3xl font-bold text-upm-blue mb-1" th:text="${subjects.size()}">0</div>
             <div class="text-gray-500 uppercase text-xs font-semibold tracking-wider" th:text="${subjectsTitle}">Asignaturas</div>
         </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
+        <div id="stat-opinions" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
             <div class="text-3xl font-bold text-upm-blue mb-1">0</div>
             <div class="text-gray-500 uppercase text-xs font-semibold tracking-wider">Opiniones</div>
         </div>
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center">
-            <div class="text-3xl font-bold text-upm-blue mb-1">0</div>
+        <div id="stat-resources" class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center cursor-pointer transition-all hover:border-upm-light-blue" onclick="switchTab('resources')">
+            <div class="text-3xl font-bold text-upm-blue mb-1" th:text="${uploadedResourcesCount}">0</div>
             <div class="text-gray-500 uppercase text-xs font-semibold tracking-wider">Recursos Subidos</div>
         </div>
     </div>
@@ -80,13 +80,9 @@
         </a>
     </div>
 
-    <!-- Subjects List -->
-    <section>
-        <h2 class="text-2xl font-bold text-upm-blue mb-8 flex items-center">
-            <i class="fas fa-book-open mr-3 text-upm-light-blue"></i>
-            <span th:text="${subjectsTitle}">Mis Asignaturas</span>
-        </h2>
 
+    <!-- Tab: Subjects -->
+    <section id="content-subjects">
         <div th:if="${subjects.isEmpty()}" class="bg-white rounded-xl p-12 text-center border-2 border-dashed border-gray-200">
             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-folder-open text-gray-400 text-2xl"></i>
@@ -102,41 +98,69 @@
                  class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all cursor-pointer flex flex-col h-full group"
                  th:onclick="|window.location.href='@{/subject/{id}(id=${subject.id})}'|">
                 <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-xl font-bold text-upm-blue group-hover:text-upm-light-blue transition-colors" th:text="${subject.name}">Nombre de la Asignatura</h3>
+                    <h3 class="text-xl font-bold text-upm-blue group-hover:text-upm-light-blue transition-colors" th:text="${subject.name}">Nombre</h3>
                     <i class="fas fa-star text-yellow-400"></i>
                 </div>
-                <p class="text-gray-600 mb-6 flex-grow line-clamp-3" th:text="${subject.description}">Descripción breve de la asignatura.</p>
+                <p class="text-gray-600 mb-6 flex-grow line-clamp-3" th:text="${subject.description}">Descripción</p>
                 <div class="flex flex-wrap gap-2 mt-auto">
-                    <span th:each="attr : ${subject.attributes}" 
-                          class="bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold" 
-                          th:text="${attr}">Attribute</span>
+                    <span th:each="attr : ${subject.attributes}" class="bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold" th:text="${attr}">Attr</span>
                 </div>
             </div>
         </div>
 
-        <!-- Teacher subject cards - with management actions -->
+        <!-- Teacher subject cards -->
         <div th:if="${isTeacher}" th:unless="${subjects.isEmpty()}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div th:each="subject : ${subjects}" 
-                 class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full group">
+            <div th:each="subject : ${subjects}" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full">
                 <div class="flex justify-between items-start mb-4">
-                    <h3 class="text-xl font-bold text-upm-blue" th:text="${subject.name}">Nombre de la Asignatura</h3>
+                    <h3 class="text-xl font-bold text-upm-blue" th:text="${subject.name}">Nombre</h3>
                     <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">IMPARTO</span>
                 </div>
-                <p class="text-gray-600 mb-4 flex-grow line-clamp-3" th:text="${subject.description}">Descripción breve de la asignatura.</p>
-                <div class="flex flex-wrap gap-2 mb-4">
-                    <span th:each="attr : ${subject.attributes}" 
-                          class="bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold" 
-                          th:text="${attr}">Attribute</span>
-                </div>
+                <p class="text-gray-600 mb-4 flex-grow line-clamp-3" th:text="${subject.description}">Descripción</p>
                 <div class="flex gap-2 pt-4 border-t border-gray-100 mt-auto">
-                    <a th:href="@{/teacher/subject/{id}(id=${subject.id})}"
-                       class="flex-1 bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-lg font-medium transition-all text-center text-sm">
-                        <i class="fas fa-cogs mr-1"></i> Gestionar
+                    <a th:href="@{/teacher/subject/{id}(id=${subject.id})}" class="flex-1 bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-lg font-medium text-center text-sm"><i class="fas fa-cogs mr-1"></i> Gestionar</a>
+                    <a th:href="@{/subject/{id}(id=${subject.id})}" class="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium text-center text-sm"><i class="fas fa-eye mr-1"></i> Ver</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tab: My Resources -->
+    <section id="content-resources" class="hidden">
+        <div th:if="${uploadedResources.isEmpty()}" class="bg-white rounded-xl p-12 text-center border-2 border-dashed border-gray-200">
+            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-cloud-upload-alt text-gray-400 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-medium text-gray-600 mb-2">No has subido recursos aún</h3>
+            <p class="text-gray-400">Cuando subas recursos como contribuidor, aparecerán aquí.</p>
+        </div>
+
+        <div th:unless="${uploadedResources.isEmpty()}" class="space-y-4">
+            <div th:each="resource : ${uploadedResources}"
+                 class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center justify-between hover:shadow-md transition-all">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center">
+                        <i class="fas fa-file text-amber-600"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800" th:text="${resource.name}">Resource</h4>
+                        <p class="text-sm text-gray-500">
+                            <span th:text="${resource.type}">TYPE</span> ·
+                            <span th:text="${resource.creationDate}">Date</span>
+                            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                <i class="fas fa-user-graduate mr-1"></i> No oficial
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a th:href="@{/download/resource/{id}(id=${resource.id})}" class="px-3 py-1.5 text-sm text-upm-light-blue hover:text-upm-blue font-medium">
+                        <i class="fas fa-download mr-1"></i> Descargar
                     </a>
-                    <a th:href="@{/subject/{id}(id=${subject.id})}"
-                       class="flex-1 border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-all text-center text-sm">
-                        <i class="fas fa-eye mr-1"></i> Ver pública
-                    </a>
+                    <form th:action="@{'/subject/' + ${resource.subjectId} + '/contribute/' + ${resource.id} + '/delete'}" method="post" onsubmit="return confirm('¿Eliminar este recurso?');">
+                        <button type="submit" class="px-3 py-1.5 text-sm text-red-500 hover:text-red-700 border border-red-200 hover:bg-red-50 rounded-lg font-medium">
+                            <i class="fas fa-trash mr-1"></i> Eliminar
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -144,6 +168,20 @@
 </main>
 
 <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<script>
+    function switchTab(tab) {
+        // Hide all content
+        document.getElementById('content-subjects').classList.add('hidden');
+        document.getElementById('content-resources').classList.add('hidden');
+        // Reset stat card borders
+        document.getElementById('stat-subjects').className = 'bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center cursor-pointer transition-all hover:border-upm-light-blue';
+        document.getElementById('stat-resources').className = 'bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center cursor-pointer transition-all hover:border-upm-light-blue';
+        // Show selected content + highlight stat card
+        document.getElementById('content-' + tab).classList.remove('hidden');
+        document.getElementById('stat-' + tab).className = 'bg-white p-6 rounded-xl shadow-sm border-2 border-upm-light-blue text-center cursor-pointer transition-all';
+    }
+</script>
 
 </body>
 </html>

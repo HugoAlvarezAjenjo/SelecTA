@@ -1,6 +1,7 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
 import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
+import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
@@ -63,6 +64,14 @@ public class SubjectViewController {
             log.info("SelecTA Log: Subject {} isFavourite for student: {}", id, isFavourite);
         }
         model.addAttribute("isFavourite", isFavourite);
+
+        // Contributor check — can the current user upload resources?
+        boolean isContributor = false;
+        if (user != null) {
+            isContributor = this.subjectService.isContributor(id, user.getId());
+        }
+        model.addAttribute("isContributor", isContributor);
+        model.addAttribute("resourceTypes", ResourceType.values());
         
         return "subject/user/subject-view";
     }

@@ -2,6 +2,7 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
+import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,4 +43,12 @@ public class Subject {
             inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
     private Set<Teacher> teachers = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "subject_contributors",
+            joinColumns = @JoinColumn(name = "subject_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private Set<Student> contributors = new HashSet<>();
 }

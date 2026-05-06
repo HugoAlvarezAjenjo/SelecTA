@@ -58,6 +58,8 @@
                     <a th:href="@{'/subject/' + ${subjectDTO.id}}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-arrow-left mr-1"></i> Asignatura</a>
                     <span class="text-gray-300">|</span>
                     <a th:href="@{'/teacher/subject/' + ${subjectDTO.id} + '/description'}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-edit mr-1"></i> Descripción</a>
+                    <span class="text-gray-300">|</span>
+                    <a th:href="@{'/teacher/subject/' + ${subjectDTO.id} + '/contributors'}" class="text-upm-light-blue hover:text-upm-blue"><i class="fas fa-users mr-1"></i> Contribuidores</a>
                 </div>
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
