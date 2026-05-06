@@ -5,7 +5,9 @@ import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRating;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
+import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRatingRepository;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
@@ -13,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -29,6 +29,7 @@ public class SubjectViewController {
     private final ResourceVoteService resourceVoteService;
     private final MarkdownService markdownService;
     private final UserService userService;
+    private final SubjectRatingRepository ratingRepository;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
@@ -72,8 +73,40 @@ public class SubjectViewController {
         }
         model.addAttribute("isContributor", isContributor);
         model.addAttribute("resourceTypes", ResourceType.values());
+
+        // Rating data (server-side)
+        final Double avgRating = this.ratingRepository.getAverageRating(id);
+        final long ratingCount = this.ratingRepository.countBySubjectId(id);
+        int userRating = 0;
+        if (user != null) {
+            userRating = this.ratingRepository.findBySubjectIdAndUserId(id, user.getId())
+                    .map(r -> r.getRating()).orElse(0);
+        }
+        model.addAttribute("avgRating", avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0);
+        model.addAttribute("ratingCount", ratingCount);
+        model.addAttribute("userRating", userRating);
         
         return "subject/user/subject-view";
+    }
+
+    @PostMapping("/{id}/rate")
+    public String rateSubject(@PathVariable final Long id, @RequestParam final int rating) {
+        final User user = this.userService.getCurrentUser();
+        if (user != null && rating >= 1 && rating <= 5) {
+            final Subject subject = this.subjectService.getSubjectById(id).orElse(null);
+            if (subject != null) {
+                final SubjectRating entity = this.ratingRepository.findBySubjectIdAndUserId(id, user.getId())
+                        .orElseGet(() -> {
+                            final SubjectRating r = new SubjectRating();
+                            r.setSubject(subject);
+                            r.setUser(user);
+                            return r;
+                        });
+                entity.setRating(rating);
+                this.ratingRepository.save(entity);
+            }
+        }
+        return "redirect:/subject/" + id;
     }
 
     @GetMapping("/{id}/favourite")

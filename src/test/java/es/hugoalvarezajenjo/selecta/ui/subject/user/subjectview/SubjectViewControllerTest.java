@@ -7,6 +7,7 @@ import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
+import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRatingRepository;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
@@ -45,6 +46,9 @@ class SubjectViewControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private SubjectRatingRepository ratingRepository;
 
     @Mock
     private Model model;

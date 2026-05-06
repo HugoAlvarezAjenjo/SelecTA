@@ -53,13 +53,28 @@
                         </div>
                         <p class="text-gray-600 mb-4">Código: 1156 - ETSII - Grado en Ingeniería Informática</p>
 
+                        <!-- Star Rating -->
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="flex items-center gap-1">
+                                <form th:action="@{'/subject/' + ${subject.id} + '/rate'}" method="post" class="flex items-center gap-1" sec:authorize="isAuthenticated()">
+                                    <button th:each="star : ${#numbers.sequence(1, 5)}" type="submit" name="rating" th:value="${star}"
+                                        class="text-xl transition-all hover:scale-110"
+                                        th:classappend="${star <= userRating} ? 'text-yellow-400' : (${star <= avgRating} ? 'text-yellow-200' : 'text-gray-300 hover:text-yellow-400')">
+                                        <i th:class="${star <= userRating || star <= avgRating} ? 'fas fa-star' : 'far fa-star'"></i>
+                                    </button>
+                                </form>
+                                <!-- Read-only stars for non-authenticated -->
+                                <span sec:authorize="!isAuthenticated()" class="flex items-center gap-1">
+                                    <span th:each="star : ${#numbers.sequence(1, 5)}">
+                                        <i th:class="${star <= avgRating} ? 'fas fa-star text-xl text-yellow-300' : 'far fa-star text-xl text-gray-300'"></i>
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-700" th:text="${avgRating > 0} ? ${avgRating} : '—'">—</span>
+                            <span th:if="${ratingCount > 0}" class="text-sm text-gray-500" th:text="'(' + ${ratingCount} + ' valoraciones)'"></span>
+                        </div>
+
                         <div class="flex items-center space-x-4 mb-4">
-                            <!--                        <div class="flex items-center">-->
-                            <!--                            <div class="flex mr-1">-->
-                            <!--                                <i class="fas fa-star text-yellow-400"></i>-->
-                            <!--                            </div>-->
-                            <!--                            <span class="text-gray-700 font-medium ml-1" th:text="${subject.rating}">4.8 (120 opiniones)</span>-->
-                            <!--                        </div>-->
                             <div class="mt-3 mb-4">
                                 <span th:each="attribute : ${subject.attributes}"
                                     class="inline-block bg-upm-gray rounded-full px-3 py-1 text-sm font-medium mr-2"
@@ -414,6 +429,7 @@
 
         // Initialize with description tab active
         activateTab('description');
+
 
 
 
