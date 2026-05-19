@@ -4,6 +4,7 @@ import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
+import es.hugoalvarezajenjo.selecta.services.contributions.ContributionRequestService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRating;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
@@ -30,6 +31,7 @@ public class SubjectViewController {
     private final MarkdownService markdownService;
     private final UserService userService;
     private final SubjectRatingRepository ratingRepository;
+    private final ContributionRequestService contributionRequestService;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
@@ -73,6 +75,13 @@ public class SubjectViewController {
         }
         model.addAttribute("isContributor", isContributor);
         model.addAttribute("resourceTypes", ResourceType.values());
+
+        // Pending contribution request check
+        boolean hasPendingRequest = false;
+        if (user != null && !isContributor) {
+            hasPendingRequest = this.contributionRequestService.hasPendingAccessRequest(id, user.getId());
+        }
+        model.addAttribute("hasPendingRequest", hasPendingRequest);
 
         // Rating data (server-side)
         final Double avgRating = this.ratingRepository.getAverageRating(id);

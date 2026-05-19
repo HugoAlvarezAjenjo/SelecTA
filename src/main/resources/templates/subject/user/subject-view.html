@@ -204,10 +204,27 @@
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-upm-blue">Recursos compartidos</h2>
-                        <button th:if="${isContributor}" id="open-upload-modal"
-                            class="bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-full font-medium transition-all">
-                            <i class="fas fa-upload mr-2"></i> Subir recurso
-                        </button>
+                        <div class="flex items-center gap-3">
+                            <!-- Already contributor: upload button -->
+                            <button th:if="${isContributor}" id="open-upload-modal"
+                                class="bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-full font-medium transition-all">
+                                <i class="fas fa-upload mr-2"></i> Subir recurso
+                            </button>
+                            <!-- Not contributor: request buttons -->
+                            <div th:if="${!isContributor}" sec:authorize="hasRole('STUDENT')" class="flex items-center gap-2">
+                                <span th:if="${hasPendingRequest}" class="text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200">
+                                    <i class="fas fa-clock mr-1"></i> Solicitud pendiente
+                                </span>
+                                <button th:unless="${hasPendingRequest}" id="open-request-modal"
+                                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full font-medium transition-all text-sm">
+                                    <i class="fas fa-hand-paper mr-1"></i> Solicitar contribuir
+                                </button>
+                                <button id="open-propose-modal"
+                                    class="border border-upm-light-blue text-upm-light-blue hover:bg-upm-light-blue hover:text-white px-4 py-2 rounded-full font-medium transition-all text-sm">
+                                    <i class="fas fa-file-upload mr-1"></i> Proponer recurso
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Resources Grid -->
@@ -387,9 +404,58 @@
         </div>
     </div>
 
+    <!-- Request Access Modal -->
+    <div id="request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-hand-paper mr-2"></i>Solicitar ser contribuidor</h3>
+            <p class="text-gray-600 text-sm mb-4">Envía una solicitud al profesor para poder subir recursos de forma permanente.</p>
+            <form th:action="@{'/subject/' + ${subject.id} + '/request-access'}" method="post" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 mb-2 font-medium">Mensaje (opcional)</label>
+                    <textarea name="message" rows="3" placeholder="¿Por qué quieres contribuir?" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="document.getElementById('request-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1"></i>Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Propose Resource Modal -->
+    <div id="propose-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-file-upload mr-2"></i>Proponer un recurso</h3>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <p class="text-sm text-blue-800"><i class="fas fa-info-circle mr-1"></i>Será revisado por el profesor antes de publicarse.</p>
+            </div>
+            <form th:action="@{'/subject/' + ${subject.id} + '/propose-resource'}" method="post" enctype="multipart/form-data" class="space-y-4">
+                <div><label class="block text-gray-700 mb-2 font-medium">Archivo <span class="text-red-500">*</span></label><input type="file" name="file" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                <div><label class="block text-gray-700 mb-2 font-medium">Nombre <span class="text-red-500">*</span></label><input type="text" name="name" required placeholder="Ej: Apuntes Tema 3" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                <div><label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label><select name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="">Selecciona...</option><option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">TYPE</option></select></div>
+                <div><label class="block text-gray-700 mb-2 font-medium">Idioma</label><input type="text" name="language" placeholder="Español" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
+                <div><label class="block text-gray-700 mb-2 font-medium">Mensaje al profesor</label><textarea name="message" rows="2" placeholder="Opcional..." class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea></div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="document.getElementById('propose-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1"></i>Proponer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <th:block th:replace="~{fragments/footer :: footer}" />
 
     <script>
+        // Modal openers for request/propose
+        const reqModal = document.getElementById('request-modal');
+        const propModal = document.getElementById('propose-modal');
+        const openReqBtn = document.getElementById('open-request-modal');
+        const openPropBtn = document.getElementById('open-propose-modal');
+        if (openReqBtn && reqModal) openReqBtn.addEventListener('click', () => reqModal.classList.remove('hidden'));
+        if (openPropBtn && propModal) openPropBtn.addEventListener('click', () => propModal.classList.remove('hidden'));
+        if (reqModal) reqModal.addEventListener('click', (e) => { if (e.target === reqModal) reqModal.classList.add('hidden'); });
+        if (propModal) propModal.addEventListener('click', (e) => { if (e.target === propModal) propModal.classList.add('hidden'); });
+
         // Tab functionality
         const tabs = {
             description: {

@@ -6,6 +6,7 @@ import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -205,10 +206,14 @@ public class SubjectServiceImpl implements SubjectService {
     public void addContributor(final Long subjectId, final Long studentId) {
         final Subject subject = this.subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + subjectId));
-        final User user = this.userRepository.findById(studentId)
+        final User rawUser = this.userRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentId));
+
+        // Unproxy to get the real entity class (fixes Hibernate proxy instanceof issue)
+        final User user = (User) Hibernate.unproxy(rawUser);
+
         if (!(user instanceof Student student)) {
-            throw new IllegalArgumentException("User " + studentId + " is not a student");
+            throw new IllegalArgumentException("User " + studentId + " is not a student (class=" + user.getClass().getSimpleName() + ", role=" + user.getRole() + ")");
         }
         subject.getContributors().add(student);
         this.subjectRepository.save(subject);
@@ -219,8 +224,9 @@ public class SubjectServiceImpl implements SubjectService {
     public void removeContributor(final Long subjectId, final Long studentId) {
         final Subject subject = this.subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new IllegalArgumentException("Subject not found: " + subjectId));
-        final User user = this.userRepository.findById(studentId)
+        final User rawUser = this.userRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalArgumentException("Student not found: " + studentId));
+        final User user = (User) Hibernate.unproxy(rawUser);
         if (!(user instanceof Student student)) {
             throw new IllegalArgumentException("User " + studentId + " is not a student");
         }

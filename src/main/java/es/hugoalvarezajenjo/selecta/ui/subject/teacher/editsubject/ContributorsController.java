@@ -1,10 +1,11 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.teacher.editsubject;
 
+import es.hugoalvarezajenjo.selecta.services.contributions.ContributionRequest;
+import es.hugoalvarezajenjo.selecta.services.contributions.ContributionRequestService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.User;
-import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/teacher/subject/{subjectId}/contributors")
@@ -23,6 +23,7 @@ public class ContributorsController {
 
     private final SubjectService subjectService;
     private final UserRepository userRepository;
+    private final ContributionRequestService requestService;
 
     @GetMapping
     public String contributorsView(@PathVariable final Long subjectId, final Model model) {
@@ -40,6 +41,10 @@ public class ContributorsController {
                 .filter(u -> !subject.getContributors().contains(u))
                 .toList();
         model.addAttribute("availableStudents", allStudents);
+
+        // Pending requests
+        final List<ContributionRequest> pendingRequests = this.requestService.getPendingRequests(subjectId);
+        model.addAttribute("pendingRequests", pendingRequests);
 
         return "subject/teacher/contributors";
     }
@@ -65,6 +70,32 @@ public class ContributorsController {
             this.subjectService.removeContributor(subjectId, studentId);
             redirectAttributes.addFlashAttribute("success", "Alumno desautorizado como contribuidor");
         } catch (final IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teacher/subject/" + subjectId + "/contributors";
+    }
+
+    @PostMapping("/requests/{requestId}/approve")
+    public String approveRequest(@PathVariable final Long subjectId,
+                                  @PathVariable final Long requestId,
+                                  final RedirectAttributes redirectAttributes) {
+        try {
+            this.requestService.approveRequest(requestId);
+            redirectAttributes.addFlashAttribute("success", "Solicitud aprobada");
+        } catch (final Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/teacher/subject/" + subjectId + "/contributors";
+    }
+
+    @PostMapping("/requests/{requestId}/reject")
+    public String rejectRequest(@PathVariable final Long subjectId,
+                                 @PathVariable final Long requestId,
+                                 final RedirectAttributes redirectAttributes) {
+        try {
+            this.requestService.rejectRequest(requestId);
+            redirectAttributes.addFlashAttribute("success", "Solicitud rechazada");
+        } catch (final Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/teacher/subject/" + subjectId + "/contributors";
