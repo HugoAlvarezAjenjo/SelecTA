@@ -1,6 +1,6 @@
 <footer class="bg-upm-blue text-white py-12" th:fragment="footer">
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
                 <div class="flex items-center space-x-2 mb-4">
                     <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center">
@@ -8,9 +8,7 @@
                     </div>
                     <span class="text-xl font-bold">Selec<span class="text-upm-light-blue">TA</span></span>
                 </div>
-                <p class="text-upm-gray">Plataforma desarrollada por estudiantes para estudiantes para ayudar en la
-                    elección de
-                    asignaturas optativas en la UPM.</p>
+                <p class="text-upm-gray">Plataforma de gestión académica para la consulta y organización de asignaturas en la Universidad Politécnica de Madrid.</p>
             </div>
 
             <div>
@@ -20,18 +18,8 @@
                             asignaturas</a></li>
                     <li><a th:href="@{/recommender}"
                             class="text-upm-gray hover:text-white transition-all">Recomendador</a></li>
-                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Recursos académicos</a></li>
+                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Mi perfil</a></li>
                     <li><a href="#" class="text-upm-gray hover:text-white transition-all">Preguntas frecuentes</a></li>
-                </ul>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-bold mb-4">Legal</h3>
-                <ul class="space-y-2">
-                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Términos de uso</a></li>
-                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Política de privacidad</a>
-                    </li>
-                    <li><a href="#" class="text-upm-gray hover:text-white transition-all">Cookies</a></li>
                 </ul>
             </div>
 
@@ -39,9 +27,8 @@
                 <h3 class="text-lg font-bold mb-4">Contacto</h3>
                 <ul class="space-y-2">
                     <li class="flex items-center">
-                        <i class="fas fa-envelope mr-2 text-upm-light-blue"></i>
-                        <a href="mailto:contacto@selecta.upm.es"
-                            class="text-upm-gray hover:text-white transition-all">contacto@selecta.upm.es</a>
+                        <i class="fas fa-phone mr-2 text-upm-light-blue"></i>
+                        <a href="tel:+34910673699" class="text-upm-gray hover:text-white transition-all">+34 910 67 36 99</a>
                     </li>
                     <li class="flex items-center">
                         <i class="fas fa-map-marker-alt mr-2 text-upm-light-blue"></i>
@@ -50,24 +37,16 @@
                 </ul>
 
                 <div class="flex space-x-4 mt-4">
-                    <a href="#"
-                        class="w-10 h-10 rounded-full bg-upm-light-blue flex items-center justify-center hover:bg-white hover:text-upm-blue transition-all">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#"
+                    <a href="https://www.instagram.com/etsisi_upm/" target="_blank" rel="noopener"
                         class="w-10 h-10 rounded-full bg-upm-light-blue flex items-center justify-center hover:bg-white hover:text-upm-blue transition-all">
                         <i class="fab fa-instagram"></i>
                     </a>
-                    <a href="#"
+                    <a href="https://www.linkedin.com/school/universidad-politecnica-de-madrid" target="_blank" rel="noopener"
                         class="w-10 h-10 rounded-full bg-upm-light-blue flex items-center justify-center hover:bg-white hover:text-upm-blue transition-all">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                 </div>
             </div>
-        </div>
-
-        <div class="border-t border-upm-light-blue pt-8 text-center text-upm-gray">
-            <p>Desarrollado por estudiantes para estudiantes – Universidad Politécnica de Madrid © 2025</p>
         </div>
     </div>
 </footer>
