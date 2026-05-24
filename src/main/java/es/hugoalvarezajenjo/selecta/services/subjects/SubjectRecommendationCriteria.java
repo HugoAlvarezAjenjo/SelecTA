@@ -17,4 +17,5 @@ public class SubjectRecommendationCriteria {
     private final Languages language;
     private final Integer maxCredits;
     private final String searchKeywords;
+    private final List<String> selectedTags;
 }

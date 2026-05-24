@@ -11,6 +11,45 @@
     <link rel="stylesheet" th:href="@{/css/base.css}">
     <link rel="stylesheet" th:href="@{/css/design-system.css}">
     <link rel="stylesheet" th:href="@{/css/card.css}">
+    <style>
+        .tag-chip {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        .tag-chip:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .tag-chip.selected {
+            background-color: #1a56db;
+            color: white;
+            border-color: #1a56db;
+        }
+        .score-ring {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .signal-bar {
+            height: 4px;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .badge-for-you {
+            animation: pulse-badge 2s infinite;
+        }
+        @keyframes pulse-badge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
 </head>
 
 <body class="font-sans bg-gray-50 text-gray-800 flex flex-col min-h-screen">
@@ -18,8 +57,10 @@
 
     <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         <div class="mb-8 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-2">Recomendador de Asignaturas</h1>
-            <p class="text-gray-600">Encuentra tus asignaturas ideales ajustando tus preferencias de búsqueda.</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-2">
+                <i class="fas fa-magic mr-2 text-upm-light-blue"></i>Recomendador Inteligente
+            </h1>
+            <p class="text-gray-600">Descubre asignaturas basadas en tus intereses, valoraciones y preferencias.</p>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-8">
@@ -27,26 +68,48 @@
             <aside class="w-full lg:w-1/3">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-24">
                     <h2 class="text-xl font-bold text-upm-blue mb-4 pb-2 border-b border-gray-100">
-                        <i class="fas fa-filter mr-2 text-upm-light-blue"></i> Filtros
+                        <i class="fas fa-sliders-h mr-2 text-upm-light-blue"></i> Preferencias
                     </h2>
 
-                    <form th:action="@{/recommender}" th:object="${recommenderDTO}" method="post">
+                    <form th:action="@{/recommender}" th:object="${recommenderDTO}" method="post" id="recommenderForm">
+
+                        <!-- Tag Chips -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-tags mr-1 text-gray-400"></i> Temáticas de interés
+                            </label>
+                            <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1" id="tagChipsContainer">
+                                <span th:each="tag : ${availableTags}"
+                                      class="tag-chip inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border border-gray-300 bg-white text-gray-700"
+                                      th:classappend="${recommenderDTO.selectedTags != null and recommenderDTO.selectedTags.contains(tag)} ? ' selected' : ''"
+                                      th:text="${tag}"
+                                      th:attr="data-tag=${tag}"
+                                      onclick="toggleTag(this)">
+                                </span>
+                            </div>
+                            <!-- Hidden inputs for selected tags -->
+                            <div id="selectedTagsInputs">
+                                <input th:each="tag : ${recommenderDTO.selectedTags}"
+                                       type="hidden" name="selectedTags" th:value="${tag}">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Haz clic para seleccionar las temáticas que te interesan.</p>
+                        </div>
 
                         <!-- Search Keywords -->
                         <div class="mb-5">
-                            <label for="searchKeywords" class="block text-sm font-medium text-gray-700 mb-1">Palabras
-                                clave y/o Tags</label>
+                            <label for="searchKeywords" class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-search mr-1 text-gray-400"></i> Palabras clave
+                            </label>
                             <input type="text" id="searchKeywords" th:field="*{searchKeywords}"
-                                placeholder="Ej. Inteligencia, Machine Learning"
+                                placeholder="Ej. Machine Learning, Redes"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-upm-light-blue focus:border-transparent text-sm">
-                            <p class="text-xs text-gray-500 mt-1">Busca en nombres, descripciones y tags. Se ordenará
-                                por relevancia.</p>
                         </div>
 
                         <!-- Language -->
                         <div class="mb-5">
-                            <label for="language" class="block text-sm font-medium text-gray-700 mb-1">Idioma de
-                                impartición</label>
+                            <label for="language" class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-globe mr-1 text-gray-400"></i> Idioma
+                            </label>
                             <select id="language" th:field="*{language}"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-upm-light-blue focus:border-transparent text-sm">
                                 <option value="">Cualquier idioma</option>
@@ -55,35 +118,46 @@
                             </select>
                         </div>
 
-                        <!-- Credits -->
+                        <!-- Credits Slider -->
                         <div class="mb-5">
-                            <label for="maxCredits" class="block text-sm font-medium text-gray-700 mb-1">Máximo de
-                                ECTS</label>
-                            <input type="number" id="maxCredits" th:field="*{maxCredits}" placeholder="Ej. 6" min="1"
-                                max="30"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-upm-light-blue focus:border-transparent text-sm">
+                            <label for="maxCredits" class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-graduation-cap mr-1 text-gray-400"></i> Máximo ECTS
+                                <span id="creditsValue" class="ml-2 text-upm-light-blue font-bold"
+                                      th:text="${recommenderDTO.maxCredits != null ? recommenderDTO.maxCredits : 'Sin límite'}"></span>
+                            </label>
+                            <input type="range" id="maxCreditsSlider" min="1" max="12" step="1"
+                                   th:value="${recommenderDTO.maxCredits != null ? recommenderDTO.maxCredits : 12}"
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-upm-blue"
+                                   oninput="updateCreditsValue(this.value)">
+                            <input type="hidden" id="maxCredits" th:field="*{maxCredits}">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>1 ECTS</span>
+                                <span>12 ECTS</span>
+                            </div>
                         </div>
 
-                        <!-- Semesters Checkboxes -->
+                        <!-- Semesters -->
                         <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Semestres</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-calendar-alt mr-1 text-gray-400"></i> Semestres
+                            </label>
                             <div class="grid grid-cols-2 gap-2">
-                                <label class="inline-flex items-center">
+                                <label class="inline-flex items-center p-2 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
                                     <input type="checkbox" th:field="*{semesterTypes}" value="ODD"
                                         class="form-checkbox h-4 w-4 text-upm-light-blue rounded border-gray-300 focus:ring-upm-light-blue">
-                                    <span class="ml-2 text-sm text-gray-700">Primer Semestre</span>
+                                    <span class="ml-2 text-sm text-gray-700">1er Semestre</span>
                                 </label>
-                                <label class="inline-flex items-center">
+                                <label class="inline-flex items-center p-2 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
                                     <input type="checkbox" th:field="*{semesterTypes}" value="EVEN"
                                         class="form-checkbox h-4 w-4 text-upm-light-blue rounded border-gray-300 focus:ring-upm-light-blue">
-                                    <span class="ml-2 text-sm text-gray-700">Segundo Semestre</span>
+                                    <span class="ml-2 text-sm text-gray-700">2do Semestre</span>
                                 </label>
                             </div>
                         </div>
 
                         <button type="submit"
-                            class="w-full bg-upm-blue hover:bg-upm-light-blue text-white font-medium py-2 px-4 rounded-lg transition duration-200">
-                            <i class="fas fa-search mr-2"></i> Buscar
+                            class="w-full bg-upm-blue hover:bg-upm-light-blue text-white font-medium py-3 px-4 rounded-lg transition duration-200 shadow-sm">
+                            <i class="fas fa-wand-magic-sparkles mr-2"></i> Obtener Recomendaciones
                         </button>
                     </form>
                 </div>
@@ -92,55 +166,148 @@
             <!-- Results Section -->
             <section class="w-full lg:w-2/3">
 
-                <div th:if="${recommendedSubjects == null}"
+                <!-- Initial state -->
+                <div th:if="${recommendations == null}"
                     class="bg-blue-50 border border-blue-100 text-upm-blue rounded-xl p-8 text-center">
-                    <i class="fas fa-magic text-4xl mb-4 text-upm-light-blue opacity-80"></i>
+                    <i class="fas fa-wand-magic-sparkles text-4xl mb-4 text-upm-light-blue opacity-80"></i>
                     <h3 class="text-xl font-medium mb-2">Configura tus preferencias</h3>
-                    <p class="text-gray-600">Ajusta los filtros en el menú lateral y haz clic en "Buscar" para descubrir
-                        las asignaturas que mejor encajan contigo y ordenadas por relevancia.</p>
+                    <p class="text-gray-600">Selecciona temáticas y ajusta filtros para descubrir asignaturas
+                        recomendadas para ti con un score de afinidad personalizado.</p>
+                    <p th:if="${isLoggedIn}" class="text-sm text-upm-light-blue mt-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Tus valoraciones previas se usarán para personalizar las recomendaciones.
+                    </p>
                 </div>
 
-                <div th:if="${recommendedSubjects != null and recommendedSubjects.isEmpty()}"
+                <!-- Empty results -->
+                <div th:if="${recommendations != null and recommendations.isEmpty()}"
                     class="bg-gray-50 border border-gray-200 text-gray-500 rounded-xl p-8 text-center">
                     <i class="fas fa-search-minus text-4xl mb-4 opacity-50"></i>
                     <h3 class="text-xl font-medium mb-2">Sin resultados</h3>
-                    <p>No hemos encontrado asignaturas que coincidan con todo lo que has marcado. Intenta quitar algún
-                        límite.</p>
+                    <p>No hemos encontrado asignaturas para recomendar con estos criterios. Prueba a ampliar tus preferencias.</p>
                 </div>
 
-                <!-- Results Grid -->
-                <div th:if="${recommendedSubjects != null and !recommendedSubjects.isEmpty()}"
-                    class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="md:col-span-2 mb-2 flex justify-between items-center">
-                        <h3 class="text-lg font-bold text-gray-700"><span
-                                th:text="${recommendedSubjects.size()}">0</span> asignaturas encontradas</h3>
-                        <span class="text-sm text-gray-500"><i class="fas fa-sort-amount-down mr-1"></i> Ordenado por
-                            relevancia</span>
+                <!-- Results -->
+                <div th:if="${recommendations != null and !recommendations.isEmpty()}">
+                    <div class="mb-4 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-gray-700">
+                            <i class="fas fa-sparkles mr-1 text-upm-light-blue"></i>
+                            <span th:text="${recommendations.size()}">0</span> recomendaciones
+                        </h3>
+                        <span class="text-sm text-gray-500">
+                            <i class="fas fa-sort-amount-down mr-1"></i> Por relevancia + diversidad
+                        </span>
                     </div>
 
-                    <div th:each="related : ${recommendedSubjects}"
-                        class="bg-white border border-gray-100 rounded-xl shadow-sm p-5 hover:shadow-md transition-all cursor-pointer flex flex-col"
-                        th:onclick="|window.location.href='@{/subject/{id}(id=${related.id})}'|">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-xl font-bold text-upm-blue leading-tight" th:text="${related.name}">Subject
-                                Name</h3>
-                        </div>
+                    <div class="space-y-4">
+                        <div th:each="rec, iterStat : ${recommendations}"
+                             class="bg-white border border-gray-100 rounded-xl shadow-sm p-5 hover:shadow-md transition-all cursor-pointer relative"
+                             th:onclick="|window.location.href='@{/subject/{id}(id=${rec.subjectId})}'|">
 
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow" th:text="${related.description}">
-                            Description...</p>
+                            <!-- "Para ti" badge -->
+                            <div th:if="${rec.forYou}"
+                                 class="badge-for-you absolute -top-2 -right-2 bg-gradient-to-r from-upm-blue to-upm-light-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                                <i class="fas fa-star mr-1"></i> Para ti
+                            </div>
 
-                        <div th:if="${related.tags != null and not #lists.isEmpty(related.tags)}"
-                            class="flex flex-wrap gap-1 mb-4">
-                            <span th:each="tag : ${related.tags}"
-                                class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded"
-                                th:text="'#' + ${tag}"></span>
-                        </div>
+                            <div class="flex gap-4">
+                                <!-- Score Ring -->
+                                <div class="score-ring border-4 flex-shrink-0"
+                                     th:classappend="${rec.matchPercentage >= 70 ? 'border-green-400 text-green-700 bg-green-50' : (rec.matchPercentage >= 40 ? 'border-yellow-400 text-yellow-700 bg-yellow-50' : 'border-gray-300 text-gray-600 bg-gray-50')}">
+                                    <span th:text="${rec.matchPercentage + '%'}">85%</span>
+                                </div>
 
-                        <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
-                            <div class="flex flex-wrap gap-1">
-                                <span th:each="attr, stat : ${related.attributes}" th:if="${stat.index < 3}"
-                                    class="bg-upm-blue bg-opacity-10 text-upm-blue rounded-full px-2 py-1 text-xs font-medium"
-                                    th:text="${attr}">Attribute</span>
+                                <!-- Content -->
+                                <div class="flex-grow min-w-0">
+                                    <div class="flex items-start justify-between gap-2 mb-1">
+                                        <h4 class="text-lg font-bold text-upm-blue leading-tight truncate" th:text="${rec.name}">Subject Name</h4>
+                                    </div>
+
+                                    <p class="text-gray-600 text-sm mb-3 line-clamp-2" th:text="${rec.description}">
+                                        Description...</p>
+
+                                    <!-- Explanation -->
+                                    <p class="text-sm text-upm-light-blue mb-3 italic">
+                                        <i class="fas fa-lightbulb mr-1"></i>
+                                        <span th:text="${rec.explanation}">Recomendada por...</span>
+                                    </p>
+
+                                    <!-- Tags -->
+                                    <div th:if="${rec.tags != null and not rec.tags.isEmpty()}"
+                                        class="flex flex-wrap gap-1 mb-3">
+                                        <span th:each="tag : ${rec.tags}"
+                                            class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full"
+                                            th:text="'#' + ${tag}"></span>
+                                    </div>
+
+                                    <!-- Footer: rating + attributes -->
+                                    <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                                        <div class="flex items-center gap-3">
+                                            <!-- Average Rating -->
+                                            <div th:if="${rec.averageRating != null and rec.ratingCount > 0}" class="flex items-center gap-1 text-sm">
+                                                <i class="fas fa-star text-yellow-400"></i>
+                                                <span class="font-medium" th:text="${rec.averageRating}">4.2</span>
+                                                <span class="text-gray-400" th:text="'(' + ${rec.ratingCount} + ')'"> (12)</span>
+                                            </div>
+                                            <span th:if="${rec.averageRating == null or rec.ratingCount == 0}" class="text-xs text-gray-400">Sin valoraciones</span>
+                                        </div>
+
+                                        <div class="flex flex-wrap gap-1">
+                                            <span th:each="attr, stat : ${rec.attributes}" th:if="${stat.index < 3}"
+                                                class="bg-upm-blue bg-opacity-10 text-upm-blue rounded-full px-2 py-0.5 text-xs font-medium"
+                                                th:text="${attr}">Attribute</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Signal Breakdown (collapsible) -->
+                                    <details class="mt-3" onclick="event.stopPropagation()">
+                                        <summary class="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+                                            <i class="fas fa-chart-bar mr-1"></i> Ver desglose de señales
+                                        </summary>
+                                        <div class="mt-2 space-y-1.5">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-gray-500 w-24">Afinidad</span>
+                                                <div class="flex-grow bg-gray-100 rounded-full h-1.5">
+                                                    <div class="signal-bar bg-blue-500 rounded-full h-1.5"
+                                                         th:style="'width: ' + ${rec.signalBreakdown['tagAffinity'] != null ? (rec.signalBreakdown['tagAffinity'] * 100) : 0} + '%'"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-400 w-8" th:text="${rec.signalBreakdown['tagAffinity'] != null ? #numbers.formatDecimal(rec.signalBreakdown['tagAffinity'] * 100, 1, 0) + '%' : '0%'}"></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-gray-500 w-24">Colaborativo</span>
+                                                <div class="flex-grow bg-gray-100 rounded-full h-1.5">
+                                                    <div class="signal-bar bg-purple-500 rounded-full h-1.5"
+                                                         th:style="'width: ' + ${rec.signalBreakdown['collaborative'] != null ? (rec.signalBreakdown['collaborative'] * 100) : 0} + '%'"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-400 w-8" th:text="${rec.signalBreakdown['collaborative'] != null ? #numbers.formatDecimal(rec.signalBreakdown['collaborative'] * 100, 1, 0) + '%' : '0%'}"></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-gray-500 w-24">Popularidad</span>
+                                                <div class="flex-grow bg-gray-100 rounded-full h-1.5">
+                                                    <div class="signal-bar bg-yellow-500 rounded-full h-1.5"
+                                                         th:style="'width: ' + ${rec.signalBreakdown['popularity'] != null ? (rec.signalBreakdown['popularity'] * 100) : 0} + '%'"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-400 w-8" th:text="${rec.signalBreakdown['popularity'] != null ? #numbers.formatDecimal(rec.signalBreakdown['popularity'] * 100, 1, 0) + '%' : '0%'}"></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-gray-500 w-24">Contenido</span>
+                                                <div class="flex-grow bg-gray-100 rounded-full h-1.5">
+                                                    <div class="signal-bar bg-green-500 rounded-full h-1.5"
+                                                         th:style="'width: ' + ${rec.signalBreakdown['contentMatch'] != null ? (rec.signalBreakdown['contentMatch'] * 100) : 0} + '%'"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-400 w-8" th:text="${rec.signalBreakdown['contentMatch'] != null ? #numbers.formatDecimal(rec.signalBreakdown['contentMatch'] * 100, 1, 0) + '%' : '0%'}"></span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs text-gray-500 w-24">Diversidad</span>
+                                                <div class="flex-grow bg-gray-100 rounded-full h-1.5">
+                                                    <div class="signal-bar bg-pink-500 rounded-full h-1.5"
+                                                         th:style="'width: ' + ${rec.signalBreakdown['diversity'] != null ? (rec.signalBreakdown['diversity'] * 100) : 0} + '%'"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-400 w-8" th:text="${rec.signalBreakdown['diversity'] != null ? #numbers.formatDecimal(rec.signalBreakdown['diversity'] * 100, 1, 0) + '%' : '0%'}"></span>
+                                            </div>
+                                        </div>
+                                    </details>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,6 +318,47 @@
     </main>
 
     <th:block th:replace="~{fragments/footer :: footer}" />
+
+    <script>
+        // Tag chips toggle logic
+        function toggleTag(chip) {
+            chip.classList.toggle('selected');
+            updateSelectedTagsInputs();
+        }
+
+        function updateSelectedTagsInputs() {
+            const container = document.getElementById('selectedTagsInputs');
+            container.innerHTML = '';
+            document.querySelectorAll('.tag-chip.selected').forEach(chip => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'selectedTags';
+                input.value = chip.getAttribute('data-tag');
+                container.appendChild(input);
+            });
+        }
+
+        // Credits slider
+        function updateCreditsValue(value) {
+            const display = document.getElementById('creditsValue');
+            const hiddenInput = document.getElementById('maxCredits');
+            if (parseInt(value) >= 12) {
+                display.textContent = 'Sin límite';
+                hiddenInput.value = '';
+            } else {
+                display.textContent = value + ' ECTS';
+                hiddenInput.value = value;
+            }
+        }
+
+        // Initialize slider on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const slider = document.getElementById('maxCreditsSlider');
+            if (slider) {
+                updateCreditsValue(slider.value);
+            }
+        });
+    </script>
 </body>
 
 </html>

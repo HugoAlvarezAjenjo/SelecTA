@@ -4,6 +4,7 @@ import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,4 +14,5 @@ public class SubjectRecommenderDTO {
     private Languages language;
     private Integer maxCredits;
     private String searchKeywords;
+    private List<String> selectedTags = new ArrayList<>();
 }
