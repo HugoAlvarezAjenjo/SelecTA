@@ -7,11 +7,13 @@ import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -45,6 +47,8 @@ public class ContributionRequestService {
         request.setRequester(requester);
         request.setType(RequestType.ACCESS);
         request.setMessage(message);
+        log.info("Contribution access request created — user: {}, subject: {} (id={})",
+                requester.getUsername(), subject.getName(), subjectId);
         return this.requestRepository.save(request);
     }
 
@@ -85,6 +89,8 @@ public class ContributionRequestService {
         }
 
         request.setStatus(RequestStatus.APPROVED);
+        log.info("Request {} APPROVED — type: {}, user: {}, subject: {}",
+                requestId, request.getType(), request.getRequester().getUsername(), request.getSubject().getName());
 
         if (request.getType() == RequestType.ACCESS) {
             // Grant contributor access

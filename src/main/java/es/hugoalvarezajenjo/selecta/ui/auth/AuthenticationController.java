@@ -5,12 +5,14 @@ import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserRole;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+@Slf4j
 @Controller
 public class AuthenticationController {
     private final UserService userService;
@@ -55,6 +57,7 @@ public class AuthenticationController {
         user.setRole(registrationDto.getRole());
 
         this.userService.registerUser(user);
+        log.info("New user registered: email={}, role={}, approved={}", user.getEmail(), user.getRole(), user.isApproved());
 
         // Teachers get redirected to a pending approval page
         if (registrationDto.getRole() == UserRole.TEACHER) {

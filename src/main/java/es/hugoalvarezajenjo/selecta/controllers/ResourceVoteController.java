@@ -3,11 +3,13 @@ package es.hugoalvarezajenjo.selecta.controllers;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.VoteType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/resources")
 @RequiredArgsConstructor

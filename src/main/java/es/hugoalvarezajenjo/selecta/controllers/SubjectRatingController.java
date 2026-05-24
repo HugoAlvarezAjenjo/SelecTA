@@ -7,12 +7,14 @@ import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectReposito
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/subject/{subjectId}/rating")
 @RequiredArgsConstructor
@@ -72,6 +74,7 @@ public class SubjectRatingController {
                 });
         entity.setRating(rating);
         this.ratingRepository.save(entity);
+        log.info("Rating set: user={}, subject={}, rating={}", user.getUsername(), subjectId, rating);
 
         // Return updated average
         final Double avg = this.ratingRepository.getAverageRating(subjectId);

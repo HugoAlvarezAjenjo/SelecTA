@@ -5,6 +5,7 @@ import es.hugoalvarezajenjo.selecta.services.enrollment.EnrollmentListService;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.util.Map;
  * Controller for the enrollment priority list feature.
  * Provides page rendering and REST API endpoints for drag-and-drop reordering.
  */
+@Slf4j
 @Controller
 @RequestMapping("/enrollment-list")
 @RequiredArgsConstructor

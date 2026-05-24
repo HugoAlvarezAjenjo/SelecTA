@@ -4,6 +4,7 @@ import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * Service for managing a user's enrollment priority list.
  * Supports main list and reserve list with add, remove, reorder, toggle, and note operations.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EnrollmentListService {
@@ -51,6 +53,7 @@ public class EnrollmentListService {
     @Transactional
     public boolean addSubject(User user, Long subjectId, boolean asReserve) {
         if (repository.existsByUserIdAndSubjectId(user.getId(), subjectId)) {
+            log.debug("Subject {} already in enrollment list for user {}", subjectId, user.getUsername());
             return false;
         }
 
@@ -63,6 +66,9 @@ public class EnrollmentListService {
 
         EnrollmentListItem item = new EnrollmentListItem(user, subject, nextPosition, asReserve);
         repository.save(item);
+
+        log.info("Subject '{}' (id={}) added to {} list for user {} at position {}",
+                subject.getName(), subjectId, asReserve ? "reserve" : "main", user.getUsername(), nextPosition);
         return true;
     }
 
@@ -82,12 +88,12 @@ public class EnrollmentListService {
         var item = repository.findByUserIdAndSubjectId(userId, subjectId);
         if (item.isPresent()) {
             boolean wasReserve = item.get().isReserve();
+            log.info("Removing subject {} from {} list for userId {}", subjectId,
+                    wasReserve ? "reserve" : "main", userId);
             repository.deleteByUserIdAndSubjectId(userId, subjectId);
-            if (wasReserve) {
-                normalizePositions(userId, true);
-            } else {
-                normalizePositions(userId, false);
-            }
+            normalizePositions(userId, wasReserve);
+        } else {
+            log.debug("Subject {} not found in enrollment list for userId {}", subjectId, userId);
         }
     }
 

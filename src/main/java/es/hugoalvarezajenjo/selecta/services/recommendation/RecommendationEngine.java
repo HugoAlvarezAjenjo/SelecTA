@@ -9,6 +9,7 @@ import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  *
  * Weights are adaptive based on user context (cold-start handling).
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecommendationEngine {
@@ -59,8 +61,17 @@ public class RecommendationEngine {
      */
     @Transactional(readOnly = true)
     public List<SubjectScoreDTO> recommend(User user, SubjectRecommendationCriteria criteria, int limit) {
+        log.info("Recommendation request — user: {}, context will be determined from profile",
+                user != null ? user.getUsername() : "anonymous");
+
         UserInterestProfile profile = buildUserProfile(user);
         RecommendationWeights weights = RecommendationWeights.forContext(profile.getContext());
+
+        log.info("User context: {}, profile tags: {}, rated subjects: {}",
+                profile.getContext(), profile.getTagWeights().size(), profile.getRatedSubjects().size());
+        log.debug("Weights applied — tagAffinity: {}, collaborative: {}, popularity: {}, contentMatch: {}, diversity: {}",
+                weights.getTagAffinity(), weights.getCollaborative(), weights.getPopularity(),
+                weights.getContentMatch(), weights.getDiversity());
 
         List<Subject> candidates = subjectService.getActiveSubjects();
 
@@ -69,11 +80,15 @@ public class RecommendationEngine {
                 .filter(s -> !profile.getRatedSubjects().containsKey(s.getId()))
                 .toList();
 
+        log.debug("Candidates after exclusion of rated subjects: {}", candidates.size());
+
         // Pre-compute popularity data for all subjects
         Map<Long, PopularityData> popularityMap = computePopularityMap();
 
         // Pre-compute collaborative signal
         Map<Long, Double> collaborativeScores = computeCollaborativeScores(profile, candidates);
+
+        log.debug("Collaborative signal computed for {} subjects", collaborativeScores.size());
 
         // Score each candidate
         List<ScoredCandidate> scored = candidates.stream()
@@ -83,6 +98,14 @@ public class RecommendationEngine {
 
         // Apply MMR for diversity re-ranking
         List<ScoredCandidate> diversified = applyMMR(scored, profile, limit);
+
+        log.info("Recommendation complete — {} results returned (from {} candidates, limit {})",
+                diversified.size(), scored.size(), limit);
+
+        if (!diversified.isEmpty()) {
+            log.debug("Top result: '{}' with score {}", diversified.get(0).subject().getName(),
+                    String.format("%.3f", diversified.get(0).totalScore()));
+        }
 
         // Convert to DTOs
         return diversified.stream()
