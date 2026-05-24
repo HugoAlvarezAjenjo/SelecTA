@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="subject-id" th:content="${subject.id}">
     <title th:text="${subject.name}">Subject</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -42,13 +43,33 @@
                                 Inteligencia Artificial</h1>
                             
                             <!-- Favourite Button -->
-                            <div sec:authorize="hasRole('STUDENT')" class="ml-4">
+                            <div sec:authorize="hasRole('STUDENT')" class="ml-4 flex items-center gap-3">
                                 <a th:href="@{/subject/{id}/favourite(id=${subject.id})}" 
                                    class="text-2xl transition-all duration-300 hover:scale-110 inline-block"
                                    th:classappend="${isFavourite ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-200'}"
                                    th:title="${isFavourite ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
                                     <i th:class="${isFavourite ? 'fas fa-star' : 'far fa-star'}"></i>
                                 </a>
+
+                                <!-- Enrollment List Button -->
+                                <div class="relative" id="enrollmentDropdown">
+                                    <button onclick="toggleEnrollmentMenu()" 
+                                            class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg border transition-all"
+                                            id="enrollmentBtn"
+                                            th:classappend="${isInEnrollmentList ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-700 hover:border-upm-light-blue hover:text-upm-blue'}">
+                                        <i th:class="${isInEnrollmentList ? 'fas fa-check' : 'fas fa-clipboard-list'}"></i>
+                                        <span th:text="${isInEnrollmentList ? 'En mi lista' : 'Matrícula'}"></span>
+                                        <i th:unless="${isInEnrollmentList}" class="fas fa-caret-down text-xs ml-1"></i>
+                                    </button>
+                                    <div id="enrollmentMenu" class="hidden absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1">
+                                        <button onclick="addToEnrollment(false)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-upm-blue transition">
+                                            <i class="fas fa-list-ol mr-2 text-upm-light-blue"></i> Lista principal
+                                        </button>
+                                        <button onclick="addToEnrollment(true)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition">
+                                            <i class="fas fa-shield-alt mr-2 text-amber-500"></i> Reserva
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <p class="text-gray-600 mb-4">Código: 1156 - ETSII - Grado en Ingeniería Informática</p>
@@ -516,6 +537,43 @@
         }
         if (uploadModal) {
             uploadModal.addEventListener('click', (e) => { if (e.target === uploadModal) uploadModal.classList.add('hidden'); });
+        }
+
+        // Enrollment list functionality
+        function toggleEnrollmentMenu() {
+            const menu = document.getElementById('enrollmentMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('enrollmentDropdown');
+            const menu = document.getElementById('enrollmentMenu');
+            if (dropdown && menu && !dropdown.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function addToEnrollment(asReserve) {
+            const subjectId = document.getElementById('enrollmentDropdown').closest('[data-subject-id]')?.getAttribute('data-subject-id') 
+                || document.querySelector('meta[name="subject-id"]')?.content;
+            document.getElementById('enrollmentMenu').classList.add('hidden');
+
+            fetch('/enrollment-list/api/add?subjectId=' + subjectId + '&asReserve=' + asReserve, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const btn = document.getElementById('enrollmentBtn');
+                    btn.className = 'flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg border transition-all bg-green-50 border-green-300 text-green-700';
+                    btn.innerHTML = '<i class="fas fa-check"></i><span>En mi lista</span>';
+                    btn.onclick = null;
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(err => console.error('Error:', err));
         }
 
         // Voting functionality

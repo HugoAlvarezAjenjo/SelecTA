@@ -1,5 +1,6 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
+import es.hugoalvarezajenjo.selecta.services.enrollment.EnrollmentListService;
 import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
@@ -32,6 +33,7 @@ public class SubjectViewController {
     private final UserService userService;
     private final SubjectRatingRepository ratingRepository;
     private final ContributionRequestService contributionRequestService;
+    private final EnrollmentListService enrollmentListService;
 
     @GetMapping("/{id}")
     public String subjectView(@PathVariable final Long id, final Model model) {
@@ -82,6 +84,13 @@ public class SubjectViewController {
             hasPendingRequest = this.contributionRequestService.hasPendingAccessRequest(id, user.getId());
         }
         model.addAttribute("hasPendingRequest", hasPendingRequest);
+
+        // Enrollment list check
+        boolean isInEnrollmentList = false;
+        if (user != null) {
+            isInEnrollmentList = this.enrollmentListService.isInList(user.getId(), id);
+        }
+        model.addAttribute("isInEnrollmentList", isInEnrollmentList);
 
         // Rating data (server-side)
         final Double avgRating = this.ratingRepository.getAverageRating(id);
