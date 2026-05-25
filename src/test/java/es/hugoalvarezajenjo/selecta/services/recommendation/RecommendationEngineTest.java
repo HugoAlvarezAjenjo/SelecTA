@@ -345,6 +345,77 @@ class RecommendationEngineTest {
     }
 
     // ──────────────────────────────────────────────────────────────────────
+    // Collaborative Filtering Integration Tests
+    // ──────────────────────────────────────────────────────────────────────
+
+    @Nested
+    @DisplayName("Collaborative Filtering Signal")
+    class CollaborativeFilteringTests {
+
+        @Test
+        @DisplayName("Returns empty scores when profile has no ratings")
+        void emptyProfileReturnsEmptyScores() {
+            UserInterestProfile profile = UserInterestProfile.anonymous();
+            Map<Long, Double> scores = engine.computeCollaborativeScores(profile, List.of());
+            assertThat(scores).isEmpty();
+        }
+
+        @Test
+        @DisplayName("Returns scores when neighbors have rated candidate subjects")
+        void returnsScoresWithNeighbors() {
+            // Setup: Current user rated subjects 1 and 2
+            Student currentUser = createStudent(1L);
+            Subject s1 = createSubject(1L, "AI", Set.of("AI"));
+            Subject s2 = createSubject(2L, "ML", Set.of("ML"));
+            SubjectRating r1 = createRating(1L, s1, currentUser, 5);
+            SubjectRating r2 = createRating(2L, s2, currentUser, 4);
+
+            UserInterestProfile profile = UserInterestProfile.build(List.of(r1, r2), true);
+
+            // Neighbor user also rated subjects 1 and 2 similarly, PLUS subject 3
+            Student neighbor = createStudent(2L);
+            Subject candidate = createSubject(3L, "Deep Learning", Set.of("DL"));
+            SubjectRating nr1 = createRating(10L, s1, neighbor, 5);
+            SubjectRating nr2 = createRating(11L, s2, neighbor, 5);
+            SubjectRating nr3 = createRating(12L, candidate, neighbor, 4);
+
+            // findBySubjectIdIn returns ratings for subjects 1,2 from the neighbor
+            when(ratingRepository.findBySubjectIdIn(anyList())).thenReturn(List.of(nr1, nr2));
+
+            // findAll returns ALL ratings (including neighbor's rating on the candidate)
+            when(ratingRepository.findAll()).thenReturn(List.of(r1, r2, nr1, nr2, nr3));
+
+            Map<Long, Double> scores = engine.computeCollaborativeScores(profile, List.of(candidate));
+
+            assertThat(scores).isNotEmpty();
+            assertThat(scores).containsKey(3L);
+            // Score should be neighbor's rating (4) normalized: 4/5 = 0.8
+            assertThat(scores.get(3L)).isBetween(0.5, 1.0);
+        }
+
+        @Test
+        @DisplayName("Returns empty when no neighbors have enough common ratings")
+        void returnsEmptyWhenNoSufficientNeighbors() {
+            Student currentUser = createStudent(1L);
+            Subject s1 = createSubject(1L, "AI", Set.of("AI"));
+            SubjectRating r1 = createRating(1L, s1, currentUser, 5);
+
+            UserInterestProfile profile = UserInterestProfile.build(List.of(r1), true);
+
+            // Only 1 common rating — below MIN_COMMON_RATINGS threshold of 2
+            Student neighbor = createStudent(2L);
+            SubjectRating nr1 = createRating(10L, s1, neighbor, 3);
+
+            when(ratingRepository.findBySubjectIdIn(anyList())).thenReturn(List.of(nr1));
+
+            Subject candidate = createSubject(3L, "Networks", Set.of("Net"));
+            Map<Long, Double> scores = engine.computeCollaborativeScores(profile, List.of(candidate));
+
+            assertThat(scores).isEmpty();
+        }
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
     // Cosine Similarity Tests
     // ──────────────────────────────────────────────────────────────────────
 

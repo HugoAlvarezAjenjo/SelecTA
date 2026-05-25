@@ -455,4 +455,116 @@ class SubjectServiceImplTest {
                     () -> subjectService.addTeacherToSubject(1L, 10L));
         }
     }
+
+    @Nested
+    @DisplayName("Contributor Management")
+    class ContributorManagementTests {
+
+        @Test
+        @DisplayName("Should add contributor to subject")
+        void shouldAddContributor() {
+            Subject subject = new Subject();
+            subject.setId(1L);
+            subject.setContributors(new HashSet<>());
+
+            Student student = new Student();
+            student.setId(10L);
+            student.setRole(es.hugoalvarezajenjo.selecta.services.user.UserRole.STUDENT);
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+            when(userRepository.findById(10L)).thenReturn(Optional.of(student));
+
+            subjectService.addContributor(1L, 10L);
+
+            assertTrue(subject.getContributors().contains(student));
+            verify(subjectRepository).save(subject);
+        }
+
+        @Test
+        @DisplayName("Should remove contributor from subject")
+        void shouldRemoveContributor() {
+            Student student = new Student();
+            student.setId(10L);
+            student.setRole(es.hugoalvarezajenjo.selecta.services.user.UserRole.STUDENT);
+
+            Subject subject = new Subject();
+            subject.setId(1L);
+            subject.setContributors(new HashSet<>(Set.of(student)));
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+            when(userRepository.findById(10L)).thenReturn(Optional.of(student));
+
+            subjectService.removeContributor(1L, 10L);
+
+            assertFalse(subject.getContributors().contains(student));
+            verify(subjectRepository).save(subject);
+        }
+
+        @Test
+        @DisplayName("Should return true when user is a contributor")
+        void shouldReturnTrueWhenContributor() {
+            Student student = new Student();
+            student.setId(10L);
+
+            Subject subject = new Subject();
+            subject.setId(1L);
+            subject.setContributors(new HashSet<>(Set.of(student)));
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+
+            assertTrue(subjectService.isContributor(1L, 10L));
+        }
+
+        @Test
+        @DisplayName("Should return false when user is not a contributor")
+        void shouldReturnFalseWhenNotContributor() {
+            Subject subject = new Subject();
+            subject.setId(1L);
+            subject.setContributors(new HashSet<>());
+
+            when(subjectRepository.findById(1L)).thenReturn(Optional.of(subject));
+
+            assertFalse(subjectService.isContributor(1L, 99L));
+        }
+
+        @Test
+        @DisplayName("Should return false when subject not found for isContributor")
+        void shouldReturnFalseWhenSubjectNotFound() {
+            when(subjectRepository.findById(99L)).thenReturn(Optional.empty());
+
+            assertFalse(subjectService.isContributor(99L, 10L));
+        }
+    }
+
+    @Nested
+    @DisplayName("Active Search")
+    class ActiveSearchTests {
+
+        @Test
+        @DisplayName("Should filter active subjects with search query")
+        @SuppressWarnings("unchecked")
+        void shouldFilterActiveSubjectsWithQuery() {
+            List<Subject> filteredSubjects = List.of(subject1);
+            when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                    .thenReturn(filteredSubjects);
+
+            List<Subject> result = subjectService.findActiveBySearchQuery("Math");
+
+            assertEquals(1, result.size());
+            verify(subjectRepository).findAll(any(org.springframework.data.jpa.domain.Specification.class));
+        }
+
+        @Test
+        @DisplayName("Should return all active subjects when query is null")
+        @SuppressWarnings("unchecked")
+        void shouldReturnAllActiveWhenQueryNull() {
+            List<Subject> activeSubjects = Arrays.asList(subject1, subject2);
+            when(subjectRepository.findAll(any(org.springframework.data.jpa.domain.Specification.class)))
+                    .thenReturn(activeSubjects);
+
+            List<Subject> result = subjectService.findActiveBySearchQuery(null);
+
+            assertEquals(2, result.size());
+        }
+    }
 }

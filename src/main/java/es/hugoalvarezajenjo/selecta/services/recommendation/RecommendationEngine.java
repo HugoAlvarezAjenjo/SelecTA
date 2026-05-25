@@ -553,44 +553,6 @@ public class RecommendationEngine {
     // DTO CONVERSION
     // ──────────────────────────────────────────────────────────────────────
 
-    private SubjectScoreDTO toDTO(ScoredCandidate sc, Map<Long, PopularityData> popularityMap) {
-        Subject subject = sc.subject();
-        PopularityData pop = popularityMap.get(subject.getId());
-
-        List<String> attributes = new ArrayList<>();
-        attributes.add(subject.getCredits() + " ECTS");
-        if (subject.getSemesters() != null) {
-            for (Semester sem : subject.getSemesters()) {
-                attributes.add("Semestre " + sem);
-            }
-        }
-        if (subject.getLanguages() != null) {
-            for (Languages lang : subject.getLanguages()) {
-                attributes.add(lang.toString());
-            }
-        }
-
-        // Use a temporary empty profile for explanation if needed
-        String explanation = generateExplanation(sc.breakdown(), subject, UserInterestProfile.anonymous());
-
-        return SubjectScoreDTO.builder()
-                .subjectId(subject.getId())
-                .name(subject.getName())
-                .description(subject.getDescription())
-                .totalScore(sc.totalScore())
-                .matchPercentage((int) Math.round(sc.totalScore() * 100))
-                .signalBreakdown(sc.breakdown())
-                .explanation(explanation)
-                .averageRating(pop != null ? Math.round(pop.average() * 10.0) / 10.0 : null)
-                .ratingCount(pop != null ? (long) pop.count() : 0L)
-                .tags(subject.getTags())
-                .attributes(attributes)
-                .build();
-    }
-
-    /**
-     * Overloaded toDTO that accepts a profile for proper explanation generation.
-     */
     private SubjectScoreDTO toDTO(ScoredCandidate sc, Map<Long, PopularityData> popularityMap, UserInterestProfile profile) {
         Subject subject = sc.subject();
         PopularityData pop = popularityMap.get(subject.getId());

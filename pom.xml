@@ -120,6 +120,42 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
+                <configuration>
+                    <excludes>
+                        <!-- Exclude UI/controller layer (thin routing, no business logic) -->
+                        <exclude>**/ui/**</exclude>
+                        <!-- Exclude REST controllers (thin delegation to services) -->
+                        <exclude>**/controllers/**</exclude>
+                        <!-- Exclude Spring config classes -->
+                        <exclude>**/config/**</exclude>
+                        <!-- Exclude application entry point -->
+                        <exclude>**/SelecTaApplication.class</exclude>
+                        <!-- Exclude JPA entities (POJOs with no logic, only getters/setters) -->
+                        <exclude>**/services/subjects/Subject.class</exclude>
+                        <exclude>**/services/subjects/SubjectRating.class</exclude>
+                        <exclude>**/services/subjects/SubjectRecommendationCriteria.class</exclude>
+                        <exclude>**/services/user/User.class</exclude>
+                        <exclude>**/services/user/Student.class</exclude>
+                        <exclude>**/services/user/Teacher.class</exclude>
+                        <exclude>**/services/user/Admin.class</exclude>
+                        <exclude>**/services/user/UserRole.class</exclude>
+                        <exclude>**/services/resources/SubjectResource.class</exclude>
+                        <exclude>**/services/resources/ResourceFolder.class</exclude>
+                        <exclude>**/services/resources/ResourceVote.class</exclude>
+                        <exclude>**/services/resources/ResourceTag.class</exclude>
+                        <exclude>**/services/resources/ResourceType.class</exclude>
+                        <exclude>**/services/resources/VoteType.class</exclude>
+                        <exclude>**/services/enrollment/EnrollmentListItem.class</exclude>
+                        <exclude>**/services/contributions/ContributionRequest.class</exclude>
+                        <exclude>**/services/contributions/RequestStatus.class</exclude>
+                        <exclude>**/services/contributions/RequestType.class</exclude>
+                        <exclude>**/services/recommendation/SubjectScoreDTO.class</exclude>
+                        <exclude>**/services/recommendation/RecommendationWeights.class</exclude>
+                        <exclude>**/services/recommendation/UserContext.class</exclude>
+                        <!-- Exclude JPA Specifications (query configuration, not business logic) -->
+                        <exclude>**/services/subjects/repository/SubjectSpecifications.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
