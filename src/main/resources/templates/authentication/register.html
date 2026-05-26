@@ -18,7 +18,8 @@
     <div th:if="${param.error}" class="alert alert-danger" role="alert">
       <i class="fas fa-exclamation-circle me-1"></i>
       <span th:if="${param.error[0] == 'role'}">No se permite el registro con ese rol.</span>
-      <span th:if="${param.error[0] != 'role'}">Error en el registro. Inténtalo de nuevo.</span>
+      <span th:if="${param.error[0] == 'email'}">Ya existe una cuenta con ese correo electrónico.</span>
+      <span th:if="${param.error[0] != 'role' and param.error[0] != 'email'}">Error en el registro. Inténtalo de nuevo.</span>
     </div>
 
     <form th:action="@{/register}" th:object="${userRegistration}" method="post">
