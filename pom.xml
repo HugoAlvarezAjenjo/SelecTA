@@ -60,6 +60,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
@@ -92,11 +97,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.32</version>
-						</path>
+					<path>
+						<groupId>org.projectlombok</groupId>
+						<artifactId>lombok</artifactId>
+						<version>1.18.36</version>
+					</path>
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
