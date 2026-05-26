@@ -17,11 +17,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF habilitado por defecto (HttpSessionCsrfTokenRepository).
+                // CSRF habilitado con sesión lazy (no fuerza creación de sesión en páginas públicas).
                 // Thymeleaf inyecta el token como campo oculto _csrf en todos los <form>.
-                // Para AJAX: el token se expone en un meta tag que JS puede leer.
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**") // REST endpoints usan autenticación por sesión pero envían token vía header
+                        .ignoringRequestMatchers("/api/**", "/subject/**", "/enrollment-list/**") // REST + public subject views + enrollment AJAX
                 )
                 .authorizeHttpRequests(auth -> auth
                         // Recursos estáticos y páginas públicas
