@@ -435,6 +435,10 @@
                     <label class="block text-gray-700 mb-2 font-medium">Mensaje (opcional)</label>
                     <textarea name="message" rows="3" placeholder="¿Por qué quieres contribuir?" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
                 </div>
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="copyright-check-access" required class="mt-1 h-4 w-4 rounded border-gray-300 text-upm-blue focus:ring-upm-light-blue">
+                    <label for="copyright-check-access" class="text-xs text-gray-600">Declaro que los contenidos que suba serán de mi autoría o tendré los derechos necesarios para compartirlos, y que no infringen derechos de propiedad intelectual de terceros.</label>
+                </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" onclick="document.getElementById('request-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
                     <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1"></i>Enviar</button>
@@ -456,6 +460,10 @@
                 <div><label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label><select name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="">Selecciona...</option><option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">TYPE</option></select></div>
                 <div><label class="block text-gray-700 mb-2 font-medium">Idioma</label><input type="text" name="language" placeholder="Español" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
                 <div><label class="block text-gray-700 mb-2 font-medium">Mensaje al profesor</label><textarea name="message" rows="2" placeholder="Opcional..." class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea></div>
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="copyright-check-propose" required class="mt-1 h-4 w-4 rounded border-gray-300 text-upm-blue focus:ring-upm-light-blue">
+                    <label for="copyright-check-propose" class="text-xs text-gray-600">Declaro que el contenido que estoy subiendo es de mi autoría o tengo los derechos necesarios para compartirlo, y que no infringe derechos de propiedad intelectual de terceros.</label>
+                </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" onclick="document.getElementById('propose-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
                     <button type="submit" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1"></i>Proponer</button>

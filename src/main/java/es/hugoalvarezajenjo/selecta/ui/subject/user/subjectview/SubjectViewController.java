@@ -113,15 +113,21 @@ public class SubjectViewController {
         if (user != null && rating >= 1 && rating <= 5) {
             final Subject subject = this.subjectService.getSubjectById(id).orElse(null);
             if (subject != null) {
-                final SubjectRating entity = this.ratingRepository.findBySubjectIdAndUserId(id, user.getId())
-                        .orElseGet(() -> {
-                            final SubjectRating r = new SubjectRating();
-                            r.setSubject(subject);
-                            r.setUser(user);
-                            return r;
-                        });
-                entity.setRating(rating);
-                this.ratingRepository.save(entity);
+                final var existing = this.ratingRepository.findBySubjectIdAndUserId(id, user.getId());
+                if (existing.isPresent() && existing.get().getRating() == rating) {
+                    // Same rating clicked again → remove (toggle off)
+                    this.ratingRepository.delete(existing.get());
+                } else {
+                    // Create or update
+                    final SubjectRating entity = existing.orElseGet(() -> {
+                        final SubjectRating r = new SubjectRating();
+                        r.setSubject(subject);
+                        r.setUser(user);
+                        return r;
+                    });
+                    entity.setRating(rating);
+                    this.ratingRepository.save(entity);
+                }
             }
         }
         return "redirect:/subject/" + id;

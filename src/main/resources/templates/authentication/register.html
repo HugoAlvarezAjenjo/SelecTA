@@ -42,12 +42,6 @@
         </select>
       </div>
 
-      <!-- Titulation field - only for students -->
-      <div class="mb-3" id="titulationGroup" style="display: none;">
-        <label for="titulation" class="form-label">Titulación</label>
-        <input type="text" id="titulation" class="form-control" th:field="*{titulation}"
-               placeholder="Ej: Grado en Ingeniería Informática">
-      </div>
 
       <!-- Info banner for teachers -->
       <div class="alert alert-info" id="teacherInfo" style="display: none;">
@@ -75,11 +69,7 @@
 <script>
   function toggleFields() {
     const role = document.getElementById('role').value;
-    const titulationGroup = document.getElementById('titulationGroup');
     const teacherInfo = document.getElementById('teacherInfo');
-
-    // Show titulation only for students
-    titulationGroup.style.display = (role === 'STUDENT') ? 'block' : 'none';
 
     // Show info banner only for teachers
     teacherInfo.style.display = (role === 'TEACHER') ? 'block' : 'none';
