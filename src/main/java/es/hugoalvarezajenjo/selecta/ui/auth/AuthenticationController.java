@@ -34,6 +34,11 @@ public class AuthenticationController {
             return "redirect:/register?error=role";
         }
 
+        // Check if email already exists
+        if (this.userService.existsByEmail(registrationDto.getEmail())) {
+            return "redirect:/register?error=email";
+        }
+
         User user;
         switch (registrationDto.getRole()) {
             case STUDENT:
