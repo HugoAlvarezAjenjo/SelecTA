@@ -1,0 +1,33 @@
+# Build output
+target/
+*.jar
+*.war
+
+# IDE files and workspace settings
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+.metadata/
+bin/
+
+# Local data and storage
+file-storage/
+h2/
+*.db
+
+# Version control and documentation
+.git/
+.gitattributes
+.gitignore
+.pulse.yaml
+README.md
+docs/
+Makefile
+
+# Docker configuration files
+Dockerfile
+docker-compose.yml
+.dockerignore

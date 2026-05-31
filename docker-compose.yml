@@ -1,0 +1,22 @@
+services:
+  selecta:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: selecta-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - selecta-db-data:/app/data
+      - selecta-file-storage:/app/file-storage
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/selecta;AUTO_SERVER=TRUE
+      - APP_STORAGE_PATH=/app/file-storage/subject_resources/
+    restart: unless-stopped
+
+volumes:
+  selecta-db-data:
+    driver: local
+  selecta-file-storage:
+    driver: local
