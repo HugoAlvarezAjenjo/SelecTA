@@ -13,25 +13,13 @@
 <main layout:fragment="content">
 
     <!-- Header -->
-    <section class="hero-pattern py-8">
-        <div class="container mx-auto px-4">
-            <div class="bg-white rounded-xl shadow-sm p-6">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center">
-                        <i class="fas fa-shield-alt text-purple-600 text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl md:text-4xl font-bold text-upm-blue">
-                            Panel de Administración
-                        </h1>
-                        <p class="text-gray-600">
-                            Bienvenido, <span class="font-medium" th:text="${adminName}">Admin</span> — gestiona la plataforma SelecTA
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <th:block th:replace="~{fragments/layout-components :: page-header(
+        icon='shield-alt',
+        iconBg='bg-purple-100',
+        iconColor='text-purple-600',
+        title='Panel de Administración',
+        subtitle='Bienvenido, <span class=&quot;font-medium&quot;>' + ${adminName} + '</span> — gestiona la plataforma SelecTA'
+    )}" />
 
     <!-- Dashboard Content -->
     <section class="py-8 bg-upm-gray bg-opacity-30 min-h-screen">

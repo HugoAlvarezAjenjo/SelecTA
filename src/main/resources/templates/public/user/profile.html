@@ -61,25 +61,9 @@
             </div>
 
             <div th:unless="${subjects.isEmpty()}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <a th:each="subject : ${subjects}" 
-                   th:href="@{/subject/{id}(id=${subject.id})}"
-                   class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full group block">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-upm-blue group-hover:text-upm-light-blue transition-colors" th:text="${subject.name}">Nombre de la Asignatura</h3>
-                        <i class="fas fa-chalkboard text-upm-light-blue"></i>
-                    </div>
-                    <p class="text-gray-600 mb-6 flex-grow line-clamp-3" th:text="${subject.description}">Descripción de la asignatura.</p>
-                    <div class="flex flex-wrap gap-2 mt-auto">
-                        <span th:each="attr : ${subject.attributes}" 
-                              class="bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold" 
-                              th:text="${attr}">Attribute</span>
-                    </div>
-                    <div class="mt-4 pt-3 border-t border-gray-100">
-                        <span class="text-sm text-upm-light-blue font-medium group-hover:text-upm-blue">
-                            Ver asignatura <i class="fas fa-arrow-right ml-1"></i>
-                        </span>
-                    </div>
-                </a>
+                <th:block th:each="subject : ${subjects}">
+                    <th:block th:replace="~{fragments/layout-components :: subject-card(subject=${subject}, showDescription=true)}" />
+                </th:block>
             </div>
         </section>
 

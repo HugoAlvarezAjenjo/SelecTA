@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Layout Components - Self-contained Tailwind fragments</title>
+</head>
+<body>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    PAGE HEADER — Hero section with icon, title, and subtitle.
+    100% Tailwind — no external CSS needed.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: page-header(
+            icon='shield-alt',
+            iconBg='bg-purple-100',
+            iconColor='text-purple-600',
+            title='Panel de Administración',
+            subtitle='Gestiona la plataforma SelecTA'
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <section th:fragment="page-header(icon, iconBg, iconColor, title, subtitle)"
+             class="py-8 bg-gradient-to-br from-blue-50/50 to-white">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-xl flex items-center justify-center"
+                         th:classappend="${iconBg} ?: 'bg-blue-100'">
+                        <i th:class="'fas fa-' + ${icon} + ' text-2xl'"
+                           th:classappend="' ' + (${iconColor} ?: 'text-blue-600')"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-gray-900" th:text="${title}">Page Title</h1>
+                        <p th:if="${subtitle}" class="text-gray-600 mt-1" th:utext="${subtitle}">Page subtitle</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    MODAL — Reusable modal dialog wrapper. Self-contained.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: modal(
+            id='upload-modal',
+            title='Subir recurso',
+            icon='upload',
+            size='md'
+        )}">
+            <div th:fragment="modal-body">
+                ... form or content here ...
+            </div>
+        </th:block>
+    
+    Sizes: sm (max-w-sm), md (max-w-md), lg (max-w-lg), xl (max-w-xl)
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="modal(id, title, icon, size)"
+         th:id="${id}"
+         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 mx-4 w-full max-h-[90vh] overflow-y-auto"
+             th:classappend="${size == 'sm' ? 'max-w-sm' : (size == 'lg' ? 'max-w-lg' : (size == 'xl' ? 'max-w-xl' : 'max-w-md'))}">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">
+                    <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' mr-2 text-blue-600'"></i>
+                    <span th:text="${title}">Modal Title</span>
+                </h3>
+                <button th:onclick="'document.getElementById(\'' + ${id} + '\').classList.add(\'hidden\')'"
+                        class="text-gray-400 hover:text-gray-700 text-xl transition-colors p-1 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <th:block th:replace="${'modal-body'}" />
+        </div>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    STAT CARD — Small statistics display card.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: stat-card(
+            value='12',
+            label='Asignaturas',
+            valueColor='text-blue-700',
+            borderColor='border-blue-200'
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="stat-card(value, label, valueColor, borderColor)"
+         class="bg-white rounded-xl shadow-sm border px-4 py-3 text-center"
+         th:classappend="${borderColor} ?: 'border-gray-100'">
+        <div class="text-2xl font-bold" th:classappend="${valueColor} ?: 'text-blue-800'" th:text="${value}">0</div>
+        <div class="text-xs text-gray-500" th:text="${label}">Label</div>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    AVATAR — Circular avatar with initial letter.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: avatar(
+            name='Juan García',
+            size='md',
+            color='bg-blue-600'
+        )}" />
+    
+    Sizes: sm (w-10 h-10), md (w-12 h-12), lg (w-16 h-16), xl (w-28 h-28)
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="avatar(name, size, color)"
+         class="rounded-full flex items-center justify-center text-white font-bold"
+         th:classappend="(${size == 'sm'} ? 'w-10 h-10 text-sm' : (${size == 'lg'} ? 'w-16 h-16 text-xl' : (${size == 'xl'} ? 'w-28 h-28 text-4xl shadow-lg' : 'w-12 h-12 text-base'))) + ' ' + (${color} ?: 'bg-blue-600')">
+        <span th:text="${#strings.substring(name, 0, 1).toUpperCase()}">U</span>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    SUBJECT CARD — Card for displaying a subject in a grid.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: subject-card(
+            subject=${subject},
+            showDescription=true
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <a th:fragment="subject-card(subject, showDescription)"
+       th:href="@{/subject/{id}(id=${subject.id})}"
+       class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full group block">
+        <div class="flex justify-between items-start mb-4">
+            <h3 class="text-xl font-bold text-blue-900 group-hover:text-blue-600 transition-colors"
+                th:text="${subject.name}">Subject Name</h3>
+            <i class="fas fa-book text-blue-500 flex-shrink-0 ml-2"></i>
+        </div>
+        <p th:if="${showDescription}" class="text-gray-600 mb-6 flex-grow line-clamp-3"
+           th:text="${subject.description}">Description</p>
+        <div class="flex flex-wrap gap-2 mt-auto">
+            <span th:each="attr : ${subject.attributes}"
+                  class="bg-gray-100 text-gray-700 rounded-full px-3 py-1 text-xs font-semibold"
+                  th:text="${attr}">Attribute</span>
+        </div>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+            <span class="text-sm text-blue-600 font-medium group-hover:text-blue-800 transition-colors">
+                Ver asignatura <i class="fas fa-arrow-right ml-1"></i>
+            </span>
+        </div>
+    </a>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    TAG LIST — Display a list of tags/badges.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: tag-list(
+            tags=${subject.tags},
+            prefix='#'
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="tag-list(tags, prefix)" class="flex flex-wrap gap-2">
+        <span th:each="tag : ${tags}"
+              class="bg-gray-100 rounded-full px-3 py-1 text-sm font-medium text-gray-700"
+              th:text="${(prefix ?: '') + tag}">#Tag</span>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    ATTRIBUTE PILLS — Display attributes as inline pills.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: attribute-pills(
+            attributes=${subject.attributes}
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="attribute-pills(attributes)" class="flex flex-wrap gap-2">
+        <span th:each="attribute : ${attributes}"
+              class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-medium text-gray-700"
+              th:text="${attribute}">Attribute</span>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    TEACHER CARD — Clickable card for a teacher with avatar.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: teacher-card(
+            teacher=${teacher}
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <a th:fragment="teacher-card(teacher)"
+       th:href="@{/user/{id}(id=${teacher.id})}"
+       class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-400 transition-all group">
+        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold mr-4 flex-shrink-0">
+            <span th:text="${#strings.substring(teacher.name, 0, 1).toUpperCase()}">T</span>
+        </div>
+        <div class="flex-grow min-w-0">
+            <h3 class="font-bold text-blue-900 group-hover:text-blue-600 transition-colors truncate"
+                th:text="${teacher.name}">Teacher Name</h3>
+            <p class="text-sm text-gray-500 italic truncate" th:text="${teacher.email}">email@example.com</p>
+        </div>
+        <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-2"></i>
+    </a>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    RESOURCE TYPE ICON — File type icon container.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: resource-type-icon(
+            type=${resource.type}
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="resource-type-icon(type)"
+         class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+        <th:block th:switch="${type}">
+            <i th:case="'PDF'" class="fas fa-file-pdf text-blue-600 text-xl"></i>
+            <i th:case="'VIDEO'" class="fas fa-video text-blue-600 text-xl"></i>
+            <i th:case="'CODE'" class="fas fa-file-code text-blue-600 text-xl"></i>
+            <i th:case="'DOCUMENT'" class="fas fa-file-alt text-blue-600 text-xl"></i>
+            <i th:case="'PRESENTATION'" class="fas fa-file-powerpoint text-blue-600 text-xl"></i>
+            <i th:case="*" class="fas fa-file text-blue-600 text-xl"></i>
+        </th:block>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    STAR RATING (Read-only) — Display star rating.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: star-rating-display(
+            rating=4.2,
+            count=15
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="star-rating-display(rating, count)" class="flex items-center gap-2">
+        <div class="flex items-center gap-0.5">
+            <span th:each="star : ${#numbers.sequence(1, 5)}">
+                <i th:class="${star <= rating} ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300'"></i>
+            </span>
+        </div>
+        <span class="text-sm font-bold text-gray-700" th:text="${rating > 0} ? ${rating} : '—'">—</span>
+        <span th:if="${count != null and count > 0}" class="text-sm text-gray-500"
+              th:text="'(' + ${count} + ')'"></span>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    EMPTY STATE — Centered empty state with icon.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: empty-state(
+            icon='inbox',
+            title='No hay datos',
+            message='Aún no se han añadido elementos.'
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="empty-state(icon, title, message)" class="text-center py-12">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+            <i th:class="'fas fa-' + ${icon} + ' text-blue-400 text-3xl'"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2" th:text="${title}">Title</h3>
+        <p class="text-gray-500" th:text="${message}">Message</p>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    ALERT — Inline alert/notification.
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: alert(
+            type='warning',
+            icon='exclamation-circle',
+            message='Hay solicitudes pendientes.'
+        )}" />
+    
+    Types: success, error, warning, info
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <div th:fragment="alert(type, icon, message)"
+         class="px-4 py-3 rounded-lg mb-6 border flex items-center gap-3"
+         th:classappend="${type == 'success'} ? 'bg-green-50 border-green-200 text-green-800' : (${type == 'error'} ? 'bg-red-50 border-red-200 text-red-800' : (${type == 'warning'} ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-blue-50 border-blue-200 text-blue-800'))">
+        <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' flex-shrink-0'"></i>
+        <span th:text="${message}">Alert message</span>
+    </div>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════
+    ACTION CARD — Clickable action card with icon (for dashboards).
+    
+    Usage:
+        <th:block th:replace="~{fragments/layout-components :: action-card(
+            href='/admin/users',
+            icon='users-cog',
+            iconBg='bg-blue-100',
+            iconColor='text-blue-600',
+            title='Gestionar Usuarios',
+            description='Aprobar profesores, ver todos los usuarios'
+        )}" />
+    ═══════════════════════════════════════════════════════════════
+    -->
+    <a th:fragment="action-card(href, icon, iconBg, iconColor, title, description)"
+       th:href="${href}"
+       class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all group block">
+        <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all"
+             th:classappend="(${iconBg} ?: 'bg-blue-100') + ' group-hover:opacity-80'">
+            <i th:class="'fas fa-' + ${icon} + ' text-xl'" th:classappend="' ' + (${iconColor} ?: 'text-blue-600')"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors" th:text="${title}">Title</h3>
+        <p class="text-sm text-gray-500 mt-1" th:text="${description}">Description</p>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+            <span class="text-sm text-blue-600 font-medium group-hover:text-blue-800 transition-colors">
+                Ir <i class="fas fa-arrow-right ml-1"></i>
+            </span>
+        </div>
+    </a>
+
+</body>
+</html>
