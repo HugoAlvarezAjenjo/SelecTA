@@ -28,6 +28,9 @@ services:
       DB_NAME: selecta
       DB_USERNAME: selecta
       DB_PASSWORD: selecta
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe123!}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@selecta.upm.es}
     depends_on:
       db:
         condition: service_healthy
