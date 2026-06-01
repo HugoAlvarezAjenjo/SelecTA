@@ -488,23 +488,34 @@
 
 <th:block layout:fragment="scripts">
     <script>
-        // Modal helpers with focus management
+        // Modal helpers with focus management and focus trap
         let lastFocusedElement = null;
+        let activeFocusTrap = null;
 
         function openModal(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
             lastFocusedElement = document.activeElement;
             modal.classList.remove('hidden');
-            // Focus first focusable element inside modal
-            const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            if (focusable.length) focusable[0].focus();
+            // Activate focus trap
+            if (typeof createFocusTrap === 'function') {
+                activeFocusTrap = createFocusTrap(modal);
+                activeFocusTrap.activate();
+            } else {
+                // Fallback: focus first focusable element
+                const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusable.length) focusable[0].focus();
+            }
         }
 
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             if (!modal) return;
             modal.classList.add('hidden');
+            if (activeFocusTrap) {
+                activeFocusTrap.deactivate();
+                activeFocusTrap = null;
+            }
             if (lastFocusedElement) lastFocusedElement.focus();
         }
 
@@ -716,9 +727,17 @@
                         downvoteBtn.setAttribute('aria-pressed', 'false');
                     }
                 }
+
+                // Announce vote change to screen readers
+                if (typeof announce === 'function') {
+                    const voteMsg = data.userVote === 'UPVOTE' ? 'Voto positivo registrado' :
+                                    data.userVote === 'DOWNVOTE' ? 'Voto negativo registrado' : 'Voto eliminado';
+                    announce(voteMsg + '. ' + data.upvotes + ' votos positivos, ' + data.downvotes + ' votos negativos.');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                if (typeof announce === 'function') announce('Error: debes iniciar sesión como estudiante para votar', 'assertive');
                 alert('Debes iniciar sesión como estudiante para votar');
             });
         }

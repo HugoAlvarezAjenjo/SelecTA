@@ -40,7 +40,13 @@
     <!-- Footer -->
     <th:block th:replace="~{fragments/footer :: footer}" />
 
+    <!-- ARIA Live region for dynamic announcements (screen readers) -->
+    <div id="aria-live-announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
     <!-- Additional page-specific scripts injected here -->
     <th:block layout:fragment="scripts"></th:block>
+
+    <!-- Global accessibility utilities -->
+    <script th:src="@{/js/accessibility.js}"></script>
 </body>
 </html>
