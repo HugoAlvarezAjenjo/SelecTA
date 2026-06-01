@@ -227,18 +227,19 @@ VALUES
 (52,'Prácticas','Empresa','2025-01-01','NOTES','SPANISH','prac.pdf',false,true);
 
 -- =========================
--- USERS
+-- USERS (password for all: 'password')
 -- =========================
 
 INSERT INTO accounts (username,password,email,user_type,role,approved) VALUES
-('admin','x','admin@demo.com','ADMIN','ADMIN',true),
-('hugo','x','hugo@demo.com','TEACHER','TEACHER',true),
-('alicia','x','alicia@demo.com','TEACHER','TEACHER',true),
-('pedro','x','pedro@demo.com','TEACHER','TEACHER',true),
-('laura','x','laura@demo.com','TEACHER','TEACHER',false),
+('admin','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','admin@demo.com','ADMIN','ADMIN',true),
+('hugo','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','hugo@demo.com','TEACHER','TEACHER',true),
+('alicia','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','alicia@demo.com','TEACHER','TEACHER',true),
+('pedro','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','pedro@demo.com','TEACHER','TEACHER',true),
+('laura','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','laura@demo.com','TEACHER','TEACHER',false);
 
-('carlos','x','carlos@demo.com','STUDENT','STUDENT',true),
-('maria','x','maria@demo.com','STUDENT','STUDENT',true);
+INSERT INTO accounts (username,password,email,user_type,role,approved,titulation) VALUES
+('carlos','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','carlos@demo.com','STUDENT','STUDENT',true,'Grado en Ingeniería del Software'),
+('maria','$2a$12$YdOWmWVPWm5rz5vIEPdwAeZUQ4VaYmJwVWwtKobtGFv5iB2qHX4aS','maria@demo.com','STUDENT','STUDENT',true,'Grado en Ingeniería del Software');
 
 -- =========================
 -- TEACHER RELATIONS
