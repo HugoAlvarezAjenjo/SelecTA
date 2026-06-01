@@ -1,31 +1,26 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'Editar: ' + ${subject.subjectName}">Editar Asignatura</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script th:src="@{/js/tailwind-config.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/hero.css}">
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/design-system.css}">
-    <link rel="stylesheet" th:href="@{/css/tabs.css}">
-    <link rel="stylesheet" th:href="@{/css/forms.css}">
-    <style>
-        .markdown-preview {
-            min-height: 200px;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            background-color: #f8fafc;
-        }
-    </style>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/hero.css}">
+        <link rel="stylesheet" th:href="@{/css/tabs.css}">
+        <link rel="stylesheet" th:href="@{/css/forms.css}">
+        <style>
+            .markdown-preview {
+                min-height: 200px;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                background-color: #f8fafc;
+            }
+        </style>
+    </th:block>
 </head>
-
-<body class="font-sans bg-gray-50 text-gray-800">
-    <th:block th:replace="~{fragments/navbar :: navbar}" />
+<body>
+<main layout:fragment="content">
 
     <!-- Subject Header (Read-only) -->
     <section class="hero-pattern py-8">
@@ -153,8 +148,6 @@
         </div>
     </section>
 
-    <th:block th:replace="~{fragments/footer :: footer}" />
-
     <script>
         // Simple markdown parser for preview
         function parseMarkdown(markdown) {
@@ -251,6 +244,6 @@
             this.submit();
         });
     </script>
+</main>
 </body>
-
 </html>

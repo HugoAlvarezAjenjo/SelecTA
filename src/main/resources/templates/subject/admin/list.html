@@ -1,35 +1,18 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrar Asignaturas - SelecTA</title>
-    <link rel="stylesheet" th:href="@{/css/design-system.css}">
-    <link rel="stylesheet" th:href="@{/css/utilities.css}">
-    <link rel="stylesheet" th:href="@{/css/badges.css}">
-    <link rel="stylesheet" th:href="@{/css/modals.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'upm-blue': '#003865',
-                        'upm-light-blue': '#0072CE',
-                        'upm-gray': '#E5E7EB',
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Administrar Asignaturas</title>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/utilities.css}">
+        <link rel="stylesheet" th:href="@{/css/badges.css}">
+        <link rel="stylesheet" th:href="@{/css/modals.css}">
+    </th:block>
 </head>
-
-<body class="bg-gray-50 flex flex-col min-h-screen">
-    <div th:replace="~{fragments/navbar :: navbar}"></div>
-
-    <main class="flex-grow container mx-auto px-4 py-8">
+<body>
+<main layout:fragment="content">
+    <div class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-3xl font-bold text-upm-blue">Administrar Asignaturas</h1>

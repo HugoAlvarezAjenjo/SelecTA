@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE | SelecTA">SelecTA</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script th:src="@{/js/tailwind-config.js}"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Base styles (shared across all pages) -->
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/design-system.css}">
+
+    <!-- Additional page-specific styles injected here -->
+    <th:block layout:fragment="styles"></th:block>
+</head>
+<body class="font-sans bg-white text-gray-800">
+
+    <!-- Navbar -->
+    <th:block th:replace="~{fragments/navbar :: navbar}" />
+
+    <!-- Page content -->
+    <main layout:fragment="content">
+        <p>Page content goes here</p>
+    </main>
+
+    <!-- Footer -->
+    <th:block th:replace="~{fragments/footer :: footer}" />
+
+    <!-- Additional page-specific scripts injected here -->
+    <th:block layout:fragment="scripts"></th:block>
+</body>
+</html>
