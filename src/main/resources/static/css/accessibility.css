@@ -1,0 +1,109 @@
+/* ═══════════════════════════════════════════════════════════════
+   ACCESSIBILITY STYLES
+   Focus indicators, reduced motion, and high contrast support
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Focus-visible: Only show focus ring for keyboard users, not mouse clicks */
+*:focus-visible {
+    outline: 3px solid #0072CE;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Remove default outline for mouse users */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Enhanced focus for interactive cards */
+a:focus-visible,
+button:focus-visible {
+    outline: 3px solid #0072CE;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(0, 114, 206, 0.15);
+}
+
+/* Focus within forms */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #0072CE;
+    outline-offset: 0;
+    border-color: #0072CE;
+}
+
+/* Skip link visible only on focus */
+.sr-only:focus {
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION — Respect user's motion preferences
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .hover\:scale-110:hover {
+        transform: none !important;
+    }
+
+    .hover\:-translate-y-0\.5:hover {
+        transform: none !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HIGH CONTRAST — Improve readability for high contrast mode
+   ═══════════════════════════════════════════════════════════════ */
+@media (forced-colors: active) {
+    a, button {
+        border: 1px solid ButtonText;
+    }
+
+    .bg-upm-blue,
+    .bg-upm-light-blue {
+        forced-color-adjust: none;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIVE REGION HELPERS — For dynamic content announcements
+   ═══════════════════════════════════════════════════════════════ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Visually hidden but still takes up space (for checkboxes/radios) */
+.visually-hidden-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}

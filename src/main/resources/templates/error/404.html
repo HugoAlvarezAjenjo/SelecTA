@@ -9,12 +9,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" th:href="@{/css/error.css}">
+    <link rel="stylesheet" th:href="@{/css/accessibility.css}">
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 bg-white">
 
-<div class="max-w-md w-full text-center space-y-6">
+<main class="max-w-md w-full text-center space-y-6" role="main">
     <!-- Icono de error -->
-    <div class="error-icon text-upm-blue">
+    <div class="error-icon text-upm-blue" aria-hidden="true">
         <i class="fas fa-exclamation-circle"></i>
     </div>
 
@@ -30,7 +31,7 @@
     <div class="pt-4">
         <a href="/"
            class="inline-block bg-upm-blue text-white font-medium py-3 px-6 rounded-lg hover:bg-[#00283C] transition-all shadow-md hover:-translate-y-0.5">
-            <i class="fas fa-home mr-2"></i> Volver al inicio
+            <i class="fas fa-home mr-2" aria-hidden="true"></i> Volver al inicio
         </a>
     </div>
 
@@ -39,7 +40,7 @@
         <p>Si crees que esto es un error, por favor contacta con el soporte técnico.</p>
         <p class="mt-2">© Universidad Politécnica de Madrid</p>
     </div>
-</div>
+</main>
 
 </body>
 </html>

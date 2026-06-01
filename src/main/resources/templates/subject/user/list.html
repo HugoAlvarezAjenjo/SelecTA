@@ -39,22 +39,24 @@
 <body>
 <main layout:fragment="content">
     <!-- Search Hero Section -->
-    <section class="hero-pattern py-12">
+    <section class="hero-pattern py-12" aria-labelledby="search-title">
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-6">Busca tu asignatura ideal</h1>
+                <h1 id="search-title" class="text-3xl md:text-4xl font-bold text-upm-blue mb-6">Busca tu asignatura ideal</h1>
                 <p class="text-lg text-gray-600 mb-8">Encuentra asignaturas por nombre, código, escuela o palabras
                     clave.
                     Filtra por criterios específicos para encontrar exactamente lo que necesitas.</p>
 
-                <form th:action="@{/subjects}" method="get" class="relative max-w-2xl mx-auto">
-                    <input type="text" name="search"
+                <form th:action="@{/subjects}" method="get" class="relative max-w-2xl mx-auto" role="search" aria-label="Buscar asignaturas">
+                    <label for="search-input" class="sr-only">Buscar asignaturas</label>
+                    <input type="text" id="search-input" name="search"
                         placeholder="Buscar asignaturas (ej: Inteligencia Artificial, 1156, ETSII)"
                         th:value="${searchQuery}"
                         class="w-full px-6 py-4 rounded-full border border-gray-300 focus:outline-none focus:border-upm-light-blue search-input transition-all">
                     <button type="submit"
-                        class="absolute right-2 top-2 bg-upm-light-blue hover:bg-upm-blue text-white p-2 rounded-full transition-all">
-                        <i class="fas fa-search"></i>
+                        class="absolute right-2 top-2 bg-upm-light-blue hover:bg-upm-blue text-white p-2 rounded-full transition-all"
+                        aria-label="Buscar">
+                        <i class="fas fa-search" aria-hidden="true"></i>
                     </button>
                 </form>
             </div>
@@ -188,20 +190,20 @@
 
                     <!-- Pagination -->
                     <div class="mt-8 flex justify-center">
-                        <nav class="inline-flex rounded-md shadow">
-                            <a href="#"
+                        <nav class="inline-flex rounded-md shadow" aria-label="Paginación de resultados">
+                            <a href="#" aria-label="Página anterior"
                                 class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
-                                <i class="fas fa-chevron-left"></i>
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i>
                             </a>
-                            <a href="#"
+                            <a href="#" aria-label="Página 1" aria-current="page"
                                 class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue font-medium hover:bg-upm-gray">1</a>
-                            <a href="#"
+                            <a href="#" aria-label="Página 2"
                                 class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">2</a>
-                            <a href="#"
+                            <a href="#" aria-label="Página 3"
                                 class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">3</a>
-                            <a href="#"
+                            <a href="#" aria-label="Página siguiente"
                                 class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
-                                <i class="fas fa-chevron-right"></i>
+                                <i class="fas fa-chevron-right" aria-hidden="true"></i>
                             </a>
                         </nav>
                     </div>
