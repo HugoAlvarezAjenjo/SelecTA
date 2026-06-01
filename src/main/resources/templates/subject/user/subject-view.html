@@ -316,7 +316,16 @@
                                         </span>
                                     </span>
                                 </div>
-                                <a th:href="@{/api/resources/{path}/download(path=${resource.id})}"
+                                <!-- External link -->
+                                <a th:if="${resource.type == 'EXTERNAL_RESOURCE' and resource.url != null}"
+                                    th:href="${resource.url}" target="_blank" rel="noopener noreferrer"
+                                    class="text-indigo-500 hover:text-indigo-700 font-medium"
+                                    th:attr="aria-label=${'Abrir enlace: ' + resource.name}">
+                                    <i class="fas fa-external-link-alt mr-1" aria-hidden="true"></i> Abrir enlace
+                                </a>
+                                <!-- File download -->
+                                <a th:unless="${resource.type == 'EXTERNAL_RESOURCE' and resource.url != null}"
+                                    th:href="@{/api/resources/{path}/download(path=${resource.id})}"
                                     class="text-upm-light-blue hover:text-upm-blue font-medium download-link"
                                     th:attr="data-filename=${resource.name}, aria-label=${'Descargar ' + resource.name}">
                                     <i class="fas fa-download mr-1" aria-hidden="true"></i> Descargar

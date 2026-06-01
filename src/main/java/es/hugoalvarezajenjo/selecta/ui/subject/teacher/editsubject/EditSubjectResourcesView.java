@@ -52,12 +52,13 @@ public class EditSubjectResourcesView {
     @PostMapping("/upload")
     public String uploadResource(
             @PathVariable final Long subjectId,
-            @RequestParam("file") final MultipartFile file,
+            @RequestParam(value = "file", required = false) final MultipartFile file,
             @RequestParam final String name,
             @RequestParam(required = false) final String description,
             @RequestParam final ResourceType type,
             @RequestParam(required = false) final String language,
-            @RequestParam(defaultValue = "true") final boolean isPrivate,
+            @RequestParam(required = false) final String url,
+            @RequestParam(defaultValue = "false") final boolean isPrivate,
             @RequestParam(required = false) final List<Long> tagIds,
             @RequestParam(required = false) final Long folderId,
             final RedirectAttributes redirectAttributes) {
@@ -65,7 +66,14 @@ public class EditSubjectResourcesView {
         final Optional<Subject> subjectOpt = this.subjectService.getSubjectById(subjectId);
         if (subjectOpt.isEmpty()) return "subject/user/no-subject";
 
-        if (file.isEmpty()) {
+        final boolean isExternalLink = type == ResourceType.EXTERNAL_RESOURCE;
+
+        // Validate: external links need URL, other types need file
+        if (isExternalLink && (url == null || url.isBlank())) {
+            redirectAttributes.addFlashAttribute("error", "Por favor, introduce una URL válida");
+            return "redirect:/teacher/subject/" + subjectId + "/resources";
+        }
+        if (!isExternalLink && (file == null || file.isEmpty())) {
             redirectAttributes.addFlashAttribute("error", "Por favor, selecciona un archivo");
             return "redirect:/teacher/subject/" + subjectId + "/resources";
         }
@@ -77,9 +85,15 @@ public class EditSubjectResourcesView {
             resource.setDescription(description != null ? description : "");
             resource.setType(type);
             resource.setLanguage(language != null ? language : "");
-            resource.setOriginalName(file.getOriginalFilename());
             resource.setCreationDate(LocalDate.now());
             resource.setPrivate(isPrivate);
+
+            if (isExternalLink) {
+                resource.setUrl(url);
+                resource.setOriginalName(url);
+            } else {
+                resource.setOriginalName(file.getOriginalFilename());
+            }
 
             // Set folder if provided
             if (folderId != null) {
@@ -95,9 +109,14 @@ public class EditSubjectResourcesView {
                 }
             }
 
-            final String filename = resource.getId().toString();
-            this.storageService.uploadFile(filename, file.getInputStream(), file.getSize(), file.getContentType());
-            redirectAttributes.addFlashAttribute("success", "Recurso subido correctamente");
+            // Only upload to storage for file-based resources
+            if (!isExternalLink) {
+                final String filename = resource.getId().toString();
+                this.storageService.uploadFile(filename, file.getInputStream(), file.getSize(), file.getContentType());
+            }
+
+            redirectAttributes.addFlashAttribute("success",
+                    isExternalLink ? "Enlace externo añadido correctamente" : "Recurso subido correctamente");
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("error", "Error al subir el archivo: " + e.getMessage());
         }

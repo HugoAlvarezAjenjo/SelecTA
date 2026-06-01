@@ -29,6 +29,7 @@ public class SubjectResource {
     private String language;
     private String originalName;
     private boolean isPrivate = true;
+    private String url;
     private boolean official = true;
 
     @ManyToOne(fetch = FetchType.LAZY)

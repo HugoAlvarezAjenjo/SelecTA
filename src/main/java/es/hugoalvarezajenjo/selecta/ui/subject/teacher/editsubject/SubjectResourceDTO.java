@@ -18,6 +18,7 @@ public class SubjectResourceDTO {
     private boolean isPrivate;
     private Long folderId;
     private String folderName;
+    private String url;
     private Set<TagRef> tags;
 
     @Value
@@ -35,6 +36,7 @@ public class SubjectResourceDTO {
                 r.getLanguage(), r.getCreationDate().toString(), r.isPrivate(),
                 r.getFolder() != null ? r.getFolder().getId() : null,
                 r.getFolder() != null ? r.getFolder().getName() : null,
+                r.getUrl(),
                 tagRefs);
     }
 

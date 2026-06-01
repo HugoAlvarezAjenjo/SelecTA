@@ -17,6 +17,7 @@ public class SubjectResourceDTO {
     private boolean isPrivate;
     private boolean official;
     private String uploadedByName;
+    private String url;
     private long upvotes;
     private long downvotes;
     private String userVote; // "UPVOTE", "DOWNVOTE", or null
@@ -35,6 +36,7 @@ public class SubjectResourceDTO {
                 subjectResource.isPrivate(),
                 subjectResource.isOfficial(),
                 subjectResource.getUploadedBy() != null ? subjectResource.getUploadedBy().getUsername() : null,
+                subjectResource.getUrl(),
                 upvotes,
                 downvotes,
                 userVote != null ? userVote.name() : null);
