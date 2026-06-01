@@ -44,4 +44,9 @@ public class SubjectResourceServiceImpl implements SubjectResourceService {
     public void deleteResource(final Long resourceId) {
         this.subjectResourceRepository.deleteById(resourceId);
     }
+
+    @Override
+    public List<SubjectResource> getResourcesUploadedByUser(final Long userId) {
+        return this.subjectResourceRepository.findByUploadedById(userId);
+    }
 }

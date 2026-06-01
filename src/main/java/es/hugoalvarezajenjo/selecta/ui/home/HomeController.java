@@ -23,14 +23,14 @@ public class HomeController {
     @GetMapping
     public String home(final Model model) {
         final User currentUser = userService.getCurrentUser();
-        log.info("SelecTA Log: Home check - User retrieved: {}, isStudent: {}", 
+        log.debug("Home check - User retrieved: {}, isStudent: {}", 
             currentUser != null ? currentUser.getEmail() : "null", currentUser instanceof Student);
 
         if (currentUser instanceof Student student) {
             List<SubjectInfoDTO> favourites = student.getFavouriteSubjects().stream()
                     .map(s -> SubjectInfoDTO.createFromDomain(s, ""))
                     .toList();
-            log.info("SelecTA Log: Student {} has {} favourites", student.getEmail(), favourites.size());
+            log.debug("Student {} has {} favourites", student.getEmail(), favourites.size());
             model.addAttribute("favouriteSubjects", favourites);
         }
         return "index";

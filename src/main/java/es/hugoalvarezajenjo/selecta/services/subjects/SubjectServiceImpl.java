@@ -2,31 +2,31 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectSpecifications;
+import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
-import org.hibernate.Hibernate;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.Hibernate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
+
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
-
-    public SubjectServiceImpl(@Autowired final SubjectRepository subjectRepository,
-                              @Autowired final UserRepository userRepository) {
-        this.subjectRepository = subjectRepository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<Subject> getAllSubjects() {
@@ -84,19 +84,19 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         final Subject targetSubject = subjectOpt.get();
-        final java.util.Set<String> targetTags = targetSubject.getTags();
+        final Set<String> targetTags = targetSubject.getTags();
 
         if (targetTags == null || targetTags.isEmpty()) {
             return List.of();
         }
 
         return this.getActiveSubjects().stream()
-                .filter(s -> !s.getId().equals(subjectId)) // Exclude the target subject itself
-                .filter(s -> s.getTags() != null && s.getTags().stream().anyMatch(targetTags::contains)) // Must have at least one common tag
+                .filter(s -> !s.getId().equals(subjectId))
+                .filter(s -> s.getTags() != null && s.getTags().stream().anyMatch(targetTags::contains))
                 .sorted((s1, s2) -> {
                     long s1Matches = s1.getTags().stream().filter(targetTags::contains).count();
                     long s2Matches = s2.getTags().stream().filter(targetTags::contains).count();
-                    return Long.compare(s2Matches, s1Matches); // Descending order of matches
+                    return Long.compare(s2Matches, s1Matches);
                 })
                 .limit(limit)
                 .toList();
@@ -115,20 +115,14 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         if (criteria.getSemesterTypes() != null && !criteria.getSemesterTypes().isEmpty()) {
-            java.util.List<es.hugoalvarezajenjo.selecta.services.types.Semester> targetSemesters = new java.util.ArrayList<>();
+            List<Semester> targetSemesters = new ArrayList<>();
             if (criteria.getSemesterTypes().contains("ODD")) {
-                targetSemesters.addAll(java.util.Arrays.asList(
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.FIRST, 
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.THIRD, 
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.FIFTH, 
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.SEVENTH));
+                targetSemesters.addAll(Arrays.asList(
+                    Semester.FIRST, Semester.THIRD, Semester.FIFTH, Semester.SEVENTH));
             }
             if (criteria.getSemesterTypes().contains("EVEN")) {
-                targetSemesters.addAll(java.util.Arrays.asList(
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.SECOND, 
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.FOURTH, 
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.SIXTH, 
-                    es.hugoalvarezajenjo.selecta.services.types.Semester.EIGHTH));
+                targetSemesters.addAll(Arrays.asList(
+                    Semester.SECOND, Semester.FOURTH, Semester.SIXTH, Semester.EIGHTH));
             }
             spec = spec.and(SubjectSpecifications.hasSemesterIn(targetSemesters));
         }
@@ -141,16 +135,14 @@ public class SubjectServiceImpl implements SubjectService {
 
         String searchKeywords = criteria.getSearchKeywords();
         if (searchKeywords != null && !searchKeywords.trim().isEmpty()) {
-            String[] words = searchKeywords.trim().toLowerCase().split("[\\s,]+"); // Split by comma or space
+            String[] words = searchKeywords.trim().toLowerCase().split("[\\s,]+");
             
-            // Re-order by relevance match
             filteredSubjects.sort((s1, s2) -> {
                 long s1Score = calculateRelevanceScore(s1, words);
                 long s2Score = calculateRelevanceScore(s2, words);
-                return Long.compare(s2Score, s1Score); // Descending
+                return Long.compare(s2Score, s1Score);
             });
             
-            // Only return items that had at least 1 match with keywords if keywords are provided
             filteredSubjects = filteredSubjects.stream()
                 .filter(s -> calculateRelevanceScore(s, words) > 0)
                 .toList();
@@ -163,14 +155,14 @@ public class SubjectServiceImpl implements SubjectService {
         long score = 0;
         String name = subject.getName() != null ? subject.getName().toLowerCase() : "";
         String desc = subject.getDescription() != null ? subject.getDescription().toLowerCase() : "";
-        java.util.Set<String> tags = subject.getTags();
+        Set<String> tags = subject.getTags();
 
         for (String word : words) {
-            if (word.length() > 2) { // Skip tiny words
-                if (name.contains(word)) score += 3; // Name match gets highest weight
-                if (desc.contains(word)) score += 1; // Description match
+            if (word.length() > 2) {
+                if (name.contains(word)) score += 3;
+                if (desc.contains(word)) score += 1;
                 if (tags != null && tags.stream().map(String::toLowerCase).anyMatch(t -> t.contains(word))) {
-                    score += 2; // Tag match
+                    score += 2;
                 }
             }
         }

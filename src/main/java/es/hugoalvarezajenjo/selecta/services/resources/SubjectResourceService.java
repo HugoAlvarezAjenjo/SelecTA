@@ -14,4 +14,6 @@ public interface SubjectResourceService {
     void togglePrivacy(Long resourceId);
 
     void deleteResource(Long resourceId);
+
+    List<SubjectResource> getResourcesUploadedByUser(Long userId);
 }

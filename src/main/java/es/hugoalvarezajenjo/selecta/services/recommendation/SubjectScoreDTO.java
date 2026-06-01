@@ -3,6 +3,7 @@ package es.hugoalvarezajenjo.selecta.services.recommendation;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +45,7 @@ public class SubjectScoreDTO {
     private final Set<String> tags;
 
     /** Display attributes (credits, semesters, languages) */
-    private final java.util.List<String> attributes;
+    private final List<String> attributes;
 
     /**
      * Returns true if this subject qualifies for the "Para ti" badge.

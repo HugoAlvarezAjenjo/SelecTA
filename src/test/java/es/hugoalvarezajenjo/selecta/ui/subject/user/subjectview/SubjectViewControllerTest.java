@@ -1,13 +1,15 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.subjectview;
 
+import es.hugoalvarezajenjo.selecta.services.contributions.ContributionRequestService;
+import es.hugoalvarezajenjo.selecta.services.enrollment.EnrollmentListService;
 import es.hugoalvarezajenjo.selecta.services.markdown.MarkdownService;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceType;
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRatingService;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
-import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRatingRepository;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
@@ -48,7 +50,13 @@ class SubjectViewControllerTest {
     private UserService userService;
 
     @Mock
-    private SubjectRatingRepository ratingRepository;
+    private SubjectRatingService ratingService;
+
+    @Mock
+    private ContributionRequestService contributionRequestService;
+
+    @Mock
+    private EnrollmentListService enrollmentListService;
 
     @Mock
     private Model model;

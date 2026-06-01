@@ -7,9 +7,8 @@ import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.contributions.ContributionRequestService;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
-import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRating;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRatingService;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
-import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRatingRepository;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -31,7 +31,7 @@ public class SubjectViewController {
     private final ResourceVoteService resourceVoteService;
     private final MarkdownService markdownService;
     private final UserService userService;
-    private final SubjectRatingRepository ratingRepository;
+    private final SubjectRatingService ratingService;
     private final ContributionRequestService contributionRequestService;
     private final EnrollmentListService enrollmentListService;
 
@@ -53,20 +53,20 @@ public class SubjectViewController {
                         resourceVoteService::getDownvoteCount,
                         resourceVoteService::getUserVote));
         
-        java.util.List<SubjectInfoDTO> relatedSubjects = this.subjectService.getRelatedSubjects(id, 3).stream()
+        List<SubjectInfoDTO> relatedSubjects = this.subjectService.getRelatedSubjects(id, 3).stream()
                 .map(s -> SubjectInfoDTO.createFromDomain(s, ""))
                 .toList();
         model.addAttribute("relatedSubjects", relatedSubjects);
 
         boolean isFavourite = false;
         final User user = this.userService.getCurrentUser();
-        log.info("SelecTA Log: SubjectView check - User retrieved: {}, isStudent: {}", 
+        log.debug("SubjectView check - User retrieved: {}, isStudent: {}", 
             user != null ? user.getEmail() : "null", user instanceof Student);
         
         if (user instanceof Student student) {
             isFavourite = student.getFavouriteSubjects().stream()
                     .anyMatch(s -> s.getId().equals(id));
-            log.info("SelecTA Log: Subject {} isFavourite for student: {}", id, isFavourite);
+            log.debug("Subject {} isFavourite for student: {}", id, isFavourite);
         }
         model.addAttribute("isFavourite", isFavourite);
 
@@ -92,12 +92,12 @@ public class SubjectViewController {
         }
         model.addAttribute("isInEnrollmentList", isInEnrollmentList);
 
-        // Rating data (server-side)
-        final Double avgRating = this.ratingRepository.getAverageRating(id);
-        final long ratingCount = this.ratingRepository.countBySubjectId(id);
+        // Rating data (via service layer)
+        final Double avgRating = this.ratingService.getAverageRating(id);
+        final long ratingCount = this.ratingService.getRatingCount(id);
         int userRating = 0;
         if (user != null) {
-            userRating = this.ratingRepository.findBySubjectIdAndUserId(id, user.getId())
+            userRating = this.ratingService.getUserRating(id, user.getId())
                     .map(r -> r.getRating()).orElse(0);
         }
         model.addAttribute("avgRating", avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0);
@@ -111,24 +111,7 @@ public class SubjectViewController {
     public String rateSubject(@PathVariable final Long id, @RequestParam final int rating) {
         final User user = this.userService.getCurrentUser();
         if (user != null && rating >= 1 && rating <= 5) {
-            final Subject subject = this.subjectService.getSubjectById(id).orElse(null);
-            if (subject != null) {
-                final var existing = this.ratingRepository.findBySubjectIdAndUserId(id, user.getId());
-                if (existing.isPresent() && existing.get().getRating() == rating) {
-                    // Same rating clicked again → remove (toggle off)
-                    this.ratingRepository.delete(existing.get());
-                } else {
-                    // Create or update
-                    final SubjectRating entity = existing.orElseGet(() -> {
-                        final SubjectRating r = new SubjectRating();
-                        r.setSubject(subject);
-                        r.setUser(user);
-                        return r;
-                    });
-                    entity.setRating(rating);
-                    this.ratingRepository.save(entity);
-                }
-            }
+            this.ratingService.setRating(id, user, rating);
         }
         return "redirect:/subject/" + id;
     }

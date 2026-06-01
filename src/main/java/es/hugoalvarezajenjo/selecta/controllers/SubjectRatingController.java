@@ -1,9 +1,7 @@
 package es.hugoalvarezajenjo.selecta.controllers;
 
-import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRating;
-import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRatingRepository;
-import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRatingService;
 import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -20,8 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubjectRatingController {
 
-    private final SubjectRatingRepository ratingRepository;
-    private final SubjectRepository subjectRepository;
+    private final SubjectRatingService ratingService;
     private final UserService userService;
 
     /**
@@ -29,14 +25,15 @@ public class SubjectRatingController {
      */
     @GetMapping
     public ResponseEntity<?> getRating(@PathVariable final Long subjectId) {
-        final Double avg = this.ratingRepository.getAverageRating(subjectId);
-        final long count = this.ratingRepository.countBySubjectId(subjectId);
+        final Double avg = this.ratingService.getAverageRating(subjectId);
+        final long count = this.ratingService.getRatingCount(subjectId);
 
         Integer userRating = null;
         final User user = this.userService.getCurrentUser();
         if (user != null) {
-            final Optional<SubjectRating> existing = this.ratingRepository.findBySubjectIdAndUserId(subjectId, user.getId());
-            userRating = existing.map(SubjectRating::getRating).orElse(null);
+            userRating = this.ratingService.getUserRating(subjectId, user.getId())
+                    .map(SubjectRating::getRating)
+                    .orElse(null);
         }
 
         return ResponseEntity.ok(Map.of(
@@ -60,25 +57,11 @@ public class SubjectRatingController {
             return ResponseEntity.status(401).body(Map.of("error", "Must be logged in"));
         }
 
-        final Subject subject = this.subjectRepository.findById(subjectId).orElse(null);
-        if (subject == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        final SubjectRating entity = this.ratingRepository.findBySubjectIdAndUserId(subjectId, user.getId())
-                .orElseGet(() -> {
-                    final SubjectRating r = new SubjectRating();
-                    r.setSubject(subject);
-                    r.setUser(user);
-                    return r;
-                });
-        entity.setRating(rating);
-        this.ratingRepository.save(entity);
-        log.info("Rating set: user={}, subject={}, rating={}", user.getUsername(), subjectId, rating);
+        this.ratingService.setRating(subjectId, user, rating);
 
         // Return updated average
-        final Double avg = this.ratingRepository.getAverageRating(subjectId);
-        final long count = this.ratingRepository.countBySubjectId(subjectId);
+        final Double avg = this.ratingService.getAverageRating(subjectId);
+        final long count = this.ratingService.getRatingCount(subjectId);
 
         return ResponseEntity.ok(Map.of(
                 "average", avg != null ? Math.round(avg * 10.0) / 10.0 : 0,

@@ -1,7 +1,7 @@
 package es.hugoalvarezajenjo.selecta.ui.profile;
 
 import es.hugoalvarezajenjo.selecta.services.resources.SubjectResource;
-import es.hugoalvarezajenjo.selecta.services.resources.repository.SubjectResourceRepository;
+import es.hugoalvarezajenjo.selecta.services.resources.SubjectResourceService;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
@@ -23,17 +23,17 @@ import java.util.List;
 @Slf4j
 public class ProfileController {
     private final UserService userService;
-    private final SubjectResourceRepository subjectResourceRepository;
+    private final SubjectResourceService subjectResourceService;
 
     @GetMapping
     public String showProfile(final Model model) {
         final User currentUser = userService.getCurrentUser();
         if (currentUser == null) {
-            log.warn("SelecTA Log: Profile access attempted without authentication");
+            log.warn("Profile access attempted without authentication");
             return "redirect:/login";
         }
 
-        log.info("SelecTA Log: Loading profile for user: {}, role: {}", currentUser.getEmail(), currentUser.getRole());
+        log.info("Loading profile for user: {}, role: {}", currentUser.getEmail(), currentUser.getRole());
         
         model.addAttribute("user", currentUser);
         
@@ -56,7 +56,7 @@ public class ProfileController {
         model.addAttribute("subjects", subjects);
 
         // Uploaded resources (for students who are contributors)
-        final List<SubjectResource> uploadedResources = this.subjectResourceRepository.findByUploadedById(currentUser.getId());
+        final List<SubjectResource> uploadedResources = this.subjectResourceService.getResourcesUploadedByUser(currentUser.getId());
         model.addAttribute("uploadedResources", uploadedResources);
         model.addAttribute("uploadedResourcesCount", uploadedResources.size());
 

@@ -1,9 +1,7 @@
 package es.hugoalvarezajenjo.selecta.controllers;
 
-import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRating;
-import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRatingRepository;
-import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
+import es.hugoalvarezajenjo.selecta.services.subjects.SubjectRatingService;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -19,17 +17,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectRatingControllerTest {
 
     @Mock
-    private SubjectRatingRepository ratingRepository;
-
-    @Mock
-    private SubjectRepository subjectRepository;
+    private SubjectRatingService ratingService;
 
     @Mock
     private UserService userService;
@@ -57,12 +51,12 @@ class SubjectRatingControllerTest {
         void returnsAllDataForLoggedInUser() {
             Student user = createUser();
             when(userService.getCurrentUser()).thenReturn(user);
-            when(ratingRepository.getAverageRating(10L)).thenReturn(4.2);
-            when(ratingRepository.countBySubjectId(10L)).thenReturn(15L);
+            when(ratingService.getAverageRating(10L)).thenReturn(4.2);
+            when(ratingService.getRatingCount(10L)).thenReturn(15L);
 
             SubjectRating existing = new SubjectRating();
             existing.setRating(5);
-            when(ratingRepository.findBySubjectIdAndUserId(10L, 1L)).thenReturn(Optional.of(existing));
+            when(ratingService.getUserRating(10L, 1L)).thenReturn(Optional.of(existing));
 
             ResponseEntity<?> response = controller.getRating(10L);
 
@@ -78,8 +72,8 @@ class SubjectRatingControllerTest {
         @DisplayName("Returns 0 userRating when not logged in")
         void returnsZeroUserRatingWhenAnonymous() {
             when(userService.getCurrentUser()).thenReturn(null);
-            when(ratingRepository.getAverageRating(10L)).thenReturn(3.5);
-            when(ratingRepository.countBySubjectId(10L)).thenReturn(8L);
+            when(ratingService.getAverageRating(10L)).thenReturn(3.5);
+            when(ratingService.getRatingCount(10L)).thenReturn(8L);
 
             ResponseEntity<?> response = controller.getRating(10L);
 
@@ -92,8 +86,8 @@ class SubjectRatingControllerTest {
         @DisplayName("Returns 0 average when no ratings exist")
         void returnsZeroWhenNoRatings() {
             when(userService.getCurrentUser()).thenReturn(null);
-            when(ratingRepository.getAverageRating(10L)).thenReturn(null);
-            when(ratingRepository.countBySubjectId(10L)).thenReturn(0L);
+            when(ratingService.getAverageRating(10L)).thenReturn(null);
+            when(ratingService.getRatingCount(10L)).thenReturn(0L);
 
             ResponseEntity<?> response = controller.getRating(10L);
 
@@ -116,46 +110,18 @@ class SubjectRatingControllerTest {
         @DisplayName("Sets rating and returns updated average")
         void setsRatingSuccessfully() {
             Student user = createUser();
-            Subject subject = new Subject();
-            subject.setId(10L);
 
             when(userService.getCurrentUser()).thenReturn(user);
-            when(subjectRepository.findById(10L)).thenReturn(Optional.of(subject));
-            when(ratingRepository.findBySubjectIdAndUserId(10L, 1L)).thenReturn(Optional.empty());
-            when(ratingRepository.getAverageRating(10L)).thenReturn(4.0);
-            when(ratingRepository.countBySubjectId(10L)).thenReturn(1L);
+            when(ratingService.getAverageRating(10L)).thenReturn(4.0);
+            when(ratingService.getRatingCount(10L)).thenReturn(1L);
 
             ResponseEntity<?> response = controller.setRating(10L, 4);
 
             assertThat(response.getStatusCode().value()).isEqualTo(200);
-            verify(ratingRepository).save(any(SubjectRating.class));
+            verify(ratingService).setRating(10L, user, 4);
             @SuppressWarnings("unchecked")
             Map<String, Object> body = (Map<String, Object>) response.getBody();
             assertThat(body).containsEntry("userRating", 4);
-        }
-
-        @Test
-        @DisplayName("Updates existing rating instead of creating new one")
-        void updatesExistingRating() {
-            Student user = createUser();
-            Subject subject = new Subject();
-            subject.setId(10L);
-
-            SubjectRating existing = new SubjectRating();
-            existing.setRating(3);
-            existing.setSubject(subject);
-            existing.setUser(user);
-
-            when(userService.getCurrentUser()).thenReturn(user);
-            when(subjectRepository.findById(10L)).thenReturn(Optional.of(subject));
-            when(ratingRepository.findBySubjectIdAndUserId(10L, 1L)).thenReturn(Optional.of(existing));
-            when(ratingRepository.getAverageRating(10L)).thenReturn(5.0);
-            when(ratingRepository.countBySubjectId(10L)).thenReturn(1L);
-
-            controller.setRating(10L, 5);
-
-            verify(ratingRepository).save(existing);
-            assertThat(existing.getRating()).isEqualTo(5);
         }
 
         @Test
@@ -176,18 +142,6 @@ class SubjectRatingControllerTest {
             ResponseEntity<?> response = controller.setRating(10L, 4);
 
             assertThat(response.getStatusCode().value()).isEqualTo(401);
-        }
-
-        @Test
-        @DisplayName("Returns 404 when subject not found")
-        void returns404WhenSubjectNotFound() {
-            Student user = createUser();
-            when(userService.getCurrentUser()).thenReturn(user);
-            when(subjectRepository.findById(99L)).thenReturn(Optional.empty());
-
-            ResponseEntity<?> response = controller.setRating(99L, 4);
-
-            assertThat(response.getStatusCode().value()).isEqualTo(404);
         }
     }
 }
