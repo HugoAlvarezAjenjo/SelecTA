@@ -8,22 +8,27 @@
 
 <body>
     <div th:fragment="subject-item(subject)">
-        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <article class="bg-white rounded-xl shadow-sm p-6 mb-6"
+                 th:attr="aria-labelledby='subject-title-' + ${subject.id}">
             <div class="flex items-start">
                 <div
-                    class="w-16 h-16 rounded-lg bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center mr-4">
-                    <i class="fas fa-laptop-code text-white text-2xl"></i>
+                    class="w-16 h-16 rounded-lg bg-gradient-to-r from-upm-blue to-upm-light-blue flex items-center justify-center mr-4"
+                    aria-hidden="true">
+                    <i class="fas fa-laptop-code text-white text-2xl" aria-hidden="true"></i>
                 </div>
                 <div class="flex-1">
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-xl font-bold text-upm-blue" th:text="${subject.name}">Nombre Asignatura</h3>
+                            <h3 th:id="'subject-title-' + ${subject.id}"
+                                class="text-xl font-bold text-upm-blue"
+                                th:text="${subject.name}">Nombre Asignatura</h3>
                         </div>
                     </div>
 
-                    <div class="mt-3 mb-4">
+                    <div class="mt-3 mb-4" role="list" aria-label="Atributos de la asignatura">
                         <span th:each="attribute : ${subject.attributes}"
                             class="inline-block bg-upm-gray rounded-full px-3 py-1 text-sm font-medium mr-2"
+                            role="listitem"
                             th:text="${attribute}">Attribute</span>
                     </div>
 
@@ -33,13 +38,14 @@
                         <div>
                         </div>
                         <a th:href="@{'/subject/' + ${subject.id}}"
-                            class="text-upm-light-blue hover:text-upm-blue font-medium">
-                            Ver detalles →
+                            class="text-upm-light-blue hover:text-upm-blue font-medium"
+                            th:attr="aria-label='Ver detalles de ' + ${subject.name}">
+                            Ver detalles <span aria-hidden="true">→</span>
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
+        </article>
     </div>
 </body>
 
