@@ -1,7 +1,5 @@
 package es.hugoalvarezajenjo.selecta.services.resources;
 
-import java.util.Map;
-
 public interface ResourceVoteService {
 
     /**
@@ -10,9 +8,9 @@ public interface ResourceVoteService {
      *
      * @param resourceId the resource ID
      * @param voteType   the vote type (UPVOTE or DOWNVOTE)
-     * @return a map with "upvotes", "downvotes", and "userVote" (null if removed)
+     * @return the updated vote counts and the user's current vote state
      */
-    Map<String, Object> toggleVote(Long resourceId, VoteType voteType);
+    VoteResult toggleVote(Long resourceId, VoteType voteType);
 
     long getUpvoteCount(Long resourceId);
 

@@ -3,7 +3,6 @@ package es.hugoalvarezajenjo.selecta.services.resources;
 import es.hugoalvarezajenjo.selecta.services.resources.repository.ResourceVoteRepository;
 import es.hugoalvarezajenjo.selecta.services.resources.repository.SubjectResourceRepository;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
-import es.hugoalvarezajenjo.selecta.services.user.User;
 import es.hugoalvarezajenjo.selecta.services.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -14,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -59,11 +57,11 @@ class ResourceVoteServiceImplTest {
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.UPVOTE)).thenReturn(1L);
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.DOWNVOTE)).thenReturn(0L);
 
-            final Map<String, Object> result = service.toggleVote(10L, VoteType.UPVOTE);
+            final VoteResult result = service.toggleVote(10L, VoteType.UPVOTE);
 
-            assertThat(result.get("upvotes")).isEqualTo(1L);
-            assertThat(result.get("downvotes")).isEqualTo(0L);
-            assertThat(result.get("userVote")).isEqualTo("UPVOTE");
+            assertThat(result.upvotes()).isEqualTo(1L);
+            assertThat(result.downvotes()).isEqualTo(0L);
+            assertThat(result.userVote()).isEqualTo(VoteType.UPVOTE);
 
             final ArgumentCaptor<ResourceVote> captor = ArgumentCaptor.forClass(ResourceVote.class);
             verify(resourceVoteRepository).save(captor.capture());
@@ -81,11 +79,11 @@ class ResourceVoteServiceImplTest {
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.UPVOTE)).thenReturn(0L);
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.DOWNVOTE)).thenReturn(1L);
 
-            final Map<String, Object> result = service.toggleVote(10L, VoteType.DOWNVOTE);
+            final VoteResult result = service.toggleVote(10L, VoteType.DOWNVOTE);
 
-            assertThat(result.get("upvotes")).isEqualTo(0L);
-            assertThat(result.get("downvotes")).isEqualTo(1L);
-            assertThat(result.get("userVote")).isEqualTo("DOWNVOTE");
+            assertThat(result.upvotes()).isEqualTo(0L);
+            assertThat(result.downvotes()).isEqualTo(1L);
+            assertThat(result.userVote()).isEqualTo(VoteType.DOWNVOTE);
         }
 
         @Test
@@ -102,9 +100,9 @@ class ResourceVoteServiceImplTest {
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.UPVOTE)).thenReturn(0L);
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.DOWNVOTE)).thenReturn(0L);
 
-            final Map<String, Object> result = service.toggleVote(10L, VoteType.UPVOTE);
+            final VoteResult result = service.toggleVote(10L, VoteType.UPVOTE);
 
-            assertThat(result.get("userVote")).isNull();
+            assertThat(result.userVote()).isNull();
             verify(resourceVoteRepository).delete(existingVote);
             verify(resourceVoteRepository, never()).save(any());
         }
@@ -124,9 +122,9 @@ class ResourceVoteServiceImplTest {
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.UPVOTE)).thenReturn(0L);
             when(resourceVoteRepository.countByResourceIdAndVoteType(10L, VoteType.DOWNVOTE)).thenReturn(1L);
 
-            final Map<String, Object> result = service.toggleVote(10L, VoteType.DOWNVOTE);
+            final VoteResult result = service.toggleVote(10L, VoteType.DOWNVOTE);
 
-            assertThat(result.get("userVote")).isEqualTo("DOWNVOTE");
+            assertThat(result.userVote()).isEqualTo(VoteType.DOWNVOTE);
             assertThat(existingVote.getVoteType()).isEqualTo(VoteType.DOWNVOTE);
             verify(resourceVoteRepository).save(existingVote);
             verify(resourceVoteRepository, never()).delete(any());

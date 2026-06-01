@@ -98,53 +98,6 @@ class UserServiceImplTest {
     }
 
     @Nested
-    @DisplayName("Spring Security UserDetails Loading")
-    class UserDetailsLoadingTests {
-        @Test
-        @DisplayName("Should load UserDetails by email")
-        void shouldLoadUserByUsername() {
-            // Given
-            String email = "test@example.com";
-            User user = new Student();
-            user.setEmail(email);
-            user.setPassword("hashedPassword");
-            when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-
-            // When
-            UserDetails userDetails = userService.loadUserByUsername(email);
-
-            // Then
-            assertEquals(email, userDetails.getUsername());
-            assertEquals("hashedPassword", userDetails.getPassword());
-        }
-
-        @Test
-        @DisplayName("Should throw exception when email not found")
-        void shouldThrowExceptionWhenEmailNotFound() {
-            // Given
-            when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-
-            // When & Then
-            assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername("nonexistent@example.com"));
-        }
-
-        @Test
-        @DisplayName("Should throw exception when user is not approved")
-        void shouldThrowExceptionWhenUserNotApproved() {
-            // Given
-            String email = "pending@example.com";
-            User user = new Teacher();
-            user.setEmail(email);
-            user.setPassword("hashedPassword");
-            user.setApproved(false);
-            when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-
-            // When & Then
-            assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(email));
-        }
-    }
-
-    @Nested
     @DisplayName("Current User Context")
     class CurrentUserContextTests {
         @Mock

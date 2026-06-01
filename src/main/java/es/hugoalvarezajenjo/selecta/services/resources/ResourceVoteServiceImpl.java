@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,7 +20,7 @@ public class ResourceVoteServiceImpl implements ResourceVoteService {
 
     @Override
     @Transactional
-    public Map<String, Object> toggleVote(final Long resourceId, final VoteType voteType) {
+    public VoteResult toggleVote(final Long resourceId, final VoteType voteType) {
         final User currentUser = userService.getCurrentUser();
         if (currentUser == null) {
             throw new IllegalStateException("User must be logged in to vote");
@@ -34,7 +32,7 @@ public class ResourceVoteServiceImpl implements ResourceVoteService {
         final Optional<ResourceVote> existingVote = resourceVoteRepository
                 .findByResourceIdAndUserId(resourceId, currentUser.getId());
 
-        String userVote = null;
+        VoteType currentVote = null;
 
         if (existingVote.isPresent()) {
             final ResourceVote vote = existingVote.get();
@@ -45,7 +43,7 @@ public class ResourceVoteServiceImpl implements ResourceVoteService {
                 // Different vote type → switch
                 vote.setVoteType(voteType);
                 resourceVoteRepository.save(vote);
-                userVote = voteType.name();
+                currentVote = voteType;
             }
         } else {
             // No vote exists → create new
@@ -54,14 +52,14 @@ public class ResourceVoteServiceImpl implements ResourceVoteService {
             newVote.setUser(currentUser);
             newVote.setVoteType(voteType);
             resourceVoteRepository.save(newVote);
-            userVote = voteType.name();
+            currentVote = voteType;
         }
 
-        final Map<String, Object> result = new HashMap<>();
-        result.put("upvotes", getUpvoteCount(resourceId));
-        result.put("downvotes", getDownvoteCount(resourceId));
-        result.put("userVote", userVote);
-        return result;
+        return new VoteResult(
+                getUpvoteCount(resourceId),
+                getDownvoteCount(resourceId),
+                currentVote
+        );
     }
 
     @Override

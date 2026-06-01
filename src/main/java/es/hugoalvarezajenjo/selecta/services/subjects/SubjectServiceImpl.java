@@ -2,7 +2,6 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectSpecifications;
-import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
@@ -14,8 +13,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -100,73 +97,6 @@ public class SubjectServiceImpl implements SubjectService {
                 })
                 .limit(limit)
                 .toList();
-    }
-
-    @Override
-    public List<Subject> recommendSubjects(final SubjectRecommendationCriteria criteria) {
-        if (criteria == null) {
-            return getActiveSubjects();
-        }
-
-        Specification<Subject> spec = SubjectSpecifications.isNotDiscontinued();
-
-        if (criteria.getMaxCredits() != null) {
-            spec = spec.and(SubjectSpecifications.hasCreditsLessThanEqual(criteria.getMaxCredits()));
-        }
-
-        if (criteria.getSemesterTypes() != null && !criteria.getSemesterTypes().isEmpty()) {
-            List<Semester> targetSemesters = new ArrayList<>();
-            if (criteria.getSemesterTypes().contains("ODD")) {
-                targetSemesters.addAll(Arrays.asList(
-                    Semester.FIRST, Semester.THIRD, Semester.FIFTH, Semester.SEVENTH));
-            }
-            if (criteria.getSemesterTypes().contains("EVEN")) {
-                targetSemesters.addAll(Arrays.asList(
-                    Semester.SECOND, Semester.FOURTH, Semester.SIXTH, Semester.EIGHTH));
-            }
-            spec = spec.and(SubjectSpecifications.hasSemesterIn(targetSemesters));
-        }
-
-        if (criteria.getLanguage() != null) {
-            spec = spec.and(SubjectSpecifications.withLanguage(criteria.getLanguage().name()));
-        }
-
-        List<Subject> filteredSubjects = this.subjectRepository.findAll(spec);
-
-        String searchKeywords = criteria.getSearchKeywords();
-        if (searchKeywords != null && !searchKeywords.trim().isEmpty()) {
-            String[] words = searchKeywords.trim().toLowerCase().split("[\\s,]+");
-            
-            filteredSubjects.sort((s1, s2) -> {
-                long s1Score = calculateRelevanceScore(s1, words);
-                long s2Score = calculateRelevanceScore(s2, words);
-                return Long.compare(s2Score, s1Score);
-            });
-            
-            filteredSubjects = filteredSubjects.stream()
-                .filter(s -> calculateRelevanceScore(s, words) > 0)
-                .toList();
-        }
-
-        return filteredSubjects;
-    }
-
-    private long calculateRelevanceScore(Subject subject, String[] words) {
-        long score = 0;
-        String name = subject.getName() != null ? subject.getName().toLowerCase() : "";
-        String desc = subject.getDescription() != null ? subject.getDescription().toLowerCase() : "";
-        Set<String> tags = subject.getTags();
-
-        for (String word : words) {
-            if (word.length() > 2) {
-                if (name.contains(word)) score += 3;
-                if (desc.contains(word)) score += 1;
-                if (tags != null && tags.stream().map(String::toLowerCase).anyMatch(t -> t.contains(word))) {
-                    score += 2;
-                }
-            }
-        }
-        return score;
     }
 
     @Override

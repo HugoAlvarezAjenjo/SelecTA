@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +19,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserAuthentication, UserDetailsService {
+public class UserServiceImpl implements UserService, UserAuthentication {
 
     private final UserRepository userRepository;
     private final SubjectRepository subjectRepository;
@@ -61,23 +59,6 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        log.info("Loading user by email: {}", email);
-        final User user = this.getUserByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email));
-        log.debug("Found user in DB: {}, role: {}, approved: {}", user.getEmail(), user.getRole(), user.isApproved());
-        
-        if (!user.isApproved()) {
-            throw new UsernameNotFoundException("La cuenta de " + email + " está pendiente de aprobación");
-        }
-        
-        return org.springframework.security.core.userdetails.User.withUsername(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole().name())
-                .build();
-    }
-
-    @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -86,20 +67,12 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
         }
 
         Object principal = authentication.getPrincipal();
-        log.debug("Current principal type: {}", principal.getClass().getName());
-        
         if (!(principal instanceof UserDetails userDetails)) {
             log.debug("Principal is not UserDetails instance");
             return null;
         }
 
-        log.debug("Current user email from principal: {}", userDetails.getUsername());
-        User user = this.getUserByEmail(userDetails.getUsername()).orElse(null);
-        if (user != null) {
-            log.debug("User found in context: {}, class: {}, role: {}", 
-                user.getEmail(), user.getClass().getSimpleName(), user.getRole());
-        }
-        return user;
+        return this.userRepository.findByEmail(userDetails.getUsername()).orElse(null);
     }
 
     @Override
@@ -139,9 +112,5 @@ public class UserServiceImpl implements UserService, UserAuthentication, UserDet
     @Override
     public List<User> getApprovedTeachers() {
         return this.userRepository.findByRoleAndApprovedTrue(UserRole.TEACHER);
-    }
-
-    private Optional<User> getUserByEmail(final String email) {
-        return this.userRepository.findByEmail(email);
     }
 }

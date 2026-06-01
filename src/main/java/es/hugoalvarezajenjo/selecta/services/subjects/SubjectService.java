@@ -20,8 +20,6 @@ public interface SubjectService {
 
     List<Subject> getRelatedSubjects(Long subjectId, int limit);
 
-    List<Subject> recommendSubjects(SubjectRecommendationCriteria criteria);
-
     void addTeacherToSubject(Long subjectId, Long teacherId);
 
     void removeTeacherFromSubject(Long subjectId, Long teacherId);

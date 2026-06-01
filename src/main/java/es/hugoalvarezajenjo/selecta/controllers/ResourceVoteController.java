@@ -1,6 +1,7 @@
 package es.hugoalvarezajenjo.selecta.controllers;
 
 import es.hugoalvarezajenjo.selecta.services.resources.ResourceVoteService;
+import es.hugoalvarezajenjo.selecta.services.resources.VoteResult;
 import es.hugoalvarezajenjo.selecta.services.resources.VoteType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,11 @@ public class ResourceVoteController {
     private final ResourceVoteService resourceVoteService;
 
     @PostMapping("/{resourceId}/vote")
-    public ResponseEntity<Map<String, Object>> vote(
+    public ResponseEntity<?> vote(
             @PathVariable final Long resourceId,
             @RequestParam final VoteType type) {
         try {
-            final Map<String, Object> result = resourceVoteService.toggleVote(resourceId, type);
+            final VoteResult result = resourceVoteService.toggleVote(resourceId, type);
             return ResponseEntity.ok(result);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(401).body(Map.of("error", "Must be logged in to vote"));
