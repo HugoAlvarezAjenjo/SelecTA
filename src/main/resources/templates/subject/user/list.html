@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/base}">
 <head>
-    <title>Buscar Asignaturas | SelecTA - UPM</title>
+    <title>Buscar Asignaturas</title>
     <th:block layout:fragment="styles">
         <link rel="stylesheet" th:href="@{/css/hero.css}">
         <link rel="stylesheet" th:href="@{/css/forms.css}">
@@ -11,34 +11,33 @@
         <style>
             .filter-checkbox:checked+.filter-label {
                 background-color: #0072CE;
-            color: white;
-        }
-
-        .filter-checkbox:checked+.filter-label .filter-icon {
-            color: white;
-        }
-
-        .search-input:focus {
-            box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .filters-container {
-                flex-direction: column;
+                color: white;
             }
 
-            .filters-sidebar {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 1.5rem;
+            .filter-checkbox:checked+.filter-label .filter-icon {
+                color: white;
             }
-        }
-    </style>
+
+            .search-input:focus {
+                box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
+            }
+
+            @media (max-width: 768px) {
+                .filters-container {
+                    flex-direction: column;
+                }
+
+                .filters-sidebar {
+                    width: 100%;
+                    margin-right: 0;
+                    margin-bottom: 1.5rem;
+                }
+            }
+        </style>
+    </th:block>
 </head>
-
-<body class="font-sans bg-white text-gray-800">
-    <th:block th:replace="~{fragments/navbar :: navbar}" />
-
+<body>
+<main layout:fragment="content">
     <!-- Search Hero Section -->
     <section class="hero-pattern py-12">
         <div class="container mx-auto px-4">
@@ -210,9 +209,9 @@
             </div>
         </div>
     </section>
+</main>
 
-    <th:block th:replace="~{fragments/footer :: footer}" />
-
+<th:block layout:fragment="scripts">
     <script th:src="@{/js/smooth-scroll.js}"></script>
     <script>
         // Filter checkbox functionality
@@ -231,6 +230,6 @@
             });
         });
     </script>
+</th:block>
 </body>
-
 </html>

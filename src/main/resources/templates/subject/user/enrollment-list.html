@@ -1,33 +1,26 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Lista de Matrícula</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script th:src="@{/js/tailwind-config.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/design-system.css}">
-    <link rel="stylesheet" th:href="@{/css/card.css}">
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <style>
-        .sortable-ghost { opacity: 0.4; background: #e0e7ff; border: 2px dashed #6366f1; }
-        .sortable-chosen { box-shadow: 0 8px 25px rgba(0,0,0,0.15); transform: rotate(1deg); }
-        .drag-handle { cursor: grab; touch-action: none; }
-        .drag-handle:active { cursor: grabbing; }
-        .enrollment-item { transition: all 0.2s ease; }
-        .enrollment-item:hover { transform: translateX(2px); }
-        .note-input { transition: all 0.2s ease; }
-        .note-input:focus { background: white; }
-    </style>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/card.css}">
+        <style>
+            .sortable-ghost { opacity: 0.4; background: #e0e7ff; border: 2px dashed #6366f1; }
+            .sortable-chosen { box-shadow: 0 8px 25px rgba(0,0,0,0.15); transform: rotate(1deg); }
+            .drag-handle { cursor: grab; touch-action: none; }
+            .drag-handle:active { cursor: grabbing; }
+            .enrollment-item { transition: all 0.2s ease; }
+            .enrollment-item:hover { transform: translateX(2px); }
+            .note-input { transition: all 0.2s ease; }
+            .note-input:focus { background: white; }
+        </style>
+    </th:block>
 </head>
-
-<body class="font-sans bg-gray-50 text-gray-800 flex flex-col min-h-screen">
-    <th:block th:replace="~{fragments/navbar :: navbar}" />
-
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-4xl">
+<body>
+<main layout:fragment="content">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
         <div class="mb-8">
             <div class="flex items-center justify-between flex-wrap gap-4">
@@ -205,10 +198,11 @@
                 </div>
             </section>
         </div>
-    </main>
+    </div>
+</main>
 
-    <th:block th:replace="~{fragments/footer :: footer}" />
-
+<th:block layout:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
         // Initialize SortableJS for both lists
         document.addEventListener('DOMContentLoaded', function() {
@@ -308,6 +302,6 @@
             .catch(err => console.error('Error removing:', err));
         }
     </script>
+</th:block>
 </body>
-
 </html>

@@ -1,37 +1,33 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="subject-id" th:content="${subject.id}">
     <title th:text="${subject.name}">Subject</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script th:src="@{/js/tailwind-config.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/hero.css}">
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/design-system.css}">
-    <link rel="stylesheet" th:href="@{/css/tabs.css}">
-    <link rel="stylesheet" th:href="@{/css/markdown.css}">
-    <link rel="stylesheet" th:href="@{/css/modals.css}">
-    <link rel="stylesheet" th:href="@{/css/card.css}">
-    <style>
-        @media (max-width: 768px) {
-            .subject-actions {
-                flex-direction: column;
-                gap: 1rem;
-            }
+    <meta name="subject-id" th:content="${subject.id}">
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/hero.css}">
+        <link rel="stylesheet" th:href="@{/css/tabs.css}">
+        <link rel="stylesheet" th:href="@{/css/markdown.css}">
+        <link rel="stylesheet" th:href="@{/css/modals.css}">
+        <link rel="stylesheet" th:href="@{/css/card.css}">
+        <style>
+            @media (max-width: 768px) {
+                .subject-actions {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
 
-            .related-subjects {
-                grid-template-columns: 1fr;
+                .related-subjects {
+                    grid-template-columns: 1fr;
+                }
             }
-        }
-    </style>
+        </style>
+    </th:block>
 </head>
-
-<body class="font-sans bg-white text-gray-800">
-    <th:block th:replace="~{fragments/navbar :: navbar}" />
+<body>
+<main layout:fragment="content">
     <!-- Subject Header -->
     <section class="hero-pattern py-8">
         <div class="container mx-auto px-4">
@@ -185,8 +181,6 @@
                 </div>
             </div>
 
-
-
             <!-- Teachers Tab Content -->
             <div id="teachers-content" class="tab-content hidden">
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
@@ -251,15 +245,12 @@
                     <!-- Resources Grid -->
                     <div th:if="${not #lists.isEmpty(resources)}"
                         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Resource Card Template -->
-                        <!-- In the resources section of subject-view.html -->
                         <div th:each="resource : ${resources}"
                             class="resource-card border border-upm-gray rounded-lg p-4 transition-all"
                             th:id="'resource-card-' + ${resource.id}">
                             <div class="flex items-start mb-3">
                                 <div
                                     class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
-                                    <!-- Dynamic icon based on resource type -->
                                     <th:block th:switch="${resource.type}">
                                         <i th:case="'PDF'" class="fas fa-file-pdf text-upm-light-blue text-xl"></i>
                                         <i th:case="'VIDEO'" class="fas fa-video text-upm-light-blue text-xl"></i>
@@ -351,7 +342,7 @@
                         </button>
                     </div>
 
-                    <!-- Pagination (you can implement this later with paginated data) -->
+                    <!-- Pagination -->
                     <div th:if="${not #lists.isEmpty(resources)}" class="flex justify-center mt-8">
                         <nav class="inline-flex rounded-md shadow">
                             <a href="#"
@@ -373,8 +364,6 @@
 
         </div>
     </section>
-
-
 
     <!-- Upload Resource Modal (Contributor) -->
     <div th:if="${isContributor}" id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -471,9 +460,9 @@
             </form>
         </div>
     </div>
+</main>
 
-    <th:block th:replace="~{fragments/footer :: footer}" />
-
+<th:block layout:fragment="scripts">
     <script>
         // Modal openers for request/propose
         const reqModal = document.getElementById('request-modal');
@@ -524,9 +513,6 @@
 
         // Initialize with description tab active
         activateTab('description');
-
-
-
 
         // Upload modal functionality
         const uploadModal = document.getElementById('upload-modal');
@@ -641,6 +627,6 @@
             });
         }
     </script>
+</th:block>
 </body>
-
 </html>

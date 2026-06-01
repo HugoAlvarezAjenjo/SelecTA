@@ -1,61 +1,55 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recomendador de Asignaturas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script th:src="@{/js/tailwind-config.js}"></script>
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/design-system.css}">
-    <link rel="stylesheet" th:href="@{/css/card.css}">
-    <style>
-        .tag-chip {
-            transition: all 0.2s ease;
-            cursor: pointer;
-            user-select: none;
-        }
-        .tag-chip:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .tag-chip.selected {
-            background-color: #1a56db;
-            color: white;
-            border-color: #1a56db;
-        }
-        .score-ring {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-        .signal-bar {
-            height: 4px;
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-        .badge-for-you {
-            animation: pulse-badge 2s infinite;
-        }
-        @keyframes pulse-badge {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-    </style>
+    <th:block layout:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/card.css}">
+        <style>
+            .tag-chip {
+                transition: all 0.2s ease;
+                cursor: pointer;
+                user-select: none;
+            }
+            .tag-chip:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .tag-chip.selected {
+                background-color: #1a56db;
+                color: white;
+                border-color: #1a56db;
+            }
+            .score-ring {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 0.8rem;
+                flex-shrink: 0;
+            }
+            .signal-bar {
+                height: 4px;
+                border-radius: 2px;
+                transition: width 0.3s ease;
+            }
+            .badge-for-you {
+                animation: pulse-badge 2s infinite;
+            }
+            @keyframes pulse-badge {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.8; }
+            }
+        </style>
+    </th:block>
 </head>
-
-<body class="font-sans bg-gray-50 text-gray-800 flex flex-col min-h-screen">
-    <th:block th:replace="~{fragments/navbar :: navbar}" />
-
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl">
+<body>
+<main layout:fragment="content">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
         <div class="mb-8 text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-2">
                 <i class="fas fa-magic mr-2 text-upm-light-blue"></i>Recomendador Inteligente
@@ -315,10 +309,10 @@
 
             </section>
         </div>
-    </main>
+    </div>
+</main>
 
-    <th:block th:replace="~{fragments/footer :: footer}" />
-
+<th:block layout:fragment="scripts">
     <script>
         // Tag chips toggle logic
         function toggleTag(chip) {
@@ -359,6 +353,6 @@
             }
         });
     </script>
+</th:block>
 </body>
-
 </html>

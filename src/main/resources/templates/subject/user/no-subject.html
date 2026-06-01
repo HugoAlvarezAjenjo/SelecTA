@@ -1,49 +1,32 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
 <head>
-    <meta charset="UTF-8">
     <title>Asignatura no encontrada</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .hero-pattern {
-            background-color: #f8fafc;
-            background-image: linear-gradient(to right, rgba(0, 114, 206, 0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(0, 114, 206, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-        .upm-blue {
-            color: #003865;
-        }
-        .bg-upm-light-blue {
-            background-color: #0072CE;
-        }
-        .hover\:bg-upm-blue:hover {
-            background-color: #003865;
-        }
-    </style>
 </head>
 <body>
-<th:block th:replace="~{fragments/navbar :: navbar}"/>
-<section class="hero-pattern py-16">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8 text-center">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
-                <i class="fas fa-exclamation-triangle text-red-500 text-4xl"></i>
-            </div>
-            <h1 class="text-3xl md:text-4xl font-bold upm-blue mb-4">Asignatura no encontrada</h1>
-            <p class="text-gray-600 text-lg mb-8">
-                Lo sentimos, no hemos podido encontrar la asignatura que estás buscando.
-                Puede que el código sea incorrecto o que la asignatura ya no esté disponible.
-            </p>
+<main layout:fragment="content">
+    <section class="hero-pattern py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-sm p-8 text-center">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-4xl"></i>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold text-upm-blue mb-4">Asignatura no encontrada</h1>
+                <p class="text-gray-600 text-lg mb-8">
+                    Lo sentimos, no hemos podido encontrar la asignatura que estás buscando.
+                    Puede que el código sea incorrecto o que la asignatura ya no esté disponible.
+                </p>
 
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a th:href="@{/subjects}" class="px-6 py-3 bg-upm-light-blue hover:bg-upm-blue text-white rounded-full font-medium transition-all">
-                    <i class="fas fa-arrow-left mr-2"></i> Volver al inicio
-                </a>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a th:href="@{/subjects}" class="px-6 py-3 bg-upm-light-blue hover:bg-upm-blue text-white rounded-full font-medium transition-all">
+                        <i class="fas fa-arrow-left mr-2"></i> Volver al inicio
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</main>
 </body>
 </html>
