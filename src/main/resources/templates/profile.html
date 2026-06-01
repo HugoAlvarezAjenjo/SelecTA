@@ -156,7 +156,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a th:href="@{/download/resource/{id}(id=${resource.id})}" class="px-3 py-1.5 text-sm text-upm-light-blue hover:text-upm-blue font-medium">
+                    <a th:href="@{/api/resources/{id}/download(id=${resource.id})}" class="px-3 py-1.5 text-sm text-upm-light-blue hover:text-upm-blue font-medium">
                         <i class="fas fa-download mr-1"></i> Descargar
                     </a>
                     <form th:action="@{'/subject/' + ${resource.subjectId} + '/contribute/' + ${resource.id} + '/delete'}" method="post" onsubmit="return confirm('¿Eliminar este recurso?');">

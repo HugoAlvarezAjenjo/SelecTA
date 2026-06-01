@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Carpetas", description = "Organización de recursos en carpetas jerárquicas")
 @RestController
-@RequestMapping("/api/subject/{subjectId}/folders")
+@RequestMapping("/api/subjects/{subjectId}/folders")
 @RequiredArgsConstructor
 public class ResourceFolderController {
 

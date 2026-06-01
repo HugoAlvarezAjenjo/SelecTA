@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Tags", description = "Etiquetado de recursos para facilitar su búsqueda y filtrado")
 @RestController
-@RequestMapping("/api/subject/{subjectId}/tags")
+@RequestMapping("/api/subjects/{subjectId}/tags")
 @RequiredArgsConstructor
 public class ResourceTagController {
 

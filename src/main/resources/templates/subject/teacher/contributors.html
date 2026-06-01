@@ -86,7 +86,7 @@
                                     <span th:text="${request.requester.username}">alumno</span>
                                     <span th:if="${request.type.name() == 'ACCESS'}" class="text-sm text-gray-500"> quiere ser contribuidor</span>
                                     <span th:if="${request.type.name() == 'RESOURCE'}" class="text-sm text-gray-500"> propone un recurso: <strong th:text="${request.pendingResource != null ? request.pendingResource.name : ''}"></strong>
-                                        <a th:if="${request.pendingResource != null}" th:href="@{/download/resource/{id}(id=${request.pendingResource.id})}" class="ml-2 text-upm-light-blue hover:text-upm-blue text-xs font-medium"><i class="fas fa-download mr-1"></i>Ver/Descargar</a>
+                                        <a th:if="${request.pendingResource != null}" th:href="@{/api/resources/{id}/download(id=${request.pendingResource.id})}" class="ml-2 text-upm-light-blue hover:text-upm-blue text-xs font-medium"><i class="fas fa-download mr-1"></i>Ver/Descargar</a>
                                     </span>
                                 </p>
                                 <p th:if="${request.message != null and !request.message.isEmpty()}" class="text-sm text-gray-500 italic" th:text="${request.message}"></p>

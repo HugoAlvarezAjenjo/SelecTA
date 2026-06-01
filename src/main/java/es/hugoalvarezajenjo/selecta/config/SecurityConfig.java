@@ -17,10 +17,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF habilitado con sesión lazy (no fuerza creación de sesión en páginas públicas).
-                // Thymeleaf inyecta el token como campo oculto _csrf en todos los <form>.
+                // CSRF habilitado globalmente. Thymeleaf inyecta el token automáticamente en <form>.
+                // Solo se exime a las rutas de API REST puras (consumidas por fetch/AJAX desde JS).
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/**", "/subject/**", "/enrollment-list/**") // REST + public subject views + enrollment AJAX
+                        .ignoringRequestMatchers("/api/**", "/enrollment-list/**")
                 )
                 .authorizeHttpRequests(auth -> auth
                         // Recursos estáticos y páginas públicas
@@ -30,7 +30,10 @@ public class SecurityConfig {
                                 "/register",
                                 "/js/**",
                                 "/css/**",
-                                "/error/**"
+                                "/error/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
                         ).permitAll()
                         // Vistas de lectura pública (cualquiera puede ver asignaturas)
                         .requestMatchers(

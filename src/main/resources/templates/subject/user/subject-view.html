@@ -324,7 +324,7 @@
                                         </span>
                                     </span>
                                 </div>
-                                <a th:href="@{/download/resource/{path}(path=${resource.id})}"
+                                <a th:href="@{/api/resources/{path}/download(path=${resource.id})}"
                                     class="text-upm-light-blue hover:text-upm-blue font-medium download-link"
                                     th:attr="data-filename=${resource.name}">
                                     <i class="fas fa-download mr-1"></i> Descargar
@@ -567,7 +567,7 @@
                 || document.querySelector('meta[name="subject-id"]')?.content;
             document.getElementById('enrollmentMenu').classList.add('hidden');
 
-            fetch('/enrollment-list/api/add?subjectId=' + subjectId + '&asReserve=' + asReserve, {
+            fetch('/enrollment-list/add?subjectId=' + subjectId + '&asReserve=' + asReserve, {
                 method: 'POST'
             })
             .then(res => res.json())

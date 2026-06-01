@@ -53,7 +53,7 @@ public class EnrollmentListController {
     /**
      * REST: Add a subject to the enrollment list.
      */
-    @PostMapping("/api/add")
+    @PostMapping("/add")
     @ResponseBody
     public ResponseEntity<?> addSubject(@RequestParam Long subjectId,
                                         @RequestParam(defaultValue = "false") boolean asReserve) {
@@ -74,7 +74,7 @@ public class EnrollmentListController {
     /**
      * REST: Remove a subject from the enrollment list.
      */
-    @DeleteMapping("/api/remove/{subjectId}")
+    @DeleteMapping("/remove/{subjectId}")
     @ResponseBody
     public ResponseEntity<?> removeSubject(@PathVariable Long subjectId) {
         User user = userService.getCurrentUser();
@@ -94,7 +94,7 @@ public class EnrollmentListController {
     /**
      * REST: Toggle a subject between main list and reserve.
      */
-    @PutMapping("/api/toggle-reserve/{subjectId}")
+    @PutMapping("/toggle-reserve/{subjectId}")
     @ResponseBody
     public ResponseEntity<?> toggleReserve(@PathVariable Long subjectId) {
         User user = userService.getCurrentUser();
@@ -109,7 +109,7 @@ public class EnrollmentListController {
     /**
      * REST: Reorder a list (called after drag-and-drop).
      */
-    @PutMapping("/api/reorder")
+    @PutMapping("/reorder")
     @ResponseBody
     public ResponseEntity<?> reorderList(@RequestBody ReorderRequest request) {
         User user = userService.getCurrentUser();
@@ -125,7 +125,7 @@ public class EnrollmentListController {
     /**
      * REST: Update the note for a specific item.
      */
-    @PutMapping("/api/note/{subjectId}")
+    @PutMapping("/note/{subjectId}")
     @ResponseBody
     public ResponseEntity<?> updateNote(@PathVariable Long subjectId, @RequestBody NoteRequest request) {
         User user = userService.getCurrentUser();
@@ -140,7 +140,7 @@ public class EnrollmentListController {
     /**
      * REST: Check if a subject is in the user's list.
      */
-    @GetMapping("/api/check/{subjectId}")
+    @GetMapping("/check/{subjectId}")
     @ResponseBody
     public ResponseEntity<?> checkInList(@PathVariable Long subjectId) {
         User user = userService.getCurrentUser();

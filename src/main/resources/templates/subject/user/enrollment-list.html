@@ -246,7 +246,7 @@
             const items = document.querySelectorAll('#' + listId + ' .enrollment-item');
             const orderedIds = Array.from(items).map(item => parseInt(item.getAttribute('data-subject-id')));
 
-            fetch('/enrollment-list/api/reorder', {
+            fetch('/enrollment-list/reorder', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ orderedSubjectIds: orderedIds, reserve: isReserve })
@@ -261,7 +261,7 @@
 
         function saveNote(input) {
             const subjectId = input.getAttribute('data-subject-id');
-            fetch('/enrollment-list/api/note/' + subjectId, {
+            fetch('/enrollment-list/note/' + subjectId, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ note: input.value.trim() })
@@ -270,7 +270,7 @@
 
         function toggleReserve(button) {
             const subjectId = button.getAttribute('data-subject-id');
-            fetch('/enrollment-list/api/toggle-reserve/' + subjectId, {
+            fetch('/enrollment-list/toggle-reserve/' + subjectId, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' }
             })
@@ -287,7 +287,7 @@
             const subjectId = button.getAttribute('data-subject-id');
             const item = button.closest('.enrollment-item');
 
-            fetch('/enrollment-list/api/remove/' + subjectId, { method: 'DELETE' })
+            fetch('/enrollment-list/remove/' + subjectId, { method: 'DELETE' })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
