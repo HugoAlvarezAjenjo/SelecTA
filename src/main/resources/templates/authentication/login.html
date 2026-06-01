@@ -13,7 +13,7 @@
   <div class="w-full max-w-md">
     <!-- Logo / Brand -->
     <div class="text-center mb-8">
-      <div class="inline-flex items-center justify-center w-16 h-16 bg-upm-blue rounded-2xl shadow-lg mb-4">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-upm-blue rounded-2xl shadow-lg mb-4" aria-hidden="true">
         <i class="fas fa-graduation-cap text-white text-2xl"></i>
       </div>
       <h1 class="text-3xl font-bold text-upm-blue">SelecTA</h1>
@@ -25,28 +25,29 @@
       <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Iniciar Sesión</h2>
 
       <!-- Error messages -->
-      <div th:if="${param.error}" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-        <i class="fas fa-exclamation-circle mr-1"></i>
+      <div th:if="${param.error}" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700" role="alert">
+        <i class="fas fa-exclamation-circle mr-1" aria-hidden="true"></i>
         Credenciales incorrectas o cuenta pendiente de aprobación.
       </div>
-      <div th:if="${param.logout}" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
-        <i class="fas fa-check-circle mr-1"></i>
+      <div th:if="${param.logout}" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700" role="status">
+        <i class="fas fa-check-circle mr-1" aria-hidden="true"></i>
         Sesión cerrada correctamente.
       </div>
-      <div th:if="${param.registered}" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
-        <i class="fas fa-check-circle mr-1"></i>
+      <div th:if="${param.registered}" class="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700" role="status">
+        <i class="fas fa-check-circle mr-1" aria-hidden="true"></i>
         Cuenta creada. Ya puedes iniciar sesión.
       </div>
 
       <!-- Form -->
-      <form th:action="@{/login}" method="post" class="space-y-5">
+      <form th:action="@{/login}" method="post" class="space-y-5" aria-label="Formulario de inicio de sesión">
         <div>
           <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Correo electrónico</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
               <i class="fas fa-envelope text-gray-400"></i>
             </div>
             <input type="email" id="username" name="username" required
+                   autocomplete="email"
                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-upm-light-blue focus:border-transparent transition-all"
                    placeholder="tu@universidad.es">
           </div>
@@ -54,17 +55,18 @@
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
           <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">
               <i class="fas fa-lock text-gray-400"></i>
             </div>
             <input type="password" id="password" name="password" required
+                   autocomplete="current-password"
                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-upm-light-blue focus:border-transparent transition-all"
                    placeholder="••••••••">
           </div>
         </div>
         <button type="submit"
                 class="w-full py-3 bg-upm-blue hover:bg-upm-light-blue text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
-          <i class="fas fa-sign-in-alt mr-2"></i>Iniciar Sesión
+          <i class="fas fa-sign-in-alt mr-2" aria-hidden="true"></i>Iniciar Sesión
         </button>
       </form>
 
@@ -77,15 +79,15 @@
     </div>
 
     <!-- Navigation footer -->
-    <div class="mt-6 text-center">
+    <nav class="mt-6 text-center" aria-label="Navegación secundaria">
       <a th:href="@{/}" class="text-gray-400 hover:text-gray-600 text-sm transition-colors">
-        <i class="fas fa-arrow-left mr-1"></i>Volver al inicio
+        <i class="fas fa-arrow-left mr-1" aria-hidden="true"></i>Volver al inicio
       </a>
-      <span class="text-gray-300 mx-3">|</span>
+      <span class="text-gray-300 mx-3" aria-hidden="true">|</span>
       <a th:href="@{/subjects}" class="text-gray-400 hover:text-gray-600 text-sm transition-colors">
-        <i class="fas fa-book mr-1"></i>Ver asignaturas
+        <i class="fas fa-book mr-1" aria-hidden="true"></i>Ver asignaturas
       </a>
-    </div>
+    </nav>
   </div>
 
 </body>

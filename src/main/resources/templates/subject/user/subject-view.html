@@ -29,13 +29,13 @@
 <body>
 <main layout:fragment="content">
     <!-- Subject Header -->
-    <section class="hero-pattern py-8">
+    <section class="hero-pattern py-8" aria-labelledby="subject-title">
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <div class="subject-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                     <div class="flex-grow">
                         <div class="flex items-center justify-between">
-                            <h1 th:text="${subject.name}" class="text-3xl md:text-4xl font-bold text-upm-blue mb-1">
+                            <h1 id="subject-title" th:text="${subject.name}" class="text-3xl md:text-4xl font-bold text-upm-blue mb-1">
                                 Inteligencia Artificial</h1>
                             
                             <!-- Favourite Button -->
@@ -43,8 +43,9 @@
                                 <a th:href="@{/subject/{id}/favourite(id=${subject.id})}" 
                                    class="text-2xl transition-all duration-300 hover:scale-110 inline-block"
                                    th:classappend="${isFavourite ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-200'}"
+                                   th:attr="aria-label=${isFavourite ? 'Quitar de favoritos' : 'Añadir a favoritos'}"
                                    th:title="${isFavourite ? 'Quitar de favoritos' : 'Añadir a favoritos'}">
-                                    <i th:class="${isFavourite ? 'fas fa-star' : 'far fa-star'}"></i>
+                                    <i th:class="${isFavourite ? 'fas fa-star' : 'far fa-star'}" aria-hidden="true"></i>
                                 </a>
 
                                 <!-- Enrollment List Button -->
@@ -52,17 +53,21 @@
                                     <button onclick="toggleEnrollmentMenu()" 
                                             class="flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg border transition-all"
                                             id="enrollmentBtn"
+                                            aria-expanded="false"
+                                            aria-haspopup="true"
+                                            aria-controls="enrollmentMenu"
+                                            th:attr="aria-label=${isInEnrollmentList ? 'Ya está en tu lista de matrícula' : 'Añadir a lista de matrícula'}"
                                             th:classappend="${isInEnrollmentList ? 'bg-green-50 border-green-300 text-green-700' : 'bg-white border-gray-300 text-gray-700 hover:border-upm-light-blue hover:text-upm-blue'}">
-                                        <i th:class="${isInEnrollmentList ? 'fas fa-check' : 'fas fa-clipboard-list'}"></i>
+                                        <i th:class="${isInEnrollmentList ? 'fas fa-check' : 'fas fa-clipboard-list'}" aria-hidden="true"></i>
                                         <span th:text="${isInEnrollmentList ? 'En mi lista' : 'Matrícula'}"></span>
-                                        <i th:unless="${isInEnrollmentList}" class="fas fa-caret-down text-xs ml-1"></i>
+                                        <i th:unless="${isInEnrollmentList}" class="fas fa-caret-down text-xs ml-1" aria-hidden="true"></i>
                                     </button>
-                                    <div id="enrollmentMenu" class="hidden absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1">
-                                        <button onclick="addToEnrollment(false)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-upm-blue transition">
-                                            <i class="fas fa-list-ol mr-2 text-upm-light-blue"></i> Lista principal
+                                    <div id="enrollmentMenu" class="hidden absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 py-1" role="menu" aria-label="Opciones de matrícula">
+                                        <button onclick="addToEnrollment(false)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-upm-blue transition" role="menuitem">
+                                            <i class="fas fa-list-ol mr-2 text-upm-light-blue" aria-hidden="true"></i> Lista principal
                                         </button>
-                                        <button onclick="addToEnrollment(true)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition">
-                                            <i class="fas fa-shield-alt mr-2 text-amber-500"></i> Reserva
+                                        <button onclick="addToEnrollment(true)" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700 transition" role="menuitem">
+                                            <i class="fas fa-shield-alt mr-2 text-amber-500" aria-hidden="true"></i> Reserva
                                         </button>
                                     </div>
                                 </div>
@@ -72,22 +77,23 @@
 
                         <!-- Star Rating -->
                         <div class="flex items-center gap-4 mb-4">
-                            <div class="flex items-center gap-1">
-                                <form th:action="@{'/subject/' + ${subject.id} + '/rate'}" method="post" class="flex items-center gap-1" sec:authorize="isAuthenticated()">
+                            <div class="flex items-center gap-1" role="group" aria-label="Valoración de la asignatura">
+                                <form th:action="@{'/subject/' + ${subject.id} + '/rate'}" method="post" class="flex items-center gap-1" sec:authorize="isAuthenticated()" aria-label="Valorar asignatura">
                                     <button th:each="star : ${#numbers.sequence(1, 5)}" type="submit" name="rating" th:value="${star}"
                                         class="text-xl transition-all hover:scale-110"
+                                        th:attr="aria-label=${'Valorar ' + star + ' de 5 estrellas'}"
                                         th:classappend="${star <= userRating} ? 'text-yellow-400' : (${star <= avgRating} ? 'text-yellow-200' : 'text-gray-300 hover:text-yellow-400')">
-                                        <i th:class="${star <= userRating || star <= avgRating} ? 'fas fa-star' : 'far fa-star'"></i>
+                                        <i th:class="${star <= userRating || star <= avgRating} ? 'fas fa-star' : 'far fa-star'" aria-hidden="true"></i>
                                     </button>
                                 </form>
                                 <!-- Read-only stars for non-authenticated -->
-                                <span sec:authorize="!isAuthenticated()" class="flex items-center gap-1">
+                                <span sec:authorize="!isAuthenticated()" class="flex items-center gap-1" th:attr="aria-label=${'Valoración media: ' + (avgRating > 0 ? avgRating : 'sin valoraciones')}">
                                     <span th:each="star : ${#numbers.sequence(1, 5)}">
-                                        <i th:class="${star <= avgRating} ? 'fas fa-star text-xl text-yellow-300' : 'far fa-star text-xl text-gray-300'"></i>
+                                        <i th:class="${star <= avgRating} ? 'fas fa-star text-xl text-yellow-300' : 'far fa-star text-xl text-gray-300'" aria-hidden="true"></i>
                                     </span>
                                 </span>
                             </div>
-                            <span class="text-lg font-bold text-gray-700" th:text="${avgRating > 0} ? ${avgRating} : '—'">—</span>
+                            <span class="text-lg font-bold text-gray-700" th:text="${avgRating > 0} ? ${avgRating} : '—'" aria-hidden="true">—</span>
                             <span th:if="${ratingCount > 0}" class="text-sm text-gray-500" th:text="'(' + ${ratingCount} + ' valoraciones)'"></span>
                         </div>
 
@@ -114,19 +120,20 @@
     <!-- Tabs Navigation -->
     <section class="bg-white border-b border-upm-gray">
         <div class="container mx-auto px-4">
-            <div class="flex overflow-x-auto">
-                <button id="description-tab" class="tab-active px-6 py-4 font-medium text-gray-500 transition-all">
-                    <i class="fas fa-info-circle mr-2"></i> Descripción
+            <div class="flex overflow-x-auto" role="tablist" aria-label="Secciones de la asignatura">
+                <button id="description-tab" role="tab" aria-selected="true" aria-controls="description-content" tabindex="0"
+                    class="tab-active px-6 py-4 font-medium text-gray-500 transition-all">
+                    <i class="fas fa-info-circle mr-2" aria-hidden="true"></i> Descripción
                 </button>
 
-                <button id="teachers-tab"
+                <button id="teachers-tab" role="tab" aria-selected="false" aria-controls="teachers-content" tabindex="-1"
                     class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
-                    <i class="fas fa-chalkboard-teacher mr-2"></i> Profesores
+                    <i class="fas fa-chalkboard-teacher mr-2" aria-hidden="true"></i> Profesores
                 </button>
 
-                <button id="resources-tab"
+                <button id="resources-tab" role="tab" aria-selected="false" aria-controls="resources-content" tabindex="-1"
                     class="px-6 py-4 font-medium text-gray-500 hover:text-upm-blue transition-all">
-                    <i class="fas fa-archive mr-2"></i> La Bóveda
+                    <i class="fas fa-archive mr-2" aria-hidden="true"></i> La Bóveda
                 </button>
             </div>
         </div>
@@ -136,7 +143,7 @@
     <section class="py-8 bg-upm-gray bg-opacity-30">
         <div class="container mx-auto px-4">
             <!-- Description Tab Content -->
-            <div id="description-content" class="tab-content">
+            <div id="description-content" role="tabpanel" aria-labelledby="description-tab" class="tab-content">
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                     <!-- Dynamic markdown content -->
                     <div th:if="${subject.longDescriptionHtml != null and !subject.longDescriptionHtml.isEmpty()}"
@@ -158,10 +165,10 @@
                     <h2 class="text-2xl font-bold text-upm-blue mb-6">Asignaturas relacionadas</h2>
                     <div class="related-subjects grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                         th:if="${relatedSubjects != null and !relatedSubjects.isEmpty()}">
-                        <div th:each="related : ${relatedSubjects}"
-                            class="border border-upm-gray rounded-lg p-4 hover:shadow-md transition-all cursor-pointer flex flex-col"
-                            th:onclick="|window.location.href='@{/subject/{id}(id=${related.id})}'|">
-                            <h3 class="text-lg font-bold text-upm-blue mb-2" th:text="${related.name}">Aprendizaje
+                        <a th:each="related : ${relatedSubjects}"
+                            th:href="@{/subject/{id}(id=${related.id})}"
+                            class="border border-upm-gray rounded-lg p-4 hover:shadow-md transition-all flex flex-col group block">
+                            <h3 class="text-lg font-bold text-upm-blue mb-2 group-hover:text-upm-light-blue transition-colors" th:text="${related.name}">Aprendizaje
                                 Automático</h3>
                             <p class="text-gray-600 text-sm mb-3 flex-grow" th:text="${related.description}">
                                 Profundización en algoritmos de ML y sus aplicaciones prácticas.</p>
@@ -172,7 +179,7 @@
                                         ects</span>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div th:if="${relatedSubjects == null or relatedSubjects.isEmpty()}"
                         class="text-center py-6 text-gray-500">
@@ -182,7 +189,7 @@
             </div>
 
             <!-- Teachers Tab Content -->
-            <div id="teachers-content" class="tab-content hidden">
+            <div id="teachers-content" role="tabpanel" aria-labelledby="teachers-tab" class="tab-content hidden">
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                     <h2 class="text-2xl font-bold text-upm-blue mb-6">Profesores</h2>
 
@@ -204,7 +211,7 @@
             </div>
 
             <!-- Resources Tab Content -->
-            <div id="resources-content" class="tab-content hidden">
+            <div id="resources-content" role="tabpanel" aria-labelledby="resources-tab" class="tab-content hidden">
                 <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-upm-blue">Recursos compartidos</h2>
@@ -212,20 +219,20 @@
                             <!-- Already contributor: upload button -->
                             <button th:if="${isContributor}" id="open-upload-modal"
                                 class="bg-upm-light-blue hover:bg-upm-blue text-white px-4 py-2 rounded-full font-medium transition-all">
-                                <i class="fas fa-upload mr-2"></i> Subir recurso
+                                <i class="fas fa-upload mr-2" aria-hidden="true"></i> Subir recurso
                             </button>
                             <!-- Not contributor: request buttons -->
                             <div th:if="${!isContributor}" sec:authorize="hasRole('STUDENT')" class="flex items-center gap-2">
-                                <span th:if="${hasPendingRequest}" class="text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200">
-                                    <i class="fas fa-clock mr-1"></i> Solicitud pendiente
+                                <span th:if="${hasPendingRequest}" class="text-sm text-amber-600 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-200" role="status">
+                                    <i class="fas fa-clock mr-1" aria-hidden="true"></i> Solicitud pendiente
                                 </span>
                                 <button th:unless="${hasPendingRequest}" id="open-request-modal"
                                     class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full font-medium transition-all text-sm">
-                                    <i class="fas fa-hand-paper mr-1"></i> Solicitar contribuir
+                                    <i class="fas fa-hand-paper mr-1" aria-hidden="true"></i> Solicitar contribuir
                                 </button>
                                 <button id="open-propose-modal"
                                     class="border border-upm-light-blue text-upm-light-blue hover:bg-upm-light-blue hover:text-white px-4 py-2 rounded-full font-medium transition-all text-sm">
-                                    <i class="fas fa-file-upload mr-1"></i> Proponer recurso
+                                    <i class="fas fa-file-upload mr-1" aria-hidden="true"></i> Proponer recurso
                                 </button>
                             </div>
                         </div>
@@ -234,12 +241,13 @@
                     <!-- Resources Grid -->
                     <div th:if="${not #lists.isEmpty(resources)}"
                         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div th:each="resource : ${resources}"
+                        <article th:each="resource : ${resources}"
                             class="resource-card border border-upm-gray rounded-lg p-4 transition-all"
-                            th:id="'resource-card-' + ${resource.id}">
+                            th:id="'resource-card-' + ${resource.id}"
+                            th:attr="aria-label=${'Recurso: ' + resource.name}">
                             <div class="flex items-start mb-3">
                                 <div
-                                    class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3">
+                                    class="w-12 h-12 rounded-lg bg-upm-light-blue bg-opacity-10 flex items-center justify-center mr-3" aria-hidden="true">
                                     <th:block th:switch="${resource.type}">
                                         <i th:case="'PDF'" class="fas fa-file-pdf text-upm-light-blue text-xl"></i>
                                         <i th:case="'VIDEO'" class="fas fa-video text-upm-light-blue text-xl"></i>
@@ -256,12 +264,12 @@
                                         <span th:text="${resource.type}">Type</span> •
                                         <span th:text="${resource.language}">Language</span>
                                         <span th:if="${resource.isPrivate}" class="ml-1 text-red-500">
-                                            • <i class="fas fa-lock ml-1"></i> Privado
+                                            • <i class="fas fa-lock ml-1" aria-hidden="true"></i> Privado
                                         </span>
                                     </p>
                                     <div th:unless="${resource.official}" class="mt-1">
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200">
-                                            <i class="fas fa-user-graduate mr-1"></i> No oficial
+                                            <i class="fas fa-user-graduate mr-1" aria-hidden="true"></i> No oficial
                                             <span th:if="${resource.uploadedByName != null}" th:text="' · ' + ${resource.uploadedByName}"></span>
                                         </span>
                                     </div>
@@ -272,42 +280,46 @@
 
                             <!-- Voting Section -->
                             <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-3" role="group" aria-label="Votaciones del recurso">
                                     <button sec:authorize="hasRole('STUDENT')"
                                         class="vote-btn upvote-btn flex items-center gap-1 px-3 py-1 rounded-full border transition-all duration-200 text-sm"
                                         th:classappend="${resource.userVote == 'UPVOTE'} ? 'bg-green-100 border-green-400 text-green-700' : 'border-gray-300 text-gray-500 hover:border-green-400 hover:text-green-600'"
                                         th:data-resource-id="${resource.id}"
+                                        th:attr="aria-pressed=${resource.userVote == 'UPVOTE' ? 'true' : 'false'}"
+                                        aria-label="Votar positivo"
                                         data-vote-type="UPVOTE"
                                         onclick="vote(this)">
-                                        <i class="fas fa-thumbs-up"></i>
+                                        <i class="fas fa-thumbs-up" aria-hidden="true"></i>
                                         <span class="upvote-count" th:text="${resource.upvotes}">0</span>
                                     </button>
                                     <button sec:authorize="hasRole('STUDENT')"
                                         class="vote-btn downvote-btn flex items-center gap-1 px-3 py-1 rounded-full border transition-all duration-200 text-sm"
                                         th:classappend="${resource.userVote == 'DOWNVOTE'} ? 'bg-red-100 border-red-400 text-red-700' : 'border-gray-300 text-gray-500 hover:border-red-400 hover:text-red-600'"
                                         th:data-resource-id="${resource.id}"
+                                        th:attr="aria-pressed=${resource.userVote == 'DOWNVOTE' ? 'true' : 'false'}"
+                                        aria-label="Votar negativo"
                                         data-vote-type="DOWNVOTE"
                                         onclick="vote(this)">
-                                        <i class="fas fa-thumbs-down"></i>
+                                        <i class="fas fa-thumbs-down" aria-hidden="true"></i>
                                         <span class="downvote-count" th:text="${resource.downvotes}">0</span>
                                     </button>
 
                                     <!-- Read-only counters for non-students -->
                                     <span sec:authorize="!hasRole('STUDENT')" class="flex items-center gap-3 text-sm text-gray-500">
                                         <span class="flex items-center gap-1">
-                                            <i class="fas fa-thumbs-up text-green-500"></i>
+                                            <i class="fas fa-thumbs-up text-green-500" aria-hidden="true"></i>
                                             <span th:text="${resource.upvotes}">0</span>
                                         </span>
                                         <span class="flex items-center gap-1">
-                                            <i class="fas fa-thumbs-down text-red-500"></i>
+                                            <i class="fas fa-thumbs-down text-red-500" aria-hidden="true"></i>
                                             <span th:text="${resource.downvotes}">0</span>
                                         </span>
                                     </span>
                                 </div>
                                 <a th:href="@{/api/resources/{path}/download(path=${resource.id})}"
                                     class="text-upm-light-blue hover:text-upm-blue font-medium download-link"
-                                    th:attr="data-filename=${resource.name}">
-                                    <i class="fas fa-download mr-1"></i> Descargar
+                                    th:attr="data-filename=${resource.name}, aria-label=${'Descargar ' + resource.name}">
+                                    <i class="fas fa-download mr-1" aria-hidden="true"></i> Descargar
                                 </a>
                             </div>
 
@@ -315,7 +327,7 @@
                                 <span class="text-gray-500 text-xs"
                                     th:text="'Subido el ' + ${resource.uploadDate}">Upload date</span>
                             </div>
-                        </div>
+                        </article>
                     </div>
 
                     <!-- Empty State -->
@@ -327,24 +339,26 @@
                         )}" />
                         <button id="open-upload-modal-empty"
                             class="mt-4 bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-3 rounded-full font-medium transition-all">
-                            <i class="fas fa-upload mr-2"></i> Subir primer recurso
+                            <i class="fas fa-upload mr-2" aria-hidden="true"></i> Subir primer recurso
                         </button>
                     </div>
 
                     <!-- Pagination -->
                     <div th:if="${not #lists.isEmpty(resources)}" class="flex justify-center mt-8">
-                        <nav class="inline-flex rounded-md shadow">
+                        <nav class="inline-flex rounded-md shadow" aria-label="Paginación de recursos">
                             <a href="#"
-                                class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
-                                <i class="fas fa-chevron-left"></i>
+                                class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray"
+                                aria-label="Página anterior">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i>
                             </a>
-                            <a href="#"
+                            <a href="#" aria-current="page" aria-label="Página 1"
                                 class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue font-medium hover:bg-upm-gray">1</a>
-                            <a href="#"
+                            <a href="#" aria-label="Página 2"
                                 class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">2</a>
                             <a href="#"
-                                class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
-                                <i class="fas fa-chevron-right"></i>
+                                class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray"
+                                aria-label="Página siguiente">
+                                <i class="fas fa-chevron-right" aria-hidden="true"></i>
                             </a>
                         </nav>
                     </div>
@@ -355,96 +369,117 @@
     </section>
 
     <!-- Upload Resource Modal (Contributor) -->
-    <div th:if="${isContributor}" id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div th:if="${isContributor}" id="upload-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+         role="dialog" aria-modal="true" aria-labelledby="upload-modal-title">
         <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-upm-blue"><i class="fas fa-upload mr-2"></i>Subir recurso</h3>
-                <button id="close-upload-modal" class="text-gray-500 hover:text-gray-700">
-                    <i class="fas fa-times"></i>
+                <h3 id="upload-modal-title" class="text-xl font-bold text-upm-blue"><i class="fas fa-upload mr-2" aria-hidden="true"></i>Subir recurso</h3>
+                <button id="close-upload-modal" class="text-gray-500 hover:text-gray-700" aria-label="Cerrar diálogo">
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
 
-            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-                <p class="text-sm text-amber-800"><i class="fas fa-info-circle mr-1"></i>Tu recurso se publicará como <strong>contribución no oficial</strong> y será visible para todos.</p>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4" role="note">
+                <p class="text-sm text-amber-800"><i class="fas fa-info-circle mr-1" aria-hidden="true"></i>Tu recurso se publicará como <strong>contribución no oficial</strong> y será visible para todos.</p>
             </div>
 
-            <form th:action="@{'/subject/' + ${subject.id} + '/contribute'}" method="post" enctype="multipart/form-data" class="space-y-4">
+            <form th:action="@{'/subject/' + ${subject.id} + '/contribute'}" method="post" enctype="multipart/form-data" class="space-y-4" aria-label="Formulario de subida de recurso">
                 <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Archivo <span class="text-red-500">*</span></label>
-                    <input type="file" name="file" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <label for="upload-file" class="block text-gray-700 mb-2 font-medium">Archivo <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(obligatorio)</span></label>
+                    <input type="file" id="upload-file" name="file" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Nombre <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" required placeholder="Ej: Apuntes Tema 3"
+                    <label for="upload-name" class="block text-gray-700 mb-2 font-medium">Nombre <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(obligatorio)</span></label>
+                    <input type="text" id="upload-name" name="name" required placeholder="Ej: Apuntes Tema 3"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label>
-                    <select name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
+                    <label for="upload-type" class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(obligatorio)</span></label>
+                    <select id="upload-type" name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
                         <option value="">Selecciona un tipo</option>
                         <option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">TYPE</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Idioma</label>
-                    <input type="text" name="language" placeholder="Español"
+                    <label for="upload-language" class="block text-gray-700 mb-2 font-medium">Idioma</label>
+                    <input type="text" id="upload-language" name="language" placeholder="Español"
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue">
                 </div>
                 <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Descripción</label>
-                    <textarea name="description" rows="2" placeholder="Breve descripción..."
+                    <label for="upload-description" class="block text-gray-700 mb-2 font-medium">Descripción</label>
+                    <textarea id="upload-description" name="description" rows="2" placeholder="Breve descripción..."
                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
                 </div>
                 <div class="flex justify-end space-x-3 pt-2">
                     <button type="button" id="cancel-upload" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-upload mr-1"></i>Subir</button>
+                    <button type="submit" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-upload mr-1" aria-hidden="true"></i>Subir</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Request Access Modal -->
-    <div id="request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div id="request-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+         role="dialog" aria-modal="true" aria-labelledby="request-modal-title">
         <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
-            <h3 class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-hand-paper mr-2"></i>Solicitar ser contribuidor</h3>
+            <h3 id="request-modal-title" class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-hand-paper mr-2" aria-hidden="true"></i>Solicitar ser contribuidor</h3>
             <p class="text-gray-600 text-sm mb-4">Envía una solicitud al profesor para poder subir recursos de forma permanente.</p>
-            <form th:action="@{'/subject/' + ${subject.id} + '/request-access'}" method="post" class="space-y-4">
+            <form th:action="@{'/subject/' + ${subject.id} + '/request-access'}" method="post" class="space-y-4" aria-label="Formulario de solicitud de acceso">
                 <div>
-                    <label class="block text-gray-700 mb-2 font-medium">Mensaje (opcional)</label>
-                    <textarea name="message" rows="3" placeholder="¿Por qué quieres contribuir?" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
+                    <label for="request-message" class="block text-gray-700 mb-2 font-medium">Mensaje (opcional)</label>
+                    <textarea id="request-message" name="message" rows="3" placeholder="¿Por qué quieres contribuir?" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"></textarea>
                 </div>
                 <div class="flex items-start gap-2">
                     <input type="checkbox" id="copyright-check-access" required class="mt-1 h-4 w-4 rounded border-gray-300 text-upm-blue focus:ring-upm-light-blue">
                     <label for="copyright-check-access" class="text-xs text-gray-600">Declaro que los contenidos que suba serán de mi autoría o tendré los derechos necesarios para compartirlos, y que no infringen derechos de propiedad intelectual de terceros.</label>
                 </div>
                 <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="document.getElementById('request-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1"></i>Enviar</button>
+                    <button type="button" onclick="closeModal('request-modal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1" aria-hidden="true"></i>Enviar</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Propose Resource Modal -->
-    <div id="propose-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div id="propose-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+         role="dialog" aria-modal="true" aria-labelledby="propose-modal-title">
         <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-file-upload mr-2"></i>Proponer un recurso</h3>
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                <p class="text-sm text-blue-800"><i class="fas fa-info-circle mr-1"></i>Será revisado por el profesor antes de publicarse.</p>
+            <h3 id="propose-modal-title" class="text-xl font-bold text-upm-blue mb-4"><i class="fas fa-file-upload mr-2" aria-hidden="true"></i>Proponer un recurso</h3>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4" role="note">
+                <p class="text-sm text-blue-800"><i class="fas fa-info-circle mr-1" aria-hidden="true"></i>Será revisado por el profesor antes de publicarse.</p>
             </div>
-            <form th:action="@{'/subject/' + ${subject.id} + '/propose-resource'}" method="post" enctype="multipart/form-data" class="space-y-4">
-                <div><label class="block text-gray-700 mb-2 font-medium">Archivo <span class="text-red-500">*</span></label><input type="file" name="file" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
-                <div><label class="block text-gray-700 mb-2 font-medium">Nombre <span class="text-red-500">*</span></label><input type="text" name="name" required placeholder="Ej: Apuntes Tema 3" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
-                <div><label class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500">*</span></label><select name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg"><option value="">Selecciona...</option><option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">TYPE</option></select></div>
-                <div><label class="block text-gray-700 mb-2 font-medium">Idioma</label><input type="text" name="language" placeholder="Español" class="w-full px-3 py-2 border border-gray-300 rounded-lg"></div>
-                <div><label class="block text-gray-700 mb-2 font-medium">Mensaje al profesor</label><textarea name="message" rows="2" placeholder="Opcional..." class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea></div>
+            <form th:action="@{'/subject/' + ${subject.id} + '/propose-resource'}" method="post" enctype="multipart/form-data" class="space-y-4" aria-label="Formulario de propuesta de recurso">
+                <div>
+                    <label for="propose-file" class="block text-gray-700 mb-2 font-medium">Archivo <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(obligatorio)</span></label>
+                    <input type="file" id="propose-file" name="file" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="propose-name" class="block text-gray-700 mb-2 font-medium">Nombre <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(obligatorio)</span></label>
+                    <input type="text" id="propose-name" name="name" required placeholder="Ej: Apuntes Tema 3" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="propose-type" class="block text-gray-700 mb-2 font-medium">Tipo <span class="text-red-500" aria-hidden="true">*</span><span class="sr-only">(obligatorio)</span></label>
+                    <select id="propose-type" name="type" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <option value="">Selecciona...</option>
+                        <option th:each="rt : ${resourceTypes}" th:value="${rt}" th:text="${rt}">TYPE</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="propose-language" class="block text-gray-700 mb-2 font-medium">Idioma</label>
+                    <input type="text" id="propose-language" name="language" placeholder="Español" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                </div>
+                <div>
+                    <label for="propose-message" class="block text-gray-700 mb-2 font-medium">Mensaje al profesor</label>
+                    <textarea id="propose-message" name="message" rows="2" placeholder="Opcional..." class="w-full px-3 py-2 border border-gray-300 rounded-lg"></textarea>
+                </div>
                 <div class="flex items-start gap-2">
                     <input type="checkbox" id="copyright-check-propose" required class="mt-1 h-4 w-4 rounded border-gray-300 text-upm-blue focus:ring-upm-light-blue">
                     <label for="copyright-check-propose" class="text-xs text-gray-600">Declaro que el contenido que estoy subiendo es de mi autoría o tengo los derechos necesarios para compartirlo, y que no infringe derechos de propiedad intelectual de terceros.</label>
                 </div>
                 <div class="flex justify-end space-x-3">
-                    <button type="button" onclick="document.getElementById('propose-modal').classList.add('hidden')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1"></i>Proponer</button>
+                    <button type="button" onclick="closeModal('propose-modal')" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium"><i class="fas fa-paper-plane mr-1" aria-hidden="true"></i>Proponer</button>
                 </div>
             </form>
         </div>
@@ -453,28 +488,62 @@
 
 <th:block layout:fragment="scripts">
     <script>
+        // Modal helpers with focus management
+        let lastFocusedElement = null;
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            lastFocusedElement = document.activeElement;
+            modal.classList.remove('hidden');
+            // Focus first focusable element inside modal
+            const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length) focusable[0].focus();
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            modal.classList.add('hidden');
+            if (lastFocusedElement) lastFocusedElement.focus();
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                ['upload-modal', 'request-modal', 'propose-modal'].forEach(id => {
+                    const modal = document.getElementById(id);
+                    if (modal && !modal.classList.contains('hidden')) {
+                        closeModal(id);
+                    }
+                });
+            }
+        });
+
         // Modal openers for request/propose
-        const reqModal = document.getElementById('request-modal');
-        const propModal = document.getElementById('propose-modal');
         const openReqBtn = document.getElementById('open-request-modal');
         const openPropBtn = document.getElementById('open-propose-modal');
-        if (openReqBtn && reqModal) openReqBtn.addEventListener('click', () => reqModal.classList.remove('hidden'));
-        if (openPropBtn && propModal) openPropBtn.addEventListener('click', () => propModal.classList.remove('hidden'));
-        if (reqModal) reqModal.addEventListener('click', (e) => { if (e.target === reqModal) reqModal.classList.add('hidden'); });
-        if (propModal) propModal.addEventListener('click', (e) => { if (e.target === propModal) propModal.classList.add('hidden'); });
+        if (openReqBtn) openReqBtn.addEventListener('click', () => openModal('request-modal'));
+        if (openPropBtn) openPropBtn.addEventListener('click', () => openModal('propose-modal'));
 
-        // Tab functionality
+        // Close modals on backdrop click
+        ['request-modal', 'propose-modal', 'upload-modal'].forEach(id => {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(id); });
+            }
+        });
+
+        // Tab functionality with ARIA support
         const tabs = {
             description: {
                 tab: document.getElementById('description-tab'),
                 content: document.getElementById('description-content')
             },
-
             teachers: {
                 tab: document.getElementById('teachers-tab'),
                 content: document.getElementById('teachers-content')
             },
-
             resources: {
                 tab: document.getElementById('resources-tab'),
                 content: document.getElementById('resources-content')
@@ -486,18 +555,48 @@
             Object.keys(tabs).forEach(key => {
                 tabs[key].tab.classList.remove('tab-active');
                 tabs[key].tab.classList.add('text-gray-500');
+                tabs[key].tab.setAttribute('aria-selected', 'false');
+                tabs[key].tab.setAttribute('tabindex', '-1');
                 tabs[key].content.classList.add('hidden');
             });
 
             // Activate selected tab
             tabs[tabName].tab.classList.add('tab-active');
             tabs[tabName].tab.classList.remove('text-gray-500');
+            tabs[tabName].tab.setAttribute('aria-selected', 'true');
+            tabs[tabName].tab.setAttribute('tabindex', '0');
             tabs[tabName].content.classList.remove('hidden');
         }
 
         // Add event listeners to tabs
-        Object.keys(tabs).forEach(key => {
-            tabs[key].tab.addEventListener('click', () => activateTab(key));
+        const tabKeys = Object.keys(tabs);
+        tabKeys.forEach((key, index) => {
+            tabs[key].tab.addEventListener('click', () => {
+                activateTab(key);
+                tabs[key].tab.focus();
+            });
+
+            // Keyboard navigation for tabs (arrow keys)
+            tabs[key].tab.addEventListener('keydown', (e) => {
+                let newIndex;
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    newIndex = (index + 1) % tabKeys.length;
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    newIndex = (index - 1 + tabKeys.length) % tabKeys.length;
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    newIndex = 0;
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    newIndex = tabKeys.length - 1;
+                }
+                if (newIndex !== undefined) {
+                    activateTab(tabKeys[newIndex]);
+                    tabs[tabKeys[newIndex]].tab.focus();
+                }
+            });
         });
 
         // Initialize with description tab active
@@ -509,31 +608,33 @@
         const closeUploadModal = document.getElementById('close-upload-modal');
         const cancelUpload = document.getElementById('cancel-upload');
 
-        if (openUploadModal && uploadModal) {
-            openUploadModal.addEventListener('click', () => uploadModal.classList.remove('hidden'));
+        if (openUploadModal) {
+            openUploadModal.addEventListener('click', () => openModal('upload-modal'));
         }
-        if (closeUploadModal && uploadModal) {
-            closeUploadModal.addEventListener('click', () => uploadModal.classList.add('hidden'));
+        if (closeUploadModal) {
+            closeUploadModal.addEventListener('click', () => closeModal('upload-modal'));
         }
-        if (cancelUpload && uploadModal) {
-            cancelUpload.addEventListener('click', () => uploadModal.classList.add('hidden'));
-        }
-        if (uploadModal) {
-            uploadModal.addEventListener('click', (e) => { if (e.target === uploadModal) uploadModal.classList.add('hidden'); });
+        if (cancelUpload) {
+            cancelUpload.addEventListener('click', () => closeModal('upload-modal'));
         }
 
         // Enrollment list functionality
         function toggleEnrollmentMenu() {
             const menu = document.getElementById('enrollmentMenu');
+            const btn = document.getElementById('enrollmentBtn');
+            const isHidden = menu.classList.contains('hidden');
             menu.classList.toggle('hidden');
+            btn.setAttribute('aria-expanded', String(isHidden));
         }
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             const dropdown = document.getElementById('enrollmentDropdown');
             const menu = document.getElementById('enrollmentMenu');
+            const btn = document.getElementById('enrollmentBtn');
             if (dropdown && menu && !dropdown.contains(e.target)) {
                 menu.classList.add('hidden');
+                if (btn) btn.setAttribute('aria-expanded', 'false');
             }
         });
 
@@ -541,6 +642,7 @@
             const subjectId = document.getElementById('enrollmentDropdown').closest('[data-subject-id]')?.getAttribute('data-subject-id') 
                 || document.querySelector('meta[name="subject-id"]')?.content;
             document.getElementById('enrollmentMenu').classList.add('hidden');
+            document.getElementById('enrollmentBtn').setAttribute('aria-expanded', 'false');
 
             fetch('/enrollment-list/add?subjectId=' + subjectId + '&asReserve=' + asReserve, {
                 method: 'POST'
@@ -550,7 +652,8 @@
                 if (data.success) {
                     const btn = document.getElementById('enrollmentBtn');
                     btn.className = 'flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-lg border transition-all bg-green-50 border-green-300 text-green-700';
-                    btn.innerHTML = '<i class="fas fa-check"></i><span>En mi lista</span>';
+                    btn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>En mi lista</span>';
+                    btn.setAttribute('aria-label', 'Ya está en tu lista de matrícula');
                     btn.onclick = null;
                 } else if (data.error) {
                     alert(data.error);
@@ -586,7 +689,7 @@
                 if (upvoteCount) upvoteCount.textContent = data.upvotes;
                 if (downvoteCount) downvoteCount.textContent = data.downvotes;
 
-                // Update upvote button styles
+                // Update upvote button styles and aria-pressed
                 const upvoteBtn = card.querySelector('.upvote-btn');
                 const downvoteBtn = card.querySelector('.downvote-btn');
 
@@ -595,8 +698,10 @@
                         'border-gray-300', 'text-gray-500');
                     if (data.userVote === 'UPVOTE') {
                         upvoteBtn.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+                        upvoteBtn.setAttribute('aria-pressed', 'true');
                     } else {
                         upvoteBtn.classList.add('border-gray-300', 'text-gray-500');
+                        upvoteBtn.setAttribute('aria-pressed', 'false');
                     }
                 }
 
@@ -605,8 +710,10 @@
                         'border-gray-300', 'text-gray-500');
                     if (data.userVote === 'DOWNVOTE') {
                         downvoteBtn.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                        downvoteBtn.setAttribute('aria-pressed', 'true');
                     } else {
                         downvoteBtn.classList.add('border-gray-300', 'text-gray-500');
+                        downvoteBtn.setAttribute('aria-pressed', 'false');
                     }
                 }
             })

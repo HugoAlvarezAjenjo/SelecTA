@@ -14,11 +14,11 @@
 <main layout:fragment="content">
 
     <!-- Hero Section -->
-    <section class="hero-pattern">
+    <section class="hero-pattern" aria-labelledby="hero-title">
         <div class="container mx-auto px-4 py-12 md:py-20">
             <div class="flex hero-content items-center m-3">
                 <div class="md:w-1/2 space-y-6">
-                    <h1 class="text-4xl md:text-5xl font-bold text-upm-blue leading-tight">
+                    <h1 id="hero-title" class="text-4xl md:text-5xl font-bold text-upm-blue leading-tight">
                         Selecciona tu asignatura ideal en segundos
                     </h1>
                     <p class="text-lg text-gray-600">
@@ -38,32 +38,32 @@
                 </div>
                 <div class="md:w-1/2 flex justify-center mt-8 md:mt-0">
                     <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80"
-                         alt="Estudiante universitario" class="w-full max-w-md rounded-lg shadow-xl">
+                         alt="Estudiantes universitarios trabajando juntos en una biblioteca" class="w-full max-w-md rounded-lg shadow-xl">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Favourite Subjects Section -->
-    <section th:if="${favouriteSubjects != null and !favouriteSubjects.isEmpty()}" class="py-12 bg-white">
+    <section th:if="${favouriteSubjects != null and !favouriteSubjects.isEmpty()}" class="py-12 bg-white" aria-labelledby="favourites-heading">
         <div class="container mx-auto px-4 m-3">
             <div class="flex justify-between items-end mb-8">
                 <div>
-                    <h2 class="text-3xl font-bold text-upm-blue">Mis Asignaturas Favoritas</h2>
+                    <h2 id="favourites-heading" class="text-3xl font-bold text-upm-blue">Mis Asignaturas Favoritas</h2>
                     <p class="text-gray-600 mt-2">Acceso rápido a las asignaturas que más te interesan.</p>
                 </div>
                 <a th:href="@{/subjects}" class="text-upm-light-blue hover:text-upm-blue font-medium transition-all">
-                    Ver todas <i class="fas fa-arrow-right ml-1"></i>
+                    Ver todas <i class="fas fa-arrow-right ml-1" aria-hidden="true"></i>
                 </a>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div th:each="subject : ${favouriteSubjects}"
-                     class="bg-white rounded-xl shadow-sm border border-upm-gray p-6 hover:shadow-md transition-all cursor-pointer flex flex-col h-full"
-                     th:onclick="|window.location.href='@{/subject/{id}(id=${subject.id})}'|">
+                <a th:each="subject : ${favouriteSubjects}"
+                   th:href="@{/subject/{id}(id=${subject.id})}"
+                   class="bg-white rounded-xl shadow-sm border border-upm-gray p-6 hover:shadow-md transition-all flex flex-col h-full group block">
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-bold text-upm-blue" th:text="${subject.name}">Nombre de la Asignatura</h3>
-                        <i class="fas fa-star text-yellow-400"></i>
+                        <h3 class="text-xl font-bold text-upm-blue group-hover:text-upm-light-blue transition-colors" th:text="${subject.name}">Nombre de la Asignatura</h3>
+                        <i class="fas fa-star text-yellow-400" aria-hidden="true"></i>
                     </div>
                     <p class="text-gray-600 mb-6 flex-grow line-clamp-3" th:text="${subject.description}">Descripción breve de la asignatura.</p>
                     <div class="flex flex-wrap gap-2 mt-auto">
@@ -71,48 +71,48 @@
                               class="bg-upm-gray rounded-full px-3 py-1 text-xs font-medium"
                               th:text="${attr}">Attribute</span>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section class="bg-upm-gray py-16">
+    <section class="bg-upm-gray py-16" aria-labelledby="features-heading">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center text-upm-blue mb-12">¿Por qué usar SelecTA?</h2>
+            <h2 id="features-heading" class="text-3xl font-bold text-center text-upm-blue mb-12">¿Por qué usar SelecTA?</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
-                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <article class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                         <i class="fas fa-brain text-upm-light-blue text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-upm-blue mb-2">Recomendaciones inteligentes</h3>
                     <p class="text-gray-600">Recomendador de asignaturas optativas inteligente.</p>
-                </div>
+                </article>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
-                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <article class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                         <i class="fas fa-check-circle text-upm-light-blue text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-upm-blue mb-2">Opiniones verificadas</h3>
                     <p class="text-gray-600">Todos los comentarios y valoraciones provienen de estudiantes reales de la UPM con credenciales verificadas.</p>
-                </div>
+                </article>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
-                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <article class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                         <i class="fas fa-book text-upm-light-blue text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-upm-blue mb-2">Recursos académicos</h3>
                     <p class="text-gray-600">Accede a apuntes, exámenes anteriores y material docente compartido por la comunidad universitaria.</p>
-                </div>
+                </article>
 
-                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
-                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <article class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all text-center">
+                    <div class="w-16 h-16 bg-upm-light-blue bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                         <i class="fas fa-users text-upm-light-blue text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-semibold text-upm-blue mb-2">Comunidad activa</h3>
                     <p class="text-gray-600">Conecta con otros estudiantes, resuelve dudas y comparte experiencias sobre asignaturas y profesores.</p>
-                </div>
+                </article>
             </div>
         </div>
     </section>

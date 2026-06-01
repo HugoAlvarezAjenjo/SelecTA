@@ -27,7 +27,7 @@
             <div class="bg-white rounded-xl shadow-sm p-6">
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 rounded-xl flex items-center justify-center"
-                         th:classappend="${iconBg} ?: 'bg-blue-100'">
+                         th:classappend="${iconBg} ?: 'bg-blue-100'" aria-hidden="true">
                         <i th:class="'fas fa-' + ${icon} + ' text-2xl'"
                            th:classappend="' ' + (${iconColor} ?: 'text-blue-600')"></i>
                     </div>
@@ -61,17 +61,21 @@
     -->
     <div th:fragment="modal(id, title, icon, size)"
          th:id="${id}"
-         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+         class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+         role="dialog"
+         aria-modal="true"
+         th:attr="aria-labelledby=${id + '-title'}">
         <div class="bg-white rounded-xl shadow-lg p-6 mx-4 w-full max-h-[90vh] overflow-y-auto"
              th:classappend="${size == 'sm' ? 'max-w-sm' : (size == 'lg' ? 'max-w-lg' : (size == 'xl' ? 'max-w-xl' : 'max-w-md'))}">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold text-gray-900">
-                    <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' mr-2 text-blue-600'"></i>
+                <h3 class="text-xl font-bold text-gray-900" th:id="${id + '-title'}">
+                    <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' mr-2 text-blue-600'" aria-hidden="true"></i>
                     <span th:text="${title}">Modal Title</span>
                 </h3>
                 <button th:onclick="'document.getElementById(\'' + ${id} + '\').classList.add(\'hidden\')'"
-                        class="text-gray-400 hover:text-gray-700 text-xl transition-colors p-1 rounded-lg hover:bg-gray-100">
-                    <i class="fas fa-times"></i>
+                        class="text-gray-400 hover:text-gray-700 text-xl transition-colors p-1 rounded-lg hover:bg-gray-100"
+                        aria-label="Cerrar diálogo">
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
             </div>
             <th:block th:replace="${'modal-body'}" />
@@ -93,9 +97,11 @@
     -->
     <div th:fragment="stat-card(value, label, valueColor, borderColor)"
          class="bg-white rounded-xl shadow-sm border px-4 py-3 text-center"
-         th:classappend="${borderColor} ?: 'border-gray-100'">
-        <div class="text-2xl font-bold" th:classappend="${valueColor} ?: 'text-blue-800'" th:text="${value}">0</div>
-        <div class="text-xs text-gray-500" th:text="${label}">Label</div>
+         th:classappend="${borderColor} ?: 'border-gray-100'"
+         role="figure"
+         th:attr="aria-label=${label + ': ' + value}">
+        <div class="text-2xl font-bold" th:classappend="${valueColor} ?: 'text-blue-800'" th:text="${value}" aria-hidden="true">0</div>
+        <div class="text-xs text-gray-500" th:text="${label}" aria-hidden="true">Label</div>
     </div>
 
     <!--
@@ -114,8 +120,10 @@
     -->
     <div th:fragment="avatar(name, size, color)"
          class="rounded-full flex items-center justify-center text-white font-bold"
+         role="img"
+         th:attr="aria-label=${'Avatar de ' + name}"
          th:classappend="(${size == 'sm'} ? 'w-10 h-10 text-sm' : (${size == 'lg'} ? 'w-16 h-16 text-xl' : (${size == 'xl'} ? 'w-28 h-28 text-4xl shadow-lg' : 'w-12 h-12 text-base'))) + ' ' + (${color} ?: 'bg-blue-600')">
-        <span th:text="${#strings.substring(name, 0, 1).toUpperCase()}">U</span>
+        <span th:text="${#strings.substring(name, 0, 1).toUpperCase()}" aria-hidden="true">U</span>
     </div>
 
     <!--
@@ -131,11 +139,12 @@
     -->
     <a th:fragment="subject-card(subject, showDescription)"
        th:href="@{/subject/{id}(id=${subject.id})}"
-       class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full group block">
+       class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all flex flex-col h-full group block"
+       th:attr="aria-label=${'Ver asignatura: ' + subject.name}">
         <div class="flex justify-between items-start mb-4">
             <h3 class="text-xl font-bold text-blue-900 group-hover:text-blue-600 transition-colors"
                 th:text="${subject.name}">Subject Name</h3>
-            <i class="fas fa-book text-blue-500 flex-shrink-0 ml-2"></i>
+            <i class="fas fa-book text-blue-500 flex-shrink-0 ml-2" aria-hidden="true"></i>
         </div>
         <p th:if="${showDescription}" class="text-gray-600 mb-6 flex-grow line-clamp-3"
            th:text="${subject.description}">Description</p>
@@ -146,7 +155,7 @@
         </div>
         <div class="mt-4 pt-3 border-t border-gray-100">
             <span class="text-sm text-blue-600 font-medium group-hover:text-blue-800 transition-colors">
-                Ver asignatura <i class="fas fa-arrow-right ml-1"></i>
+                Ver asignatura <i class="fas fa-arrow-right ml-1" aria-hidden="true"></i>
             </span>
         </div>
     </a>
@@ -162,9 +171,10 @@
         )}" />
     ═══════════════════════════════════════════════════════════════
     -->
-    <div th:fragment="tag-list(tags, prefix)" class="flex flex-wrap gap-2">
+    <div th:fragment="tag-list(tags, prefix)" class="flex flex-wrap gap-2" role="list" aria-label="Etiquetas">
         <span th:each="tag : ${tags}"
               class="bg-gray-100 rounded-full px-3 py-1 text-sm font-medium text-gray-700"
+              role="listitem"
               th:text="${(prefix ?: '') + tag}">#Tag</span>
     </div>
 
@@ -178,9 +188,10 @@
         )}" />
     ═══════════════════════════════════════════════════════════════
     -->
-    <div th:fragment="attribute-pills(attributes)" class="flex flex-wrap gap-2">
+    <div th:fragment="attribute-pills(attributes)" class="flex flex-wrap gap-2" role="list" aria-label="Atributos">
         <span th:each="attribute : ${attributes}"
               class="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-medium text-gray-700"
+              role="listitem"
               th:text="${attribute}">Attribute</span>
     </div>
 
@@ -196,8 +207,9 @@
     -->
     <a th:fragment="teacher-card(teacher)"
        th:href="@{/user/{id}(id=${teacher.id})}"
-       class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-400 transition-all group">
-        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold mr-4 flex-shrink-0">
+       class="flex items-center p-4 border border-gray-200 rounded-lg hover:shadow-md hover:border-blue-400 transition-all group"
+       th:attr="aria-label=${'Ver perfil de ' + teacher.name}">
+        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold mr-4 flex-shrink-0" aria-hidden="true">
             <span th:text="${#strings.substring(teacher.name, 0, 1).toUpperCase()}">T</span>
         </div>
         <div class="flex-grow min-w-0">
@@ -205,7 +217,7 @@
                 th:text="${teacher.name}">Teacher Name</h3>
             <p class="text-sm text-gray-500 italic truncate" th:text="${teacher.email}">email@example.com</p>
         </div>
-        <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-2"></i>
+        <i class="fas fa-chevron-right text-gray-300 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-2" aria-hidden="true"></i>
     </a>
 
     <!--
@@ -219,7 +231,8 @@
     ═══════════════════════════════════════════════════════════════
     -->
     <div th:fragment="resource-type-icon(type)"
-         class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+         class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0"
+         aria-hidden="true">
         <th:block th:switch="${type}">
             <i th:case="'PDF'" class="fas fa-file-pdf text-blue-600 text-xl"></i>
             <i th:case="'VIDEO'" class="fas fa-video text-blue-600 text-xl"></i>
@@ -241,15 +254,17 @@
         )}" />
     ═══════════════════════════════════════════════════════════════
     -->
-    <div th:fragment="star-rating-display(rating, count)" class="flex items-center gap-2">
-        <div class="flex items-center gap-0.5">
+    <div th:fragment="star-rating-display(rating, count)" class="flex items-center gap-2"
+         role="img"
+         th:attr="aria-label=${'Valoración: ' + (rating > 0 ? rating : 'sin valoraciones') + (count != null and count > 0 ? ' (' + count + ' valoraciones)' : '')}">
+        <div class="flex items-center gap-0.5" aria-hidden="true">
             <span th:each="star : ${#numbers.sequence(1, 5)}">
                 <i th:class="${star <= rating} ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300'"></i>
             </span>
         </div>
-        <span class="text-sm font-bold text-gray-700" th:text="${rating > 0} ? ${rating} : '—'">—</span>
+        <span class="text-sm font-bold text-gray-700" th:text="${rating > 0} ? ${rating} : '—'" aria-hidden="true">—</span>
         <span th:if="${count != null and count > 0}" class="text-sm text-gray-500"
-              th:text="'(' + ${count} + ')'"></span>
+              th:text="'(' + ${count} + ')'" aria-hidden="true"></span>
     </div>
 
     <!--
@@ -265,7 +280,7 @@
     ═══════════════════════════════════════════════════════════════
     -->
     <div th:fragment="empty-state(icon, title, message)" class="text-center py-12">
-        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+        <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center" aria-hidden="true">
             <i th:class="'fas fa-' + ${icon} + ' text-blue-400 text-3xl'"></i>
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2" th:text="${title}">Title</h3>
@@ -288,8 +303,9 @@
     -->
     <div th:fragment="alert(type, icon, message)"
          class="px-4 py-3 rounded-lg mb-6 border flex items-center gap-3"
+         th:attr="role=${type == 'error' ? 'alert' : 'status'}"
          th:classappend="${type == 'success'} ? 'bg-green-50 border-green-200 text-green-800' : (${type == 'error'} ? 'bg-red-50 border-red-200 text-red-800' : (${type == 'warning'} ? 'bg-amber-50 border-amber-200 text-amber-800' : 'bg-blue-50 border-blue-200 text-blue-800'))">
-        <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' flex-shrink-0'"></i>
+        <i th:if="${icon}" th:class="'fas fa-' + ${icon} + ' flex-shrink-0'" aria-hidden="true"></i>
         <span th:text="${message}">Alert message</span>
     </div>
 
@@ -312,14 +328,14 @@
        th:href="${href}"
        class="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all group block">
         <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all"
-             th:classappend="(${iconBg} ?: 'bg-blue-100') + ' group-hover:opacity-80'">
+             th:classappend="(${iconBg} ?: 'bg-blue-100') + ' group-hover:opacity-80'" aria-hidden="true">
             <i th:class="'fas fa-' + ${icon} + ' text-xl'" th:classappend="' ' + (${iconColor} ?: 'text-blue-600')"></i>
         </div>
         <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors" th:text="${title}">Title</h3>
         <p class="text-sm text-gray-500 mt-1" th:text="${description}">Description</p>
         <div class="mt-4 pt-3 border-t border-gray-100">
             <span class="text-sm text-blue-600 font-medium group-hover:text-blue-800 transition-colors">
-                Ir <i class="fas fa-arrow-right ml-1"></i>
+                Ir <i class="fas fa-arrow-right ml-1" aria-hidden="true"></i>
             </span>
         </div>
     </a>
