@@ -1,22 +1,39 @@
 services:
-  selecta:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  db:
+    image: postgres:16-alpine
+    container_name: selecta-db
+    environment:
+      POSTGRES_DB: selecta
+      POSTGRES_USER: selecta
+      POSTGRES_PASSWORD: selecta
+    ports:
+      - "5432:5432"
+    volumes:
+      - selecta-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U selecta"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
     container_name: selecta-app
     ports:
       - "8080:8080"
-    volumes:
-      - selecta-db-data:/app/data
-      - selecta-file-storage:/app/file-storage
     environment:
-      - SERVER_PORT=8080
-      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/selecta;AUTO_SERVER=TRUE
-      - APP_STORAGE_PATH=/app/file-storage/subject_resources/
-    restart: unless-stopped
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: selecta
+      DB_USERNAME: selecta
+      DB_PASSWORD: selecta
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - selecta-uploads:/app/uploads
 
 volumes:
-  selecta-db-data:
-    driver: local
-  selecta-file-storage:
-    driver: local
+  selecta-data:
+  selecta-uploads:

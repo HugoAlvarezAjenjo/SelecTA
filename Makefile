@@ -16,7 +16,11 @@ else
     endif
 endif
 
-.PHONY: build run test clean install fmt validate report
+.PHONY: build run test clean install fmt validate report docker-build docker-up docker-down docker-logs
+
+# ──────────────────────────────────────────────────────────────────────
+# Development
+# ──────────────────────────────────────────────────────────────────────
 
 # Ejecutar la aplicación sin empaquetar (ideal para desarrollo)
 run:
@@ -49,3 +53,26 @@ validate:
 # Abrir el informe de cobertura de JaCoCo en el navegador
 report:
 	$(OPEN) target/site/jacoco/index.html
+
+# ──────────────────────────────────────────────────────────────────────
+# Docker (Producción)
+# ──────────────────────────────────────────────────────────────────────
+
+# Construir la imagen Docker
+docker-build:
+	docker compose build
+
+# Arrancar la aplicación en Docker (app + PostgreSQL)
+docker-up:
+	docker compose up -d
+
+# Parar los contenedores
+docker-down:
+	docker compose down
+
+# Ver logs en tiempo real
+docker-logs:
+	docker compose logs -f app
+
+# Reconstruir y arrancar (útil tras cambios)
+docker-restart: docker-down docker-build docker-up
