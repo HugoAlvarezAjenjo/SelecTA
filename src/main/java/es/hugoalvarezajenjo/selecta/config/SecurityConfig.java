@@ -35,10 +35,13 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
-                        // Vistas de lectura pública (cualquiera puede ver asignaturas)
+                        // Vistas de lectura pública (cualquiera puede ver asignaturas y recomendador)
                         .requestMatchers(
                                 "/subjects",
-                                "/subject/{id}"
+                                "/subject/{id}",
+                                "/recommender",
+                                "/api/resources/*/download",
+                                "/user/{id}"
                         ).permitAll()
                         // Panel de administración
                         .requestMatchers("/admin/**").hasRole("ADMIN")
