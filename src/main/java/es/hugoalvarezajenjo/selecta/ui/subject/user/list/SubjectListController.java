@@ -46,9 +46,9 @@ public class SubjectListController {
 
     private static SubjectListItemDTO mapToDTO(final Subject subject) {
         final List<String> attributesList = new ArrayList<>();
-        attributesList.add(subject.getCredits() + " ects");
+        attributesList.add(subject.getCredits() + " ECTS");
         for (final Semester semester : subject.getSemesters()) {
-            attributesList.add(semester.toString() + " semester");
+            attributesList.add("Semestre " + semester.toString());
         }
         for (final Languages language : subject.getLanguages()) {
             attributesList.add(language.toString());

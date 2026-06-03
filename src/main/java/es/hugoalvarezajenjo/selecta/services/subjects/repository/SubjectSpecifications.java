@@ -25,8 +25,16 @@ public class SubjectSpecifications {
                     Predicate descPredicate = criteriaBuilder.like(
                             criteriaBuilder.lower(root.get("description")),
                             "%" + word + "%");
-                    predicates.add(criteriaBuilder.or(namePredicate, descPredicate));
+                    // Also search in tags (ElementCollection<String>)
+                    Predicate tagPredicate = criteriaBuilder.like(
+                            criteriaBuilder.lower(root.join("tags")),
+                            "%" + word + "%");
+                    predicates.add(criteriaBuilder.or(namePredicate, descPredicate, tagPredicate));
                 }
+            }
+
+            if (!predicates.isEmpty()) {
+                query.distinct(true); // Avoid duplicates from join
             }
 
             return predicates.isEmpty() ? criteriaBuilder.conjunction()

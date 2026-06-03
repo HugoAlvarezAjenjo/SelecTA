@@ -50,7 +50,7 @@
                 <form th:action="@{/subjects}" method="get" class="relative max-w-2xl mx-auto" role="search" aria-label="Buscar asignaturas">
                     <label for="search-input" class="sr-only">Buscar asignaturas</label>
                     <input type="text" id="search-input" name="search"
-                        placeholder="Buscar asignaturas (ej: Inteligencia Artificial, 1156, ETSII)"
+                        placeholder="Buscar asignaturas (ej: Machine Learning, IA, redes)"
                         th:value="${searchQuery}"
                         class="w-full px-6 py-4 rounded-full border border-gray-300 focus:outline-none focus:border-upm-light-blue search-input transition-all">
                     <button type="submit"
@@ -160,17 +160,6 @@
                 <div class="flex-1">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-upm-blue" id="results-heading">Resultados de búsqueda</h2>
-                        <div class="flex items-center">
-                            <label for="sort-select" class="text-gray-600 mr-3">Ordenar por:</label>
-                            <select id="sort-select"
-                                class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-upm-light-blue">
-                                <option>Relevancia</option>
-                                <option>Valoración (alta a baja)</option>
-                                <option>Valoración (baja a alta)</option>
-                                <option>Créditos (alta a baja)</option>
-                                <option>Créditos (baja a alta)</option>
-                            </select>
-                        </div>
                     </div>
 
                     <!-- When no subjects are found -->
