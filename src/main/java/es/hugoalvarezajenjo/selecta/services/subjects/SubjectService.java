@@ -1,5 +1,8 @@
 package es.hugoalvarezajenjo.selecta.services.subjects;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,8 @@ public interface SubjectService {
     List<Subject> getActiveSubjects();
 
     List<Subject> findActiveBySearchQuery(String searchQuery);
+
+    Page<Subject> findActiveBySearchQuery(String searchQuery, Pageable pageable);
 
     List<Subject> getRelatedSubjects(Long subjectId, int limit);
 

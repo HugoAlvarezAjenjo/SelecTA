@@ -178,22 +178,50 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-8 flex justify-center">
+                    <div th:if="${totalPages > 1}" class="mt-8 flex flex-col items-center gap-3">
+                        <p class="text-sm text-gray-500">
+                            Mostrando página <span th:text="${currentPage + 1}">1</span> de <span th:text="${totalPages}">1</span>
+                            (<span th:text="${totalElements}">0</span> asignaturas)
+                        </p>
                         <nav class="inline-flex rounded-md shadow" aria-label="Paginación de resultados">
-                            <a href="#" aria-label="Página anterior"
-                                class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
+                            <!-- Previous -->
+                            <a th:if="${currentPage > 0}"
+                               th:href="@{/subjects(search=${searchQuery}, page=${currentPage - 1})}"
+                               aria-label="Página anterior"
+                               class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
                                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
                             </a>
-                            <a href="#" aria-label="Página 1" aria-current="page"
-                                class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue font-medium hover:bg-upm-gray">1</a>
-                            <a href="#" aria-label="Página 2"
-                                class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">2</a>
-                            <a href="#" aria-label="Página 3"
-                                class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">3</a>
-                            <a href="#" aria-label="Página siguiente"
-                                class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
+                            <span th:if="${currentPage == 0}"
+                                  class="px-4 py-2 rounded-l-md border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed"
+                                  aria-disabled="true">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            </span>
+
+                            <!-- Page numbers -->
+                            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                                <a th:if="${i != currentPage}"
+                                   th:href="@{/subjects(search=${searchQuery}, page=${i})}"
+                                   th:text="${i + 1}"
+                                   th:attr="aria-label=${'Página ' + (i + 1)}"
+                                   class="px-4 py-2 border-t border-b border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">1</a>
+                                <span th:if="${i == currentPage}"
+                                      th:text="${i + 1}"
+                                      aria-current="page"
+                                      class="px-4 py-2 border-t border-b border-gray-300 bg-upm-light-blue text-white font-bold">1</span>
+                            </th:block>
+
+                            <!-- Next -->
+                            <a th:if="${currentPage < totalPages - 1}"
+                               th:href="@{/subjects(search=${searchQuery}, page=${currentPage + 1})}"
+                               aria-label="Página siguiente"
+                               class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-upm-blue hover:bg-upm-gray">
                                 <i class="fas fa-chevron-right" aria-hidden="true"></i>
                             </a>
+                            <span th:if="${currentPage >= totalPages - 1}"
+                                  class="px-4 py-2 rounded-r-md border border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed"
+                                  aria-disabled="true">
+                                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                            </span>
                         </nav>
                     </div>
                 </div>

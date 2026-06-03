@@ -6,6 +6,8 @@ import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
 import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,30 +16,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/subjects")
 @RequiredArgsConstructor
 public class SubjectListController {
-    final SubjectService subjectService;
+    private final SubjectService subjectService;
     private final FeatureFlagConfig featureFlagConfig;
+
+    private static final int PAGE_SIZE = 10;
 
     @GetMapping
     private String subjectListView(
             @RequestParam(value = "search", required = false) final String searchQuery,
+            @RequestParam(value = "page", defaultValue = "0") final int page,
             final Model model) {
 
-        List<Subject> filteredSubjects;
+        final Page<Subject> subjectPage = this.subjectService.findActiveBySearchQuery(
+                searchQuery, PageRequest.of(Math.max(0, page), PAGE_SIZE));
 
-        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            filteredSubjects = this.subjectService.findActiveBySearchQuery(searchQuery);
-        } else {
-            filteredSubjects = this.subjectService.getActiveSubjects();
-        }
-
-        model.addAttribute("subjects", filteredSubjects.stream()
+        model.addAttribute("subjects", subjectPage.getContent().stream()
                 .map(SubjectListController::mapToDTO).toList());
+        model.addAttribute("currentPage", subjectPage.getNumber());
+        model.addAttribute("totalPages", subjectPage.getTotalPages());
+        model.addAttribute("totalElements", subjectPage.getTotalElements());
         model.addAttribute("filterMenuEnabled", this.featureFlagConfig.isFilterListEnabled());
         model.addAttribute("searchQuery", searchQuery != null ? searchQuery : "");
 

@@ -9,6 +9,8 @@ import es.hugoalvarezajenjo.selecta.services.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,6 +73,17 @@ public class SubjectServiceImpl implements SubjectService {
         }
 
         return this.subjectRepository.findAll(spec);
+    }
+
+    @Override
+    public Page<Subject> findActiveBySearchQuery(final String query, final Pageable pageable) {
+        Specification<Subject> spec = SubjectSpecifications.isNotDiscontinued();
+
+        if (query != null && !query.trim().isEmpty()) {
+            spec = spec.and(SubjectSpecifications.containsWordsInNameOrDescription(query));
+        }
+
+        return this.subjectRepository.findAll(spec, pageable);
     }
 
     @Override
