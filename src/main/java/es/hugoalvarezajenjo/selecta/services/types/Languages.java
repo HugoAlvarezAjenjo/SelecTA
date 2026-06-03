@@ -2,7 +2,7 @@ package es.hugoalvarezajenjo.selecta.services.types;
 
 public enum Languages {
     SPANISH("Español"),
-    ENGLISH("Ingles");
+    ENGLISH("Inglés");
 
     private final String value;
 
