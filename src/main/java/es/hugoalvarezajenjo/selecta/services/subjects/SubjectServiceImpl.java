@@ -80,7 +80,7 @@ public class SubjectServiceImpl implements SubjectService {
         Specification<Subject> spec = SubjectSpecifications.isNotDiscontinued();
 
         if (query != null && !query.trim().isEmpty()) {
-            spec = spec.and(SubjectSpecifications.containsWordsInNameOrDescription(query));
+            spec = spec.and(SubjectSpecifications.accentInsensitiveSearch(query));
         }
 
         return this.subjectRepository.findAll(spec, pageable);
