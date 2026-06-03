@@ -23,6 +23,8 @@ public interface SubjectService {
 
     Page<Subject> findActiveBySearchQuery(String searchQuery, Pageable pageable);
 
+    Page<Subject> findActiveBySearchQuery(String searchQuery, Integer semester, String language, Pageable pageable);
+
     List<Subject> getRelatedSubjects(Long subjectId, int limit);
 
     void addTeacherToSubject(Long subjectId, Long teacherId);

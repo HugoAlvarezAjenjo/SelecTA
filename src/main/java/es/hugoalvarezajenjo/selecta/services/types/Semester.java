@@ -20,4 +20,17 @@ public enum Semester {
     public String toString() {
         return Integer.toString(this.semesterNumber);
     }
+
+    public int getNumber() {
+        return this.semesterNumber;
+    }
+
+    public static Semester fromNumber(final int number) {
+        for (final Semester s : values()) {
+            if (s.semesterNumber == number) {
+                return s;
+            }
+        }
+        return null;
+    }
 }

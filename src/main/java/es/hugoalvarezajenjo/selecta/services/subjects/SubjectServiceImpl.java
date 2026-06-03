@@ -2,6 +2,8 @@ package es.hugoalvarezajenjo.selecta.services.subjects;
 
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectRepository;
 import es.hugoalvarezajenjo.selecta.services.subjects.repository.SubjectSpecifications;
+import es.hugoalvarezajenjo.selecta.services.types.Languages;
+import es.hugoalvarezajenjo.selecta.services.types.Semester;
 import es.hugoalvarezajenjo.selecta.services.user.Student;
 import es.hugoalvarezajenjo.selecta.services.user.Teacher;
 import es.hugoalvarezajenjo.selecta.services.user.User;
@@ -77,10 +79,32 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Page<Subject> findActiveBySearchQuery(final String query, final Pageable pageable) {
+        return findActiveBySearchQuery(query, null, null, pageable);
+    }
+
+    @Override
+    public Page<Subject> findActiveBySearchQuery(final String query, final Integer semester,
+                                                  final String language, final Pageable pageable) {
         Specification<Subject> spec = SubjectSpecifications.isNotDiscontinued();
 
         if (query != null && !query.trim().isEmpty()) {
             spec = spec.and(SubjectSpecifications.accentInsensitiveSearch(query));
+        }
+
+        if (semester != null) {
+            final Semester semesterEnum = Semester.fromNumber(semester);
+            if (semesterEnum != null) {
+                spec = spec.and(SubjectSpecifications.hasSemesterIn(List.of(semesterEnum)));
+            }
+        }
+
+        if (language != null && !language.isBlank()) {
+            try {
+                final Languages lang = Languages.valueOf(language);
+                spec = spec.and((root, q, cb) -> cb.isMember(lang, root.get("languages")));
+            } catch (IllegalArgumentException ignored) {
+                // Invalid language value, skip filter
+            }
         }
 
         return this.subjectRepository.findAll(spec, pageable);

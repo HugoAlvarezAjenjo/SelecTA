@@ -9,29 +9,8 @@
         <link rel="stylesheet" th:href="@{/css/forms.css}">
         <link rel="stylesheet" th:href="@{/css/card.css}">
         <style>
-            .filter-checkbox:checked+.filter-label {
-                background-color: #0072CE;
-                color: white;
-            }
-
-            .filter-checkbox:checked+.filter-label .filter-icon {
-                color: white;
-            }
-
             .search-input:focus {
                 box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.2);
-            }
-
-            @media (max-width: 768px) {
-                .filters-container {
-                    flex-direction: column;
-                }
-
-                .filters-sidebar {
-                    width: 100%;
-                    margin-right: 0;
-                    margin-bottom: 1.5rem;
-                }
             }
         </style>
     </th:block>
@@ -66,100 +45,61 @@
     <!-- Main Content -->
     <section class="py-8 bg-upm-gray bg-opacity-30">
         <div class="container mx-auto px-4">
-            <div class="filters-container flex flex-wrap">
+            <div class="flex flex-wrap gap-6">
                 <!-- Filters Sidebar -->
-                <div th:if="${filterMenuEnabled}" class="filters-sidebar w-full md:w-64 mr-8">
-                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <aside class="w-full md:w-64 flex-shrink-0" aria-label="Filtros">
+                    <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
                         <h3 class="text-lg font-bold text-upm-blue mb-4 flex items-center">
-                            <i class="fas fa-filter mr-2 text-upm-light-blue"></i> Filtros
+                            <i class="fas fa-filter mr-2 text-upm-light-blue" aria-hidden="true"></i> Filtros
                         </h3>
 
+                        <!-- Semester -->
                         <div class="mb-6">
-                            <h4 class="font-semibold text-gray-700 mb-3">Escuela</h4>
+                            <h4 class="font-semibold text-gray-700 mb-3">Semestre</h4>
                             <div class="space-y-2">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-university filter-icon text-upm-light-blue mr-2"></i>
-                                        ETSISI
-                                    </span>
-                                </label>
+                                <th:block th:each="sem : ${semesters}">
+                                    <a th:href="@{/subjects(search=${searchQuery}, semester=${sem.number}, language=${selectedLanguage})}"
+                                       th:classappend="${selectedSemester != null and selectedSemester == sem.number} ? 'bg-upm-light-blue text-white' : 'bg-upm-gray hover:bg-gray-200 text-gray-700'"
+                                       class="flex items-center px-3 py-2 rounded-lg transition-all w-full text-sm font-medium">
+                                        <i class="fas fa-calendar-alt mr-2 text-sm" aria-hidden="true"
+                                           th:classappend="${selectedSemester != null and selectedSemester == sem.number} ? 'text-white' : 'text-upm-light-blue'"></i>
+                                        <span th:text="'Semestre ' + ${sem.number}">Semestre 1</span>
+                                    </a>
+                                </th:block>
                             </div>
                         </div>
 
-                        <div class="mb-6">
-                            <h4 class="font-semibold text-gray-700 mb-3">Tipo</h4>
-                            <div class="space-y-2">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-book filter-icon text-upm-light-blue mr-2"></i>
-                                        Obligatorias
-                                    </span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-star filter-icon text-upm-light-blue mr-2"></i>
-                                        Optativas
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="mb-6">
-                            <h4 class="font-semibold text-gray-700 mb-3">Cuatrimestre</h4>
-                            <div class="space-y-2">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-calendar-alt filter-icon text-upm-light-blue mr-2"></i>
-                                        Primer cuatrimestre
-                                    </span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-calendar-alt filter-icon text-upm-light-blue mr-2"></i>
-                                        Segundo cuatrimestre
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-
+                        <!-- Language -->
                         <div class="mb-6">
                             <h4 class="font-semibold text-gray-700 mb-3">Idioma</h4>
                             <div class="space-y-2">
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-language filter-icon text-upm-light-blue mr-2"></i>
-                                        Español
-                                    </span>
-                                </label>
-                                <label class="flex items-center cursor-pointer">
-                                    <input type="checkbox" class="hidden filter-checkbox">
-                                    <span
-                                        class="filter-label flex items-center px-3 py-2 rounded-lg bg-upm-gray hover:bg-gray-200 transition-all w-full">
-                                        <i class="fas fa-language filter-icon text-upm-light-blue mr-2"></i>
-                                        Inglés
-                                    </span>
-                                </label>
+                                <th:block th:each="lang : ${languages}">
+                                    <a th:href="@{/subjects(search=${searchQuery}, semester=${selectedSemester}, language=${lang.name()})}"
+                                       th:classappend="${selectedLanguage == lang.name()} ? 'bg-upm-light-blue text-white' : 'bg-upm-gray hover:bg-gray-200 text-gray-700'"
+                                       class="flex items-center px-3 py-2 rounded-lg transition-all w-full text-sm font-medium">
+                                        <i class="fas fa-language mr-2 text-sm" aria-hidden="true"
+                                           th:classappend="${selectedLanguage == lang.name()} ? 'text-white' : 'text-upm-light-blue'"></i>
+                                        <span th:text="${lang.toString()}">Español</span>
+                                    </a>
+                                </th:block>
                             </div>
                         </div>
+
+                        <!-- Clear all -->
+                        <a th:if="${selectedSemester != null or (selectedLanguage != null and !selectedLanguage.isEmpty())}"
+                           th:href="@{/subjects(search=${searchQuery})}"
+                           class="flex items-center justify-center px-4 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-all w-full text-sm font-medium border border-red-200">
+                            <i class="fas fa-times mr-2" aria-hidden="true"></i> Quitar filtros
+                        </a>
                     </div>
-                </div>
+                </aside>
 
                 <!-- Results Section -->
-                <div class="flex-1">
+                <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-upm-blue" id="results-heading">Resultados de búsqueda</h2>
+                        <h2 class="text-2xl font-bold text-upm-blue" id="results-heading">
+                            <span th:text="${totalElements}">0</span> asignaturas encontradas
+                        </h2>
                     </div>
 
                     <!-- When no subjects are found -->
@@ -232,23 +172,6 @@
 
 <th:block layout:fragment="scripts">
     <script th:src="@{/js/smooth-scroll.js}"></script>
-    <script>
-        // Filter checkbox functionality
-        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function () {
-                const label = this.nextElementSibling;
-                if (this.checked) {
-                    label.classList.add('bg-upm-light-blue', 'text-white');
-                    label.querySelector('.filter-icon').classList.add('text-white');
-                    label.classList.remove('bg-upm-gray', 'hover:bg-gray-200');
-                } else {
-                    label.classList.remove('bg-upm-light-blue', 'text-white');
-                    label.querySelector('.filter-icon').classList.remove('text-white');
-                    label.classList.add('bg-upm-gray', 'hover:bg-gray-200');
-                }
-            });
-        });
-    </script>
 </th:block>
 </body>
 </html>

@@ -1,6 +1,5 @@
 package es.hugoalvarezajenjo.selecta.ui.subject.user.list;
 
-import es.hugoalvarezajenjo.selecta.config.FeatureFlagConfig;
 import es.hugoalvarezajenjo.selecta.services.subjects.Subject;
 import es.hugoalvarezajenjo.selecta.services.subjects.SubjectService;
 import es.hugoalvarezajenjo.selecta.services.types.Languages;
@@ -22,26 +21,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubjectListController {
     private final SubjectService subjectService;
-    private final FeatureFlagConfig featureFlagConfig;
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 9;
 
     @GetMapping
     private String subjectListView(
             @RequestParam(value = "search", required = false) final String searchQuery,
+            @RequestParam(value = "semester", required = false) final Integer semester,
+            @RequestParam(value = "language", required = false) final String language,
             @RequestParam(value = "page", defaultValue = "0") final int page,
             final Model model) {
 
         final Page<Subject> subjectPage = this.subjectService.findActiveBySearchQuery(
-                searchQuery, PageRequest.of(Math.max(0, page), PAGE_SIZE));
+                searchQuery, semester, language, PageRequest.of(Math.max(0, page), PAGE_SIZE));
 
         model.addAttribute("subjects", subjectPage.getContent().stream()
                 .map(SubjectListController::mapToDTO).toList());
         model.addAttribute("currentPage", subjectPage.getNumber());
         model.addAttribute("totalPages", subjectPage.getTotalPages());
         model.addAttribute("totalElements", subjectPage.getTotalElements());
-        model.addAttribute("filterMenuEnabled", this.featureFlagConfig.isFilterListEnabled());
         model.addAttribute("searchQuery", searchQuery != null ? searchQuery : "");
+        model.addAttribute("selectedSemester", semester);
+        model.addAttribute("selectedLanguage", language != null ? language : "");
+        model.addAttribute("semesters", Semester.values());
+        model.addAttribute("languages", Languages.values());
 
         return "subject/user/list";
     }

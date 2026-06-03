@@ -7,8 +7,4 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Getter
 public class FeatureFlagConfig {
-    @Value("${feature.filterList.enabled:false}")
-    private boolean filterListEnabled;
-    @Value("${feature.subjectResources.enabled:false}")
-    private boolean subjectResourceEnabled;
 }
