@@ -14,6 +14,16 @@
 <main layout:fragment="content">
 
     <div class="container mx-auto px-4 py-12">
+        <!-- Alerts -->
+        <div th:if="${success}" class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3" role="alert">
+            <i class="fas fa-check-circle text-green-500" aria-hidden="true"></i>
+            <span class="text-green-800 font-medium" th:text="${success}">Éxito</span>
+        </div>
+        <div th:if="${error}" class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3" role="alert">
+            <i class="fas fa-exclamation-circle text-red-500" aria-hidden="true"></i>
+            <span class="text-red-800 font-medium" th:text="${error}">Error</span>
+        </div>
+
         <!-- Profile Header -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-8">
             <div class="flex flex-col md:flex-row items-center gap-8">
@@ -42,8 +52,8 @@
                     <a th:if="${isStudent}" th:href="@{/enrollment-list}" class="bg-upm-blue hover:bg-upm-light-blue text-white px-6 py-2 rounded-full font-medium transition-all text-center flex items-center justify-center">
                         <i class="fas fa-clipboard-list mr-2" aria-hidden="true"></i> Mi Lista de Matrícula
                     </a>
-                    <button class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-2 rounded-full font-medium transition-all text-center">
-                        Editar Perfil
+                    <button onclick="openEditModal()" class="bg-upm-light-blue hover:bg-upm-blue text-white px-6 py-2 rounded-full font-medium transition-all text-center">
+                        <i class="fas fa-pen mr-2" aria-hidden="true"></i> Editar Perfil
                     </button>
                 </div>
             </div>
@@ -170,9 +180,74 @@
         </section>
     </div>
 
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+         role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+        <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 id="edit-modal-title" class="text-xl font-bold text-upm-blue">
+                    <i class="fas fa-user-edit mr-2" aria-hidden="true"></i>Editar Perfil
+                </h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600" aria-label="Cerrar">
+                    <i class="fas fa-times text-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            <form th:action="@{/profile/edit}" method="post" class="space-y-5" aria-label="Formulario de edición de perfil">
+                <div>
+                    <label for="edit-username" class="block text-gray-700 mb-2 font-medium">
+                        Nombre <span class="text-red-500" aria-hidden="true">*</span>
+                    </label>
+                    <input type="text" id="edit-username" name="username" required
+                           th:value="${user.username}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"
+                           placeholder="Tu nombre">
+                </div>
+                <div th:if="${isStudent}">
+                    <label for="edit-titulation" class="block text-gray-700 mb-2 font-medium">Titulación</label>
+                    <input type="text" id="edit-titulation" name="titulation"
+                           th:value="${titulation}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-upm-light-blue"
+                           placeholder="Ej: Grado en Ingeniería del Software">
+                </div>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                    <p class="text-sm text-gray-500">
+                        <i class="fas fa-info-circle mr-1" aria-hidden="true"></i>
+                        El correo electrónico no se puede cambiar por motivos de seguridad.
+                    </p>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeEditModal()" class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium">
+                        <i class="fas fa-save mr-2" aria-hidden="true"></i>Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </main>
 <th:block layout:fragment="scripts">
 <script>
+    function openEditModal() {
+        document.getElementById('editProfileModal').classList.remove('hidden');
+        document.getElementById('edit-username').focus();
+    }
+
+    function closeEditModal() {
+        document.getElementById('editProfileModal').classList.add('hidden');
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeEditModal();
+    });
+
+    // Close on backdrop click
+    document.getElementById('editProfileModal').addEventListener('click', function(e) {
+        if (e.target === this) closeEditModal();
+    });
+
     function switchTab(tab) {
         // Hide all panels
         document.getElementById('content-subjects').classList.add('hidden');

@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,5 +64,24 @@ public class ProfileController {
         model.addAttribute("uploadedResourcesCount", uploadedResources.size());
 
         return "profile";
+    }
+
+    @PostMapping("/edit")
+    public String updateProfile(@RequestParam final String username,
+                                @RequestParam(required = false) final String titulation,
+                                final RedirectAttributes redirectAttributes) {
+        final User currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        if (username == null || username.isBlank()) {
+            redirectAttributes.addFlashAttribute("error", "El nombre no puede estar vacío");
+            return "redirect:/profile";
+        }
+
+        userService.updateProfile(currentUser.getId(), username, titulation);
+        redirectAttributes.addFlashAttribute("success", "Perfil actualizado correctamente");
+        return "redirect:/profile";
     }
 }

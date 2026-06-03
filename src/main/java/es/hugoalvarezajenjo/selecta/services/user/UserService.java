@@ -23,4 +23,6 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     List<User> getApprovedTeachers();
+
+    void updateProfile(Long userId, String username, String titulation);
 }

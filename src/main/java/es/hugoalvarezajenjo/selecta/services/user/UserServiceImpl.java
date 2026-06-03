@@ -113,4 +113,22 @@ public class UserServiceImpl implements UserService, UserAuthentication {
     public List<User> getApprovedTeachers() {
         return this.userRepository.findByRoleAndApprovedTrue(UserRole.TEACHER);
     }
+
+    @Override
+    @Transactional
+    public void updateProfile(final Long userId, final String username, final String titulation) {
+        final User user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+
+        if (username != null && !username.isBlank()) {
+            user.setUsername(username.trim());
+        }
+
+        if (user instanceof Student student && titulation != null) {
+            student.setTitulation(titulation.trim());
+        }
+
+        this.userRepository.save(user);
+        log.info("Profile updated for user: {}", user.getEmail());
+    }
 }
