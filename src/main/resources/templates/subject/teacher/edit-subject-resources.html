@@ -374,7 +374,7 @@
                 ${tags}${r.description?`<p class="text-sm text-gray-600 mb-2 line-clamp-2">${r.description}</p>`:''}
                 <div class="text-xs text-gray-400 mb-3"><i class="fas fa-calendar mr-1"></i>${r.uploadDate}</div>
                 <div class="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
-                    ${r.type==='EXTERNAL_RESOURCE'&&r.url?`<a href="${r.url}" target="_blank" rel="noopener noreferrer" class="action-btn action-btn-primary"><i class="fas fa-external-link-alt"></i> Abrir enlace</a>`:`<a href="/api/resources/${r.id}/download" class="action-btn action-btn-primary"><i class="fas fa-download"></i> Descargar</a>`}
+                    ${r.type==='EXTERNAL_RESOURCE'&&r.url?`<a href="${r.url}" target="_blank" rel="noopener noreferrer" class="action-btn action-btn-primary"><i class="fas fa-external-link-alt"></i> Abrir enlace</a>`:`<a href="/subject/${SID}/resources/${r.id}/preview" class="action-btn action-btn-primary"><i class="fas fa-eye"></i> Ver</a><a href="/api/resources/${r.id}/download" class="action-btn"><i class="fas fa-download text-gray-400"></i></a>`}
                     <button onclick="openTagResModal(${r.id})" class="action-btn"><i class="fas fa-tags text-indigo-400"></i></button>
                     <button onclick="openMoveResModal(${r.id})" class="action-btn"><i class="fas fa-folder-open text-amber-500"></i></button>
                     <button onclick="togglePrivacy(${r.id},${r.private})" class="action-btn"><i class="fas fa-${r.private?'eye':'eye-slash'} text-gray-400"></i></button>
