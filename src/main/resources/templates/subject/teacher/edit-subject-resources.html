@@ -243,10 +243,14 @@
         </div>
     </div>
 
-    <form id="privacyForm" method="post" style="display:none"></form>
+    <form id="privacyForm" method="post" style="display:none">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
 
     <script th:inline="javascript">
         const SID = /*[[${subjectDTO.id}]]*/ 0;
+        const CSRF_PARAM = /*[[${_csrf.parameterName}]]*/ '_csrf';
+        const CSRF_TOKEN = /*[[${_csrf.token}]]*/ '';
         const TAG_API = `/api/subjects/${SID}/tags`;
         const FOLDER_API = `/api/subjects/${SID}/folders`;
         let allTags = /*[[${allTags}]]*/ [];
@@ -375,6 +379,7 @@
                     <button onclick="openMoveResModal(${r.id})" class="action-btn"><i class="fas fa-folder-open text-amber-500"></i></button>
                     <button onclick="togglePrivacy(${r.id},${r.private})" class="action-btn"><i class="fas fa-${r.private?'eye':'eye-slash'} text-gray-400"></i></button>
                     <form action="/teacher/subject/${SID}/resources/${r.id}/delete" method="post" onsubmit="return confirm('¿Eliminar?')" class="inline">
+                        <input type="hidden" name="${CSRF_PARAM}" value="${CSRF_TOKEN}">
                         <button type="submit" class="action-btn action-btn-danger"><i class="fas fa-trash"></i></button>
                     </form>
                 </div></div>`;

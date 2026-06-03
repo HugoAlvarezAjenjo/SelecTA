@@ -9,6 +9,7 @@ import java.util.List;
 @Value
 public class SubjectResourceDTO {
     private Long id;
+    private Long subjectId;
     private String name;
     private String description;
     private String type;
@@ -18,6 +19,8 @@ public class SubjectResourceDTO {
     private boolean official;
     private String uploadedByName;
     private String url;
+    private String originalName;
+    private boolean previewable;
     private long upvotes;
     private long downvotes;
     private String userVote; // "UPVOTE", "DOWNVOTE", or null
@@ -28,6 +31,7 @@ public class SubjectResourceDTO {
                                                        final VoteType userVote) {
         return new SubjectResourceDTO(
                 subjectResource.getId(),
+                subjectResource.getSubjectId(),
                 subjectResource.getName(),
                 subjectResource.getDescription(),
                 subjectResource.getType().toString(),
@@ -37,6 +41,8 @@ public class SubjectResourceDTO {
                 subjectResource.isOfficial(),
                 subjectResource.getUploadedBy() != null ? subjectResource.getUploadedBy().getUsername() : null,
                 subjectResource.getUrl(),
+                subjectResource.getOriginalName(),
+                ResourcePreviewController.isPreviewable(subjectResource.getOriginalName(), subjectResource.getType()),
                 upvotes,
                 downvotes,
                 userVote != null ? userVote.name() : null);

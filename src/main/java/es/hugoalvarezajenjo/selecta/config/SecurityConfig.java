@@ -17,6 +17,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Permitir iframes del mismo origen (necesario para vista previa de PDF)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.sameOrigin())
+                )
                 // CSRF habilitado globalmente. Thymeleaf inyecta el token automáticamente en <form>.
                 // Solo se exime a las rutas de API REST puras (consumidas por fetch/AJAX desde JS).
                 .csrf(csrf -> csrf
@@ -39,8 +43,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/subjects",
                                 "/subject/{id}",
+                                "/subject/{id}/resources/{resourceId}/preview",
                                 "/recommender",
                                 "/api/resources/*/download",
+                                "/api/resources/*/view",
                                 "/user/{id}"
                         ).permitAll()
                         // Panel de administración

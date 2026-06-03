@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.InputStream;
+import java.net.URLConnection;
 
 @Tag(name = "Recursos", description = "Descarga de recursos de asignaturas")
 @Controller
@@ -91,6 +92,73 @@ public class ResourceDownloadController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .header(HttpHeaders.CONTENT_DISPOSITION,
                             "attachment; filename=\"" + filename + "\"")
+                    .body(streamingBody);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Operation(summary = "Visualizar un recurso inline",
+            description = "Sirve el archivo para visualización en el navegador (PDF, imágenes, vídeo). " +
+                    "El Content-Type se detecta automáticamente a partir del nombre original del archivo.")
+    @GetMapping("/{resourceId}/view")
+    public ResponseEntity<StreamingResponseBody> viewResource(
+            @Parameter(description = "ID del recurso a visualizar") final @PathVariable Long resourceId) {
+        try {
+            final SubjectResource resource = this.subjectResourceService.findById(resourceId);
+
+            if (resource == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            if (resource.isPrivate()) {
+                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+
+                String userEmail = auth.getName();
+                User currentUser = userRepository.findByEmail(userEmail).orElse(null);
+
+                if (!(currentUser instanceof Teacher)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+
+                Subject subject = subjectService.getSubjectById(resource.getSubjectId()).orElse(null);
+                if (subject == null || !subject.getTeachers().contains(currentUser)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+            }
+
+            final String storagePath = resourceId.toString();
+
+            if (!this.storageService.fileExists(storagePath)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            final InputStream inputStream = this.storageService.downloadFile(storagePath);
+            final String filename = resource.getOriginalName();
+
+            // Detect MIME type from file name
+            String mimeType = URLConnection.guessContentTypeFromName(filename);
+            if (mimeType == null) {
+                mimeType = "application/octet-stream";
+            }
+
+            final StreamingResponseBody streamingBody = outputStream -> {
+                int bytesRead;
+                byte[] buffer = new byte[8192];
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                inputStream.close();
+            };
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(mimeType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline; filename=\"" + filename + "\"")
                     .body(streamingBody);
 
         } catch (Exception e) {

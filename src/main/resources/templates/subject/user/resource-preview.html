@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title th:text="${resource.name} + ' — Vista previa'">Vista previa</title>
+    <th:block layout:fragment="styles">
+        <style>
+            .preview-container {
+                min-height: 70vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .preview-viewer {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #f8fafc;
+                border-radius: 0.75rem;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .preview-viewer iframe {
+                width: 100%;
+                height: 75vh;
+                border: none;
+                border-radius: 0.75rem;
+            }
+
+            .preview-viewer video {
+                max-width: 100%;
+                max-height: 75vh;
+                border-radius: 0.75rem;
+            }
+
+            .preview-viewer img {
+                max-width: 100%;
+                max-height: 75vh;
+                object-fit: contain;
+                border-radius: 0.75rem;
+            }
+
+            .preview-viewer audio {
+                width: 100%;
+                max-width: 600px;
+            }
+
+            .preview-toolbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .preview-fallback {
+                text-align: center;
+                padding: 4rem 2rem;
+            }
+
+            .preview-fallback-icon {
+                font-size: 4rem;
+                color: #94a3b8;
+                margin-bottom: 1.5rem;
+            }
+
+            @media (max-width: 640px) {
+                .preview-toolbar {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .preview-viewer iframe,
+                .preview-viewer video {
+                    height: 50vh;
+                }
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<main layout:fragment="content">
+    <section class="py-6" aria-labelledby="preview-title">
+        <div class="container mx-auto px-4 preview-container">
+
+            <!-- Toolbar -->
+            <div class="preview-toolbar mb-6">
+                <div class="flex items-center gap-3 flex-wrap">
+                    <a th:href="@{/subject/{id}(id=${subjectId})}"
+                       class="inline-flex items-center gap-2 text-upm-light-blue hover:text-upm-blue font-medium transition-colors"
+                       aria-label="Volver a la asignatura">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                        <span th:text="${subjectName}">Asignatura</span>
+                    </a>
+                    <span class="text-gray-300" aria-hidden="true">/</span>
+                    <h1 id="preview-title" class="text-lg md:text-xl font-bold text-gray-800" th:text="${resource.name}">
+                        Nombre del recurso
+                    </h1>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600"
+                          th:text="${resource.type}">PDF</span>
+                    <a th:href="@{${downloadUrl}}"
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium transition-colors text-sm"
+                       th:attr="aria-label=${'Descargar ' + resource.name}">
+                        <i class="fas fa-download" aria-hidden="true"></i>
+                        <span>Descargar</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Preview Area -->
+            <div class="preview-viewer" role="document" th:attr="aria-label=${'Vista previa de ' + resource.name}">
+
+                <!-- PDF viewer -->
+                <th:block th:if="${previewType == 'PDF'}">
+                    <iframe th:src="@{${viewUrl}}"
+                            th:title="${'Vista previa del documento: ' + resource.name}"
+                            loading="lazy">
+                    </iframe>
+                </th:block>
+
+                <!-- Video viewer -->
+                <th:block th:if="${previewType == 'VIDEO'}">
+                    <video controls preload="metadata"
+                           th:attr="aria-label=${'Vídeo: ' + resource.name}">
+                        <source th:src="@{${viewUrl}}" type="video/mp4">
+                        Tu navegador no soporta la reproducción de vídeo.
+                    </video>
+                </th:block>
+
+                <!-- Image viewer -->
+                <th:block th:if="${previewType == 'IMAGE'}">
+                    <img th:src="@{${viewUrl}}"
+                         th:alt="${'Imagen: ' + resource.name}"
+                         loading="lazy">
+                </th:block>
+
+                <!-- Audio viewer -->
+                <th:block th:if="${previewType == 'AUDIO'}">
+                    <audio controls preload="metadata"
+                           th:attr="aria-label=${'Audio: ' + resource.name}">
+                        <source th:src="@{${viewUrl}}">
+                        Tu navegador no soporta la reproducción de audio.
+                    </audio>
+                </th:block>
+
+                <!-- No preview available -->
+                <th:block th:if="${previewType == 'OTHER'}">
+                    <div class="preview-fallback">
+                        <div class="preview-fallback-icon" aria-hidden="true">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-700 mb-2">Vista previa no disponible</h2>
+                        <p class="text-gray-500 mb-6">Este tipo de archivo no se puede previsualizar en el navegador.</p>
+                        <a th:href="@{${downloadUrl}}"
+                           class="inline-flex items-center gap-2 px-6 py-3 bg-upm-light-blue hover:bg-upm-blue text-white rounded-lg font-medium transition-colors"
+                           th:attr="aria-label=${'Descargar ' + resource.name}">
+                            <i class="fas fa-download" aria-hidden="true"></i>
+                            Descargar archivo
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+
+            <!-- Resource metadata -->
+            <div class="mt-4 flex items-center gap-4 text-sm text-gray-500" aria-label="Información del recurso">
+                <span th:if="${resource.originalName}" class="flex items-center gap-1">
+                    <i class="fas fa-file mr-1" aria-hidden="true"></i>
+                    <span th:text="${resource.originalName}">archivo.pdf</span>
+                </span>
+                <span th:if="${resource.creationDate}" class="flex items-center gap-1">
+                    <i class="fas fa-calendar mr-1" aria-hidden="true"></i>
+                    <span th:text="${resource.creationDate}">2024-01-01</span>
+                </span>
+                <span th:if="${resource.language}" class="flex items-center gap-1">
+                    <i class="fas fa-globe mr-1" aria-hidden="true"></i>
+                    <span th:text="${resource.language}">Español</span>
+                </span>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

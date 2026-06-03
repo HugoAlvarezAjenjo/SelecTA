@@ -323,8 +323,21 @@
                                     th:attr="aria-label=${'Abrir enlace: ' + resource.name}">
                                     <i class="fas fa-external-link-alt mr-1" aria-hidden="true"></i> Abrir enlace
                                 </a>
-                                <!-- File download -->
-                                <a th:unless="${resource.type == 'EXTERNAL_RESOURCE' and resource.url != null}"
+                                <!-- Previewable file: link to preview page -->
+                                <div th:if="${resource.type != 'EXTERNAL_RESOURCE' and resource.previewable}" class="flex items-center gap-3">
+                                    <a th:href="@{/subject/{subjectId}/resources/{resourceId}/preview(subjectId=${resource.subjectId}, resourceId=${resource.id})}"
+                                        class="text-upm-light-blue hover:text-upm-blue font-medium"
+                                        th:attr="aria-label=${'Ver ' + resource.name}">
+                                        <i class="fas fa-eye mr-1" aria-hidden="true"></i> Ver
+                                    </a>
+                                    <a th:href="@{/api/resources/{path}/download(path=${resource.id})}"
+                                        class="text-gray-400 hover:text-gray-600 text-sm"
+                                        th:attr="aria-label=${'Descargar ' + resource.name}">
+                                        <i class="fas fa-download" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                                <!-- Non-previewable file: direct download -->
+                                <a th:if="${resource.type != 'EXTERNAL_RESOURCE' and !resource.previewable}"
                                     th:href="@{/api/resources/{path}/download(path=${resource.id})}"
                                     class="text-upm-light-blue hover:text-upm-blue font-medium download-link"
                                     th:attr="data-filename=${resource.name}, aria-label=${'Descargar ' + resource.name}">
