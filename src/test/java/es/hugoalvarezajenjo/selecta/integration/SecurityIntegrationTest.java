@@ -69,11 +69,10 @@ class SecurityIntegrationTest {
     // ──────────────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("Recommender redirects to login when unauthenticated")
-    void recommender_shouldRedirectToLogin_whenUnauthenticated() throws Exception {
+    @DisplayName("Recommender is publicly accessible without authentication")
+    void recommender_shouldBePublic_whenUnauthenticated() throws Exception {
         mockMvc.perform(get("/recommender"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("**/login"));
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -162,11 +161,11 @@ class SecurityIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST to register with duplicate email redirects with error")
+    @DisplayName("POST to register with duplicate email redirects with error notification")
     void register_duplicateEmail_shouldRedirectWithError() throws Exception {
         mockMvc.perform(post("/register")
                         .with(csrf())
-                        .param("email", "carlos@example.com") // already exists
+                        .param("email", "carlos@demo.com") // already exists in data.sql
                         .param("password", "testpass123")
                         .param("name", "Test User")
                         .param("role", "STUDENT")
