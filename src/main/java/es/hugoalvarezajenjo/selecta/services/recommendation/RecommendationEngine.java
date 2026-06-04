@@ -352,6 +352,19 @@ public class RecommendationEngine {
             }
         }
 
+        // Keyword filter (matches against subject name or description)
+        if (criteria.getSearchKeywords() != null && !criteria.getSearchKeywords().isBlank()) {
+            activeFilters++;
+            String subjectText = (subject.getName() + " " +
+                    (subject.getDescription() != null ? subject.getDescription() : "")).toLowerCase();
+            boolean keywordMatch = Arrays.stream(criteria.getSearchKeywords().toLowerCase().split("[,\\s]+"))
+                    .filter(k -> !k.isBlank())
+                    .anyMatch(subjectText::contains);
+            if (keywordMatch) {
+                satisfied++;
+            }
+        }
+
         return activeFilters > 0 ? (double) satisfied / activeFilters : 0.0;
     }
 

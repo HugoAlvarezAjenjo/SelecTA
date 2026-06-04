@@ -277,6 +277,72 @@ class RecommendationEngineTest {
             double score = engine.computeContentMatch(subject, criteria);
             assertThat(score).isEqualTo(0.0);
         }
+
+        @Test
+        @DisplayName("Keyword matching against subject name")
+        void keywordMatchesSubjectName() {
+            Subject subject = createSubject(1L, "Machine Learning Avanzado", Set.of("AI"));
+
+            SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                    .searchKeywords("machine")
+                    .build();
+
+            double score = engine.computeContentMatch(subject, criteria);
+            assertThat(score).isEqualTo(1.0);
+        }
+
+        @Test
+        @DisplayName("Keyword matching against subject description")
+        void keywordMatchesSubjectDescription() {
+            Subject subject = createSubject(1L, "Asignatura X", Set.of("Networks"));
+            subject.setDescription("Introducción a la programación funcional y concurrente");
+
+            SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                    .searchKeywords("funcional")
+                    .build();
+
+            double score = engine.computeContentMatch(subject, criteria);
+            assertThat(score).isEqualTo(1.0);
+        }
+
+        @Test
+        @DisplayName("Keyword not matching returns 0")
+        void keywordNotMatchingReturnsZero() {
+            Subject subject = createSubject(1L, "Redes de Computadores", Set.of("Networks"));
+
+            SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                    .searchKeywords("quantum")
+                    .build();
+
+            double score = engine.computeContentMatch(subject, criteria);
+            assertThat(score).isEqualTo(0.0);
+        }
+
+        @Test
+        @DisplayName("Multiple keywords — any match is sufficient")
+        void multipleKeywordsAnyMatchSufficient() {
+            Subject subject = createSubject(1L, "Inteligencia Artificial", Set.of("AI"));
+
+            SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                    .searchKeywords("quantum, artificial")
+                    .build();
+
+            double score = engine.computeContentMatch(subject, criteria);
+            assertThat(score).isEqualTo(1.0);
+        }
+
+        @Test
+        @DisplayName("Blank keywords are ignored as inactive filter")
+        void blankKeywordsIgnored() {
+            Subject subject = createSubject(1L, "Test", Set.of("AI"));
+
+            SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder()
+                    .searchKeywords("   ")
+                    .build();
+
+            double score = engine.computeContentMatch(subject, criteria);
+            assertThat(score).isEqualTo(0.0);
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────
