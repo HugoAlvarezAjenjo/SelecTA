@@ -29,6 +29,11 @@
 
 	<properties>
 		<java.version>21</java.version>
+		<!-- SonarCloud -->
+		<sonar.organization>hugoalvarezajenjo</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.projectKey>HugoAlvarezAjenjo_SelecTA</sonar.projectKey>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
 		<dependency>

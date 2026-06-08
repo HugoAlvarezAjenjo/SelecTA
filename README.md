@@ -1,6 +1,14 @@
 <h1 align=center> Selecta</h1>
 <p align=center>Selecciona Tu Asignatura</p>
 
+<p align=center>
+  <a href="https://github.com/HugoAlvarezAjenjo/SelecTA/actions/workflows/ci.yml"><img src="https://github.com/HugoAlvarezAjenjo/SelecTA/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://sonarcloud.io/summary/overall?id=HugoAlvarezAjenjo_SelecTA"><img src="https://sonarcloud.io/api/project_badges/measure?project=HugoAlvarezAjenjo_SelecTA&metric=alert_status" alt="Quality Gate Status"></a>
+  <a href="https://sonarcloud.io/summary/overall?id=HugoAlvarezAjenjo_SelecTA"><img src="https://sonarcloud.io/api/project_badges/measure?project=HugoAlvarezAjenjo_SelecTA&metric=coverage" alt="Coverage"></a>
+  <a href="https://sonarcloud.io/summary/overall?id=HugoAlvarezAjenjo_SelecTA"><img src="https://sonarcloud.io/api/project_badges/measure?project=HugoAlvarezAjenjo_SelecTA&metric=bugs" alt="Bugs"></a>
+  <a href="https://sonarcloud.io/summary/overall?id=HugoAlvarezAjenjo_SelecTA"><img src="https://sonarcloud.io/api/project_badges/measure?project=HugoAlvarezAjenjo_SelecTA&metric=code_smells" alt="Code Smells"></a>
+</p>
+
 ## Description
 
 Personal project to facilitate the choice of elective subjects, addressing the lack referrals and advice. Allows automated advice and collaboration between students through comments, sharing resources and a question system, whether general or directed at other students. Developed with Spring Boot and Thymeleaf.
