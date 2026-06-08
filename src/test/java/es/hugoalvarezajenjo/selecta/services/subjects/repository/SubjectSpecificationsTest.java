@@ -31,6 +31,9 @@ class SubjectSpecificationsTest {
     private Path<String> descriptionPath;
 
     @Mock
+    private Join<Object, Object> tagsJoin;
+
+    @Mock
     private Expression<String> lowerName;
 
     @Mock
@@ -44,10 +47,11 @@ class SubjectSpecificationsTest {
     void setUp() {
         // Use lenient stubbing for setup as some tests don't use all of these
         lenient().when(root.<String>get(anyString())).thenReturn((Path) namePath);
+        lenient().when(root.join(anyString())).thenReturn(tagsJoin);
         lenient().when(cb.lower(any())).thenReturn(lowerName);
         lenient().when(cb.conjunction()).thenReturn(predicate);
         lenient().when(cb.like(any(), anyString())).thenReturn(predicate);
-        lenient().when(cb.or(any(), any())).thenReturn(predicate);
+        lenient().when(cb.or(any(Predicate[].class))).thenReturn(predicate);
         lenient().when(cb.and(any(Predicate[].class))).thenReturn(predicate);
     }
 
@@ -72,8 +76,8 @@ class SubjectSpecificationsTest {
         Specification<Subject> spec = SubjectSpecifications.containsWordsInNameOrDescription("ab cdef");
         spec.toPredicate(root, query, cb);
 
-        // "ab" is ignored, "cdef" is used twice (name and description)
-        verify(cb, times(2)).like(any(), eq("%cdef%"));
+        // "ab" is ignored, "cdef" is used in name, description and tags (3 times)
+        verify(cb, times(3)).like(any(), eq("%cdef%"));
     }
 
     @Test
@@ -81,10 +85,10 @@ class SubjectSpecificationsTest {
         Specification<Subject> spec = SubjectSpecifications.containsWordsInNameOrDescription("java spring");
         spec.toPredicate(root, query, cb);
 
-        // Each word is searched in name and description
-        verify(cb, times(2)).like(any(), eq("%java%"));
-        verify(cb, times(2)).like(any(), eq("%spring%"));
-        verify(cb, times(2)).or(any(Predicate.class), any(Predicate.class));
+        // Each word is searched in name, description and tags
+        verify(cb, times(3)).like(any(), eq("%java%"));
+        verify(cb, times(3)).like(any(), eq("%spring%"));
+        verify(cb, times(2)).or(any(Predicate[].class));
         verify(cb).and(any(Predicate[].class));
     }
 

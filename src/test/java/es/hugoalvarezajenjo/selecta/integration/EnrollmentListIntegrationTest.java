@@ -34,7 +34,7 @@ class EnrollmentListIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        student = userRepository.findByEmail("carlos@example.com").orElseThrow();
+        student = userRepository.findByEmail("carlos@demo.com").orElseThrow();
     }
 
     @Test
@@ -112,8 +112,8 @@ class EnrollmentListIntegrationTest {
     @Test
     @DisplayName("Credits calculation is correct")
     void credits_calculatedCorrectly() {
-        enrollmentListService.addSubject(student, 1L); // Math: 6 credits
-        enrollmentListService.addSubject(student, 3L); // Programming: 4 credits
+        enrollmentListService.addSubject(student, 1L);  // Álgebra: 6 credits
+        enrollmentListService.addSubject(student, 44L); // Emprendimiento: 4 credits
 
         int credits = enrollmentListService.getMainCredits(student.getId());
         assertThat(credits).isEqualTo(10); // 6 + 4

@@ -41,8 +41,8 @@ class SubjectRatingIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        carlos = userRepository.findByEmail("carlos@example.com").orElseThrow();
-        maria = userRepository.findByEmail("maria@example.com").orElseThrow();
+        carlos = userRepository.findByEmail("carlos@demo.com").orElseThrow();
+        maria = userRepository.findByEmail("maria@demo.com").orElseThrow();
         math = subjectService.getSubjectById(1L).orElseThrow();
     }
 

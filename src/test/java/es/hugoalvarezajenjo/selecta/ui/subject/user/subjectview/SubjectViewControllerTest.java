@@ -134,10 +134,10 @@ class SubjectViewControllerTest {
         // Verify attributes are correctly constructed
         assertNotNull(subjectDTO.getAttributes(), "Attributes should not be null");
         List<String> attributes = (List<String>) subjectDTO.getAttributes();
-        assertTrue(attributes.contains("6 ects"), "Should include credits");
-        assertTrue(attributes.contains("1 semester"), "Should include first semester");
-        assertTrue(attributes.contains("2 semester"), "Should include second semester");
-        assertTrue(attributes.contains("Ingles"), "Should include English language");
+        assertTrue(attributes.contains("6 ECTS"), "Should include credits");
+        assertTrue(attributes.contains("Semestre 1"), "Should include first semester");
+        assertTrue(attributes.contains("Semestre 2"), "Should include second semester");
+        assertTrue(attributes.contains("Inglés"), "Should include English language");
         assertTrue(attributes.contains("Español"), "Should include Spanish language");
         assertEquals(5, attributes.size(), "Should have all attributes");
 
@@ -205,7 +205,7 @@ class SubjectViewControllerTest {
         assertEquals(minimalSubject.getDescription(), subjectDTO.getDescription());
 
         List<String> attributes = (List<String>) subjectDTO.getAttributes();
-        assertTrue(attributes.contains("4 ects"), "Should include credits");
+        assertTrue(attributes.contains("4 ECTS"), "Should include credits");
         assertEquals(1, attributes.size(), "Should only have credits attribute");
     }
 

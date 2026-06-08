@@ -60,7 +60,7 @@ class RecommendationEngineIntegrationTest {
     @Test
     @DisplayName("User with ratings gets personalized recommendations")
     void userWithRatings_getsPersonalizedRecommendations() {
-        User carlos = userRepository.findByEmail("carlos@example.com").orElseThrow();
+        User carlos = userRepository.findByEmail("carlos@demo.com").orElseThrow();
 
         // Carlos rates CS-related subjects highly
         rateSubject(carlos, 3L, 5); // Programming
@@ -80,24 +80,26 @@ class RecommendationEngineIntegrationTest {
     @Test
     @DisplayName("Rated subjects are excluded from recommendations")
     void ratedSubjects_areExcluded() {
-        User carlos = userRepository.findByEmail("carlos@example.com").orElseThrow();
+        User carlos = userRepository.findByEmail("carlos@demo.com").orElseThrow();
 
-        // Rate ALL subjects
-        for (long i = 1; i <= 5; i++) {
-            rateSubject(carlos, i, 4);
-        }
+        // Rate some subjects
+        rateSubject(carlos, 1L, 4);
+        rateSubject(carlos, 2L, 5);
+        rateSubject(carlos, 3L, 3);
 
         SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder().build();
         List<SubjectScoreDTO> results = recommendationEngine.recommend(carlos, criteria, 10);
 
-        // All subjects rated → nothing to recommend
-        assertThat(results).isEmpty();
+        // Rated subjects should NOT appear in recommendations
+        assertThat(results).noneMatch(r -> r.getSubjectId().equals(1L));
+        assertThat(results).noneMatch(r -> r.getSubjectId().equals(2L));
+        assertThat(results).noneMatch(r -> r.getSubjectId().equals(3L));
     }
 
     @Test
     @DisplayName("MMR produces diverse results (not all same tags)")
     void mmr_producesDiversity() {
-        User maria = userRepository.findByEmail("maria@example.com").orElseThrow();
+        User maria = userRepository.findByEmail("maria@demo.com").orElseThrow();
         // Maria likes science subjects
         rateSubject(maria, 1L, 5); // Math (Science, Engineering)
         rateSubject(maria, 2L, 5); // Physics (Science, Engineering)
@@ -115,7 +117,7 @@ class RecommendationEngineIntegrationTest {
     @DisplayName("Score breakdown contains all 5 signals")
     void scoreBreakdown_containsAllSignals() {
         seedRatings();
-        User carlos = userRepository.findByEmail("carlos@example.com").orElseThrow();
+        User carlos = userRepository.findByEmail("carlos@demo.com").orElseThrow();
         rateSubject(carlos, 1L, 5);
 
         SubjectRecommendationCriteria criteria = SubjectRecommendationCriteria.builder().build();
@@ -131,7 +133,7 @@ class RecommendationEngineIntegrationTest {
     @DisplayName("Content match filter increases score for matching subjects")
     void contentMatch_increasesScoreForMatchingSubjects() {
         SubjectRecommendationCriteria criteriaWithFilter = SubjectRecommendationCriteria.builder()
-                .selectedTags(List.of("Computer Science"))
+                .selectedTags(List.of("Programación"))
                 .build();
 
         SubjectRecommendationCriteria criteriaWithout = SubjectRecommendationCriteria.builder().build();
@@ -139,11 +141,11 @@ class RecommendationEngineIntegrationTest {
         List<SubjectScoreDTO> withFilter = recommendationEngine.recommend(null, criteriaWithFilter, 5);
         List<SubjectScoreDTO> without = recommendationEngine.recommend(null, criteriaWithout, 5);
 
-        // Subjects with "Computer Science" tag should score higher with the filter
+        // Subjects with "Programación" tag should score higher with the filter
         assertThat(withFilter).isNotEmpty();
-        // The CS subjects (3, 4, 5) should be boosted
+        // Subjects 4, 5, 6, 11, 19, 35 have tag "Programación" — top result should be one of them
         SubjectScoreDTO topWithFilter = withFilter.get(0);
-        assertThat(Set.of(3L, 4L, 5L)).contains(topWithFilter.getSubjectId());
+        assertThat(Set.of(4L, 5L, 6L, 11L, 19L, 35L)).contains(topWithFilter.getSubjectId());
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -164,8 +166,8 @@ class RecommendationEngineIntegrationTest {
     }
 
     private void seedRatings() {
-        User carlos = userRepository.findByEmail("carlos@example.com").orElseThrow();
-        User maria = userRepository.findByEmail("maria@example.com").orElseThrow();
+        User carlos = userRepository.findByEmail("carlos@demo.com").orElseThrow();
+        User maria = userRepository.findByEmail("maria@demo.com").orElseThrow();
         rateSubject(carlos, 1L, 4);
         rateSubject(carlos, 3L, 5);
         rateSubject(maria, 2L, 5);

@@ -145,7 +145,7 @@ class SecurityIntegrationTest {
     @DisplayName("POST to login without CSRF token is rejected")
     void login_withoutCsrf_shouldBeForbidden() throws Exception {
         mockMvc.perform(post("/login")
-                        .param("username", "carlos@example.com")
+                        .param("username", "carlos@demo.com")
                         .param("password", "password"))
                 .andExpect(status().isForbidden());
     }
@@ -155,7 +155,7 @@ class SecurityIntegrationTest {
     void login_withCsrf_shouldBeProcessed() throws Exception {
         mockMvc.perform(post("/login")
                         .with(csrf())
-                        .param("username", "carlos@example.com")
+                        .param("username", "carlos@demo.com")
                         .param("password", "password"))
                 .andExpect(status().is3xxRedirection());
     }

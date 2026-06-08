@@ -41,7 +41,7 @@ class ContributionFlowIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        student = userRepository.findByEmail("carlos@example.com").orElseThrow();
+        student = userRepository.findByEmail("carlos@demo.com").orElseThrow();
     }
 
     @Test
